@@ -567,6 +567,7 @@ async function loadOrders(reset){
 
     // Bind đổi trạng thái
     body.querySelectorAll("select.order-status").forEach(sel => {
+      sel.dataset.prevStatus = sel.value;
       sel.onchange = () => updateOrderStatus(sel.dataset.type, sel.dataset.id, sel.value, sel);
     });
   } catch(e){
@@ -601,7 +602,7 @@ function orderRow(o){
     : `<p class="font-semibold truncate max-w-[220px]">${esc(o._name||"—")}</p>
        ${o.note ? `<p class="text-[10.5px] text-zinc-500 truncate max-w-[220px]"><i class="fa-regular fa-note-sticky mr-1"></i>${esc(o.note)}</p>` : ""}`;
 
-  return `<tr class="border-b border-white/6 row-anim hover:bg-white/[.02]">
+  return `<tr class="border-b border-white/6 row-anim hover:bg-white/[.02]" data-order-row="${o._type}-${o.id}">
     <td class="p-3 text-xs text-zinc-400 whitespace-nowrap">${dt(o.created_at)}</td>
     <td class="p-3">${typeBadge}</td>
     <td class="p-3">${nameCell}</td>
@@ -618,15 +619,40 @@ function orderRow(o){
 }
 
 async function updateOrderStatus(type, id, status, sel){
+  const prev = sel.dataset.prevStatus || "pending";
   sel.disabled = true;
   try {
     const table = type === "smm" ? "orders" : "resource_orders";
-    const { error } = await supabaseClient.from(table).update({ status }).eq("id", id);
+    // .select() sau update để biết CHẮC CHẮN có dòng nào thực sự được ghi hay không.
+    // Nếu RLS chặn quyền admin sửa đơn của người khác, Supabase KHÔNG báo lỗi,
+    // nó chỉ âm thầm cập nhật 0 dòng -> data sẽ rỗng -> ta tự phát hiện và báo cho admin biết.
+    const { data, error } = await supabaseClient
+      .from(table)
+      .update({ status })
+      .eq("id", id)
+      .select("id,status");
     if (error) throw error;
+    if (!data || data.length === 0) {
+      throw new Error("Không có quyền cập nhật đơn này (có thể do RLS chặn). Cần tạo hàm RPC admin để cập nhật.");
+    }
+
+    sel.dataset.prevStatus = status;
     toast("Đã cập nhật trạng thái đơn hàng!");
     loadOverviewStats();
+
+    // Đơn đã xử lý xong (không còn "chờ xử lý") thì cho biến mất khỏi danh sách
+    if (status !== "pending") {
+      const row = sel.closest("tr");
+      if (row) {
+        row.style.transition = "opacity .35s ease, transform .35s ease";
+        row.style.opacity = "0";
+        row.style.transform = "translateX(10px)";
+        setTimeout(() => row.remove(), 350);
+      }
+    }
   } catch(e){
     toast("Lỗi cập nhật: " + (e.message||""), false);
+    sel.value = prev; // trả dropdown về trạng thái cũ vì update thất bại
   } finally { sel.disabled = false; }
 }
 
