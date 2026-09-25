@@ -205,50 +205,44 @@ select.field option{background:#0c0c0f}
 .header-pill>*{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce){.header-pill::before{animation:none}}
 
-/* ===== USER BOX ===== */
+/* ===== USER BOX — thu gọn, không min-width ===== */
 #userBox{
-  min-width:0;
-  padding:.25rem .35rem .25rem .25rem;
+  padding:.2rem .35rem .2rem .2rem;
   border-radius:9999px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.07);
-  gap:.6rem;
-}
-@media(min-width:640px){
-  #userBox{min-width:340px;justify-content:flex-end}
+  gap:.45rem;
 }
 
 /* ============================================================
-   SỐ DƯ — THIẾT KẾ LẠI: THẺ TÍN DỤNG MINI
+   SỐ DƯ — GỌN 1 DÒNG
    ============================================================ */
 #headerBalance{
   position:relative;
-  display:flex;align-items:center;gap:.65rem;
-  padding:.4rem .9rem .4rem .55rem;
-  border-radius:.75rem;
+  display:flex;align-items:center;gap:.45rem;
+  padding:.35rem .7rem .35rem .35rem;
+  border-radius:9999px;
   background:
-    linear-gradient(135deg,rgba(52,211,153,.14) 0%,rgba(16,185,129,.05) 45%,rgba(52,211,153,.10) 100%),
-    rgba(12,12,15,.6);
-  border:1px solid rgba(52,211,153,.28);
+    linear-gradient(135deg,rgba(52,211,153,.16) 0%,rgba(16,185,129,.05) 50%,rgba(52,211,153,.12) 100%),
+    rgba(12,12,15,.55);
+  border:1px solid rgba(52,211,153,.30);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.12),
-    inset 0 -1px 0 rgba(0,0,0,.2),
-    0 6px 18px -10px rgba(52,211,153,.6);
+    0 4px 14px -8px rgba(52,211,153,.6);
   overflow:hidden;
   isolation:isolate;
   transition:border-color .25s,box-shadow .25s;
 }
 #headerBalance:hover{
-  border-color:rgba(52,211,153,.55);
+  border-color:rgba(52,211,153,.6);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -1px 0 rgba(0,0,0,.2),
-    0 10px 26px -10px rgba(52,211,153,.9);
+    0 8px 20px -8px rgba(52,211,153,.9);
 }
 /* Vệt sáng chéo */
 #headerBalance::before{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
-  background:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.10) 45%,transparent 60%);
+  background:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.12) 45%,transparent 60%);
   transform:translateX(-30%) skewX(-12deg);
   transition:transform .8s cubic-bezier(.2,.8,.2,1);
 }
@@ -258,45 +252,34 @@ select.field option{background:#0c0c0f}
 .bal-icon{
   position:relative;z-index:1;
   flex-shrink:0;
-  width:34px;height:34px;border-radius:.55rem;
+  width:26px;height:26px;border-radius:50%;
   display:grid;place-items:center;
   background:linear-gradient(180deg,#34d399,#059669);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.5),
-    inset 0 -2px 0 rgba(0,0,0,.2),
-    0 4px 10px -4px rgba(52,211,153,.7);
-  color:#052e1a;
-  font-size:.85rem;
+    0 3px 8px -3px rgba(52,211,153,.7);
+  font-size:.7rem;
 }
-.bal-icon i{color:#062e1c;filter:drop-shadow(0 1px 0 rgba(255,255,255,.35))}
+.bal-icon i{color:#062e1c;filter:drop-shadow(0 1px 0 rgba(255,255,255,.3))}
 
-/* Cụm chữ */
-.bal-text{position:relative;z-index:1;display:flex;flex-direction:column;line-height:1;min-width:0}
-.bal-label{
-  font-size:.6rem;
-  font-weight:700;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:rgba(110,231,183,.75);
-  margin-bottom:3px;
-}
+/* Số dư — 1 dòng */
 #headerBalanceVal{
-  font-size:1.15rem;
+  position:relative;z-index:1;
+  font-size:.95rem;
   font-weight:900;
   color:#eafff6;
   letter-spacing:.2px;
   line-height:1;
-  text-shadow:0 1px 0 rgba(0,0,0,.5),0 0 18px rgba(52,211,153,.35);
+  text-shadow:0 1px 0 rgba(0,0,0,.4),0 0 12px rgba(52,211,153,.35);
   white-space:nowrap;
   font-variant-numeric:tabular-nums;
 }
 
 /* Responsive nhỏ */
 @media(max-width:640px){
-  #headerBalance{padding:.3rem .6rem .3rem .4rem;gap:.45rem;border-radius:.65rem}
-  .bal-icon{width:28px;height:28px;font-size:.7rem;border-radius:.45rem}
-  .bal-label{font-size:.5rem;letter-spacing:.1em;margin-bottom:2px}
-  #headerBalanceVal{font-size:.9rem}
+  #headerBalance{padding:.3rem .55rem .3rem .3rem;gap:.35rem}
+  .bal-icon{width:22px;height:22px;font-size:.6rem}
+  #headerBalanceVal{font-size:.8rem}
 }
 
 /* Menu avatar */
@@ -363,10 +346,7 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
         <div id="userBox" class="relative hidden flex items-center gap-2">
           <div id="headerBalance" class="hidden sm:flex items-center" title="Số dư hiện tại">
             <div class="bal-icon"><i class="fa-solid fa-wallet"></i></div>
-            <div class="bal-text">
-              <span class="bal-label">Số dư</span>
-              <span id="headerBalanceVal">0đ</span>
-            </div>
+            <span id="headerBalanceVal">0đ</span>
           </div>
           <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
             <span>
