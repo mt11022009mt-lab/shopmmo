@@ -229,7 +229,11 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
     </a>
     <nav id="navDesk" class="hidden md:flex items-center gap-1 mx-auto text-sm font-medium"></nav>
     <div class="ml-auto flex items-center gap-2">
-      <div id="userBox" class="relative hidden">
+      <div id="userBox" class="relative hidden flex items-center gap-2">
+        <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
+          <i class="fa-solid fa-wallet text-[11px]"></i>
+          <span id="headerBalanceVal">0đ</span>
+        </div>
         <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
           <span>
             <img id="avatarImg" alt="" hidden>
@@ -862,6 +866,13 @@ async function loadAccount(user){
   if (!currentUser || currentUser.id !== uid) return;
   renderStats([p.balance||0, p.total_deposit||0, p.total_spent||0, orders], true);
   $("statBought").textContent = bought; $("statCanceled").textContent = canceled;
+  setHeaderBalance(p.balance||0);
+}
+
+/* ============ SỐ DƯ Ở HEADER ============ */
+function setHeaderBalance(val){
+  const el = $("headerBalanceVal");
+  if (el) el.textContent = (val||0).toLocaleString("vi-VN") + "đ";
 }
 
 /* ============ AVATAR ============ */
@@ -954,6 +965,7 @@ function updateUserState(user) {
     if (same) return;
     renderStats([0,0,0,0], false);
     $("statBought").textContent = 0; $("statCanceled").textContent = 0;
+    setHeaderBalance(0);
     loadAccount(user);
   } else {
     authHeaderBtn.textContent = "Đăng nhập";
@@ -962,6 +974,7 @@ function updateUserState(user) {
     $("demoNote").classList.remove("hidden");
     paintAvatars();
     checkAdmin(null);
+    setHeaderBalance(0);
     if (prev) {
       renderStats(SAMPLE, true);
       $("statBought").textContent = 0; $("statCanceled").textContent = 0;
@@ -1104,7 +1117,7 @@ function openAccountModal(){
   $("accTotalOrders").textContent = $("stats")?.querySelectorAll(".count")?.[3]?.textContent || "0";
 
   supabaseClient.from("profiles").select("balance").eq("id", u.id).maybeSingle()
-    .then(({data}) => { if (data) $("accBalance").textContent = (data.balance||0).toLocaleString("vi-VN") + "đ"; });
+    .then(({data}) => { if (data) { $("accBalance").textContent = (data.balance||0).toLocaleString("vi-VN") + "đ"; setHeaderBalance(data.balance||0); } });
   Promise.all([
     supabaseClient.from("orders").select("id", {count:"exact", head:true}).eq("user_id", u.id),
     supabaseClient.from("resource_orders").select("id", {count:"exact", head:true}).eq("user_id", u.id)
