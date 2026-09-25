@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BR-34 — Quản trị</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+<style>
+:root{--red:#f43f5e;--red2:#e11d48}
+html{scroll-behavior:smooth}
+body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;-webkit-font-smoothing:antialiased}
+
+.aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;contain:strict}
+.aurora span{position:absolute;width:60vmax;height:60vmax;border-radius:50%;opacity:.22;mix-blend-mode:screen;
+  background:radial-gradient(circle,currentColor,transparent 68%);
+  will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.aurora .a1{color:#f43f5e;top:-15%;left:-15%;animation:float1 26s ease-in-out infinite}
+.aurora .a2{color:#8b5cf6;top:15%;right:-18%;animation:float2 30s ease-in-out infinite}
+.aurora .a3{color:#06b6d4;bottom:-20%;left:25%;animation:float3 34s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(6vw,4vh,0)}}
+@keyframes float2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,6vh,0)}}
+@keyframes float3{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4vw,-5vh,0)}}
+.grid-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent);mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent)}
+
+.card{position:relative;border-radius:1.1rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 36px -22px rgba(0,0,0,.7);overflow:hidden}
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.7rem;cursor:pointer;
+  transition:transform .15s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s;white-space:nowrap}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.5;pointer-events:none}
+.btn-red{color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 22px -8px rgba(244,63,94,.85)}
+.btn-red:hover{filter:brightness(1.1)}
+.btn-dark{color:#f4f4f5;background:rgba(24,24,27,.7);border:1px solid rgba(255,255,255,.12)}
+.btn-dark:hover{background:rgba(35,35,39,.85);border-color:rgba(244,63,94,.4)}
+.btn-ghost{color:#a1a1aa;background:transparent}
+.btn-ghost:hover{color:#fff;background:rgba(255,255,255,.06)}
+.btn-emerald{color:#fff;background:linear-gradient(180deg,#34d399,#059669);box-shadow:0 8px 22px -8px rgba(16,185,129,.7)}
+.btn-emerald:hover{filter:brightness(1.08)}
+
+.field{width:100%;background:#0c0c0f;color:#fff;font-size:15px;padding:.7rem .9rem;border-radius:.7rem;
+  border:1px solid rgba(255,255,255,.12);transition:border-color .2s,box-shadow .2s}
+.field::placeholder{color:#71717a}
+.field:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(244,63,94,.22)}
+select.field option{background:#0c0c0f}
+
+.h-grad{background:linear-gradient(180deg,#fff 30%,#a1a1aa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.red-text{background:linear-gradient(90deg,#ff8fa3,#f43f5e);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.tab-pill{padding:.55rem 1.1rem;border-radius:.7rem;font-weight:700;font-size:14px;color:#a1a1aa;white-space:nowrap;cursor:pointer;transition:.2s}
+.tab-pill:hover{color:#fff}
+.tab-pill.active{color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);box-shadow:0 8px 20px -8px rgba(244,63,94,.8)}
+
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .6rem;border-radius:999px;font-size:11.5px;font-weight:700}
+.badge-pending{background:rgba(245,158,11,.15);color:#fbbf24}
+.badge-done{background:rgba(16,185,129,.15);color:#34d399}
+.badge-canceled{background:rgba(244,63,94,.15);color:#fb7185}
+.badge-admin{background:rgba(139,92,246,.18);color:#c4b5fd}
+
+.row-anim{animation:rowin .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rowin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.bar{transition:height .5s cubic-bezier(.2,.8,.2,1)}
+::-webkit-scrollbar{height:6px;width:6px}
+::-webkit-scrollbar-thumb{background:rgba(244,63,94,.4);border-radius:99px}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.avatar-ring{position:relative;padding:2px;border-radius:9999px;background:linear-gradient(135deg,#f43f5e,#8b5cf6,#f59e0b,#10b981)}
+.avatar-ring>span{display:grid;place-items:center;width:100%;height:100%;border-radius:9999px;background:#0c0c0f;overflow:hidden}
+.avatar-ring img{width:100%;height:100%;object-fit:cover;display:block}
+</style>
+</head>
+<body class="font-sans">
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="grid-bg"></div>
+
+<!-- ============ MÀN HÌNH ĐĂNG NHẬP ============ -->
+<div id="gateScreen" class="min-h-screen flex items-center justify-center p-5">
+  <div class="w-full max-w-sm card p-7 text-center">
+    <div id="gateLoading">
+      <i class="fa-solid fa-shield-halved text-3xl text-rose-400 mb-3"></i>
+      <p class="text-sm text-zinc-400">Đang kiểm tra quyền truy cập...</p>
+      <i class="fa-solid fa-circle-notch spin text-2xl text-zinc-600 mt-4"></i>
+    </div>
+
+    <form id="gateLoginForm" class="hidden text-left">
+      <div class="text-center mb-5">
+        <i class="fa-solid fa-user-shield text-3xl text-rose-400 mb-2"></i>
+        <h1 class="text-xl font-extrabold">Đăng nhập quản trị</h1>
+        <p class="text-xs text-zinc-500 mt-1">Chỉ dành cho tài khoản admin BR-34</p>
+      </div>
+      <div class="space-y-3">
+        <input id="gEmail" type="email" placeholder="Email đăng nhập" autocomplete="username" class="field" required>
+        <input id="gPass" type="password" placeholder="Mật khẩu" autocomplete="current-password" class="field" required>
+        <p id="gateErr" class="hidden text-xs text-rose-400"></p>
+        <button type="submit" id="gateSubmit" class="btn btn-red w-full py-3">ĐĂNG NHẬP</button>
+      </div>
+    </form>
+
+    <div id="gateDenied" class="hidden">
+      <i class="fa-solid fa-lock text-3xl text-zinc-500 mb-3"></i>
+      <h1 class="text-lg font-extrabold mb-1">Không có quyền truy cập</h1>
+      <p class="text-sm text-zinc-400 mb-5">Tài khoản này chưa được cấp quyền quản trị viên.</p>
+      <button id="gateLogout" class="btn btn-dark w-full py-2.5">Đăng xuất</button>
+      <a href="index.html" class="block mt-3 text-xs text-zinc-500 hover:text-zinc-300">← Quay lại trang chủ</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dash" class="hidden min-h-screen pb-16">
+
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#09090b]/85 border-b border-white/8" style="padding-top:env(safe-area-inset-top,0px)">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl grid place-items-center font-black text-sm" style="background:linear-gradient(135deg,#ff5c7a,#e11d48)">BR</div>
+        <div class="leading-tight">
+          <p class="font-extrabold text-sm">BR-34 <span class="red-text">Quản trị</span></p>
+          <p class="text-[11px] text-zinc-500 -mt-0.5" id="adminWho">—</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="btn btn-ghost px-3 py-2 text-xs hidden sm:inline-flex"><i class="fa-solid fa-arrow-left"></i>Trang chủ</a>
+        <button id="refreshAllBtn" class="btn btn-dark px-3 py-2 text-xs"><i class="fa-solid fa-rotate"></i><span class="hidden sm:inline">Làm mới</span></button>
+        <button id="logoutBtn" class="btn btn-dark px-3 py-2 text-xs"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pb-3 flex gap-2 overflow-x-auto">
+      <div class="tab-pill active" data-tab="overview">Tổng quan</div>
+      <div class="tab-pill" data-tab="orders">Đơn hàng</div>
+      <div class="tab-pill" data-tab="customers">Khách hàng</div>
+      <div class="tab-pill" data-tab="deposits">Nạp tiền<span id="depPendingDot" class="hidden ml-1.5 w-1.5 h-1.5 rounded-full bg-rose-400 inline-block"></span></div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+
+    <!-- ===== TỔNG QUAN ===== -->
+    <section id="panel-overview" class="panel active space-y-5">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="card p-4 sm:p-5">
+          <p class="text-[11px] text-zinc-500 font-semibold">TỔNG ĐƠN HÀNG</p>
+          <p class="text-2xl sm:text-3xl font-black mt-1" id="statOrders">—</p>
+          <p class="text-[11px] text-amber-400 mt-1.5"><i class="fa-solid fa-clock mr-1"></i><span id="statOrdersPending">0</span> đang chờ xử lý</p>
+        </div>
+        <div class="card p-4 sm:p-5">
+          <p class="text-[11px] text-zinc-500 font-semibold">TỔNG ĐÃ NẠP</p>
+          <p class="text-2xl sm:text-3xl font-black mt-1"><span id="statDeposited">—</span><span class="text-sm text-zinc-500">đ</span></p>
+          <p class="text-[11px] text-zinc-500 mt-1.5">Đã duyệt, cộng vào số dư</p>
+        </div>
+        <div class="card p-4 sm:p-5">
+          <p class="text-[11px] text-zinc-500 font-semibold">CHỜ DUYỆT NẠP</p>
+          <p class="text-2xl sm:text-3xl font-black mt-1 text-rose-400" id="statDepPending">—</p>
+          <p class="text-[11px] text-zinc-500 mt-1.5"><span id="statDepPendingSum">0</span>đ đang chờ</p>
+        </div>
+        <div class="card p-4 sm:p-5">
+          <p class="text-[11px] text-zinc-500 font-semibold">TRUY CẬP HÔM NAY</p>
+          <p class="text-2xl sm:text-3xl font-black mt-1" id="statViewsToday">—</p>
+          <p class="text-[11px] text-zinc-500 mt-1.5"><span id="statViewsTotal">0</span> tổng lượt truy cập</p>
+        </div>
+      </div>
+
+      <div class="card p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-4">
+          <p class="text-sm font-bold">Lượt truy cập 7 ngày gần đây</p>
+          <i class="fa-solid fa-chart-simple text-zinc-600"></i>
+        </div>
+        <div id="viewsChart" class="flex items-end gap-2.5 sm:gap-4 h-32"></div>
+      </div>
+
+      <div class="card p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-sm font-bold">Đơn hàng mới nhất</p>
+          <div class="tab-pill !p-0 !bg-transparent text-rose-400 text-xs cursor-pointer" data-goto="orders">Xem tất cả →</div>
+        </div>
+        <div id="overviewOrders" class="divide-y divide-white/6 text-sm"></div>
+      </div>
+    </section>
+
+    <!-- ===== ĐƠN HÀNG ===== -->
+    <section id="panel-orders" class="panel space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex gap-1.5 flex-wrap" id="orderFilters">
+          <div class="tab-pill active !py-1.5 !px-3 !text-xs" data-status="">Tất cả</div>
+          <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="pending">Chờ xử lý</div>
+          <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="done">Hoàn thành</div>
+          <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="canceled">Đã huỷ</div>
+        </div>
+        <input id="orderSearch" type="text" placeholder="Tìm theo liên hệ / link..." class="field !py-1.5 !text-sm ml-auto max-w-[220px]">
+      </div>
+      <div class="card overflow-x-auto">
+        <table class="w-full text-sm min-w-[720px]">
+          <thead>
+            <tr class="text-left text-[11px] text-zinc-500 border-b border-white/8">
+              <th class="p-3 font-semibold">Thời gian</th>
+              <th class="p-3 font-semibold">Dịch vụ</th>
+              <th class="p-3 font-semibold">Link</th>
+              <th class="p-3 font-semibold">Liên hệ</th>
+              <th class="p-3 font-semibold">Nguồn</th>
+              <th class="p-3 font-semibold text-right">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+        <p id="ordersEmpty" class="hidden text-center text-zinc-500 text-sm py-10">Chưa có đơn hàng nào.</p>
+        <div class="p-3 text-center">
+          <button id="ordersMoreBtn" class="btn btn-dark px-4 py-2 text-xs hidden">Tải thêm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KHÁCH HÀNG ===== -->
+    <section id="panel-customers" class="panel space-y-4">
+      <form id="custSearchForm" class="flex gap-2">
+        <input id="custSearchInput" type="text" placeholder="Tìm theo email khách hàng..." class="field">
+        <button class="btn btn-red px-4" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div id="custResults" class="grid sm:grid-cols-2 gap-3"></div>
+      <p id="custEmpty" class="hidden text-center text-zinc-500 text-sm py-10">Không tìm thấy khách hàng nào.</p>
+    </section>
+
+    <!-- ===== NẠP TIỀN ===== -->
+    <section id="panel-deposits" class="panel space-y-4">
+      <div class="flex gap-1.5 flex-wrap" id="depFilters">
+        <div class="tab-pill active !py-1.5 !px-3 !text-xs" data-status="pending">Chờ duyệt</div>
+        <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="done">Đã duyệt</div>
+        <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="rejected">Đã từ chối</div>
+        <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="">Tất cả</div>
+      </div>
+      <div id="depResults" class="space-y-2.5"></div>
+      <p id="depEmpty" class="hidden text-center text-zinc-500 text-sm py-10">Không có giao dịch nào.</p>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[80] opacity-0 translate-y-4 pointer-events-none transition-all duration-300 bg-[#111114] border border-white/12 rounded-xl px-4 py-3 text-sm shadow-2xl max-w-[90vw]"></div>
+
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+const vnd = n => Number(n||0).toLocaleString("vi-VN");
+const dt = s => s ? new Date(s).toLocaleString("vi-VN",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "—";
+
+let tt; function toast(msg, ok=true){
+  const t=$("toast");
+  t.innerHTML=`<i class="fa-solid ${ok?"fa-circle-check text-emerald-400":"fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0","translate-y-4","pointer-events-none");
+  clearTimeout(tt);
+  tt=setTimeout(()=>t.classList.add("opacity-0","translate-y-4","pointer-events-none"),3600);
+}
+
+const STATUS_LABEL = { pending:"Chờ xử lý", done:"Hoàn thành", canceled:"Đã huỷ", rejected:"Đã từ chối" };
+const STATUS_BADGE = { pending:"badge-pending", done:"badge-done", canceled:"badge-canceled", rejected:"badge-canceled" };
+function badge(status){
+  const s = status || "pending";
+  return `<span class="badge ${STATUS_BADGE[s]||"badge-pending"}">${STATUS_LABEL[s]||s}</span>`;
+}
+
+/* ============ ĐĂNG NHẬP / GATE ADMIN ============ */
+let currentUser = null, isAdmin = false;
+
+async function boot(){
+  const { data:{ session } } = await supabaseClient.auth.getSession();
+  if (!session){ showLogin(); return; }
+  await checkAndEnter(session.user);
+}
+async function checkAndEnter(user){
+  currentUser = user;
+  $("gateLoading").classList.remove("hidden");
+  $("gateLoginForm").classList.add("hidden");
+  $("gateDenied").classList.add("hidden");
+  try {
+    const { data } = await supabaseClient.from("profiles").select("is_admin,email").eq("id", user.id).maybeSingle();
+    isAdmin = !!(data && data.is_admin);
+  } catch(e){ isAdmin = false; }
+  if (isAdmin){
+    $("adminWho").textContent = (data_email(user));
+    $("gateScreen").classList.add("hidden");
+    $("dash").classList.remove("hidden");
+    loadAll();
+  } else {
+    $("gateLoading").classList.add("hidden");
+    $("gateDenied").classList.remove("hidden");
+  }
+}
+function data_email(u){ return u && u.email ? u.email : ""; }
+function showLogin(){
+  $("gateLoading").classList.add("hidden");
+  $("gateDenied").classList.add("hidden");
+  $("gateLoginForm").classList.remove("hidden");
+}
+$("gateLoginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("gateSubmit"); btn.disabled = true; btn.textContent = "ĐANG ĐĂNG NHẬP...";
+  $("gateErr").classList.add("hidden");
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email: $("gEmail").value.trim(), password: $("gPass").value });
+    if (error) throw error;
+    await checkAndEnter(data.user);
+  } catch(x){
+    $("gateErr").textContent = /invalid login/i.test(x.message||"") ? "Sai email hoặc mật khẩu." : (x.message || "Đăng nhập thất bại.");
+    $("gateErr").classList.remove("hidden");
+  } finally { btn.disabled = false; btn.textContent = "ĐĂNG NHẬP"; }
+});
+$("gateLogout").onclick = async () => { await supabaseClient.auth.signOut(); location.reload(); };
+$("logoutBtn").onclick = async () => { await supabaseClient.auth.signOut(); location.reload(); };
+supabaseClient.auth.onAuthStateChange((_e, session) => { if (!session && currentUser) location.reload(); });
+
+/* ============ TABS ============ */
+document.querySelectorAll(".tab-pill[data-tab]").forEach(el => {
+  el.onclick = () => switchTab(el.dataset.tab);
+});
+document.querySelectorAll("[data-goto]").forEach(el => el.onclick = () => switchTab(el.dataset.goto));
+function switchTab(tab){
+  document.querySelectorAll(".tab-pill[data-tab]").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-"+tab));
+}
+
+$("refreshAllBtn").onclick = () => loadAll();
+
+async function loadAll(){
+  loadOverviewStats();
+  loadOrders(true);
+  loadDeposits(true);
+}
+
+/* ============ TỔNG QUAN ============ */
+async function loadOverviewStats(){
+  try {
+    const [{count:ordersTotal}, {count:ordersPending}] = await Promise.all([
+      supabaseClient.from("orders").select("id",{count:"exact",head:true}),
+      supabaseClient.from("orders").select("id",{count:"exact",head:true}).eq("status","pending")
+    ]);
+    $("statOrders").textContent = ordersTotal ?? 0;
+    $("statOrdersPending").textContent = ordersPending ?? 0;
+
+    const { data: depDone } = await supabaseClient.from("deposits").select("amount").eq("status","done");
+    const sumDone = (depDone||[]).reduce((s,r)=>s+Number(r.amount||0),0);
+    $("statDeposited").textContent = vnd(sumDone);
+
+    const { data: depPending } = await supabaseClient.from("deposits").select("amount").eq("status","pending");
+    $("statDepPending").textContent = (depPending||[]).length;
+    $("statDepPendingSum").textContent = vnd((depPending||[]).reduce((s,r)=>s+Number(r.amount||0),0));
+    $("depPendingDot").classList.toggle("hidden", !(depPending && depPending.length));
+  } catch(e){ console.error(e); }
+
+  loadViews();
+
+  try {
+    const { data: recent } = await supabaseClient.from("orders").select("service,contact,status,created_at").order("created_at",{ascending:false}).limit(5);
+    const box = $("overviewOrders");
+    if (!recent || !recent.length){ box.innerHTML = `<p class="text-zinc-500 py-4">Chưa có đơn hàng nào.</p>`; }
+    else box.innerHTML = recent.map(o => `
+      <div class="flex items-center justify-between gap-3 py-2.5">
+        <div class="min-w-0">
+          <p class="font-semibold truncate">${esc(o.service||"—")}</p>
+          <p class="text-[11px] text-zinc-500">${esc(o.contact||"")} · ${dt(o.created_at)}</p>
+        </div>
+        ${badge(o.status)}
+      </div>`).join("");
+  } catch(e){ console.error(e); }
+}
+
+/* ---- Lượt truy cập ---- */
+async function countViewsSince(iso){
+  try {
+    const { count } = await supabaseClient.from("page_views").select("id",{count:"exact",head:true}).gte("created_at", iso);
+    return count || 0;
+  } catch(e){ return 0; }
+}
+async function loadViews(){
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const [todayCount, totalCount] = await Promise.all([
+    countViewsSince(startToday.toISOString()),
+    (async()=>{ try{ const {count} = await supabaseClient.from("page_views").select("id",{count:"exact",head:true}); return count||0; }catch(e){ return 0; } })()
+  ]);
+  $("statViewsToday").textContent = todayCount;
+  $("statViewsTotal").textContent = vnd(totalCount);
+
+  const days = [];
+  for (let i=6;i>=0;i--){
+    const d = new Date(startToday); d.setDate(d.getDate()-i);
+    const dEnd = new Date(d); dEnd.setDate(dEnd.getDate()+1);
+    days.push({ label: d.toLocaleDateString("vi-VN",{weekday:"short"}), from: d.toISOString(), to: dEnd.toISOString() });
+  }
+  const counts = await Promise.all(days.map(async d => {
+    try { const { count } = await supabaseClient.from("page_views").select("id",{count:"exact",head:true}).gte("created_at", d.from).lt("created_at", d.to); return count || 0; }
+    catch(e){ return 0; }
+  }));
+  const max = Math.max(1, ...counts);
+  $("viewsChart").innerHTML = days.map((d,i) => `
+    <div class="flex-1 flex flex-col items-center gap-2">
+      <p class="text-[11px] text-zinc-400 font-semibold">${counts[i]}</p>
+      <div class="w-full rounded-t-lg bar" style="height:${Math.max(6,(counts[i]/max)*88)}px;background:linear-gradient(180deg,#ff5c7a,#e11d48)"></div>
+      <p class="text-[10px] text-zinc-600 capitalize">${d.label}</p>
+    </div>`).join("");
+}
+
+/* ============ ĐƠN HÀNG ============ */
+let orderStatusFilter = "", orderSearchTerm = "", orderPage = 0;
+const ORDER_PAGE_SIZE = 20;
+
+document.querySelectorAll("#orderFilters .tab-pill").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#orderFilters .tab-pill").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+    orderStatusFilter = el.dataset.status; orderPage = 0;
+    loadOrders(true);
+  };
+});
+let orderSearchDeb;
+$("orderSearch").addEventListener("input", e => {
+  clearTimeout(orderSearchDeb);
+  orderSearchDeb = setTimeout(() => { orderSearchTerm = e.target.value.trim(); orderPage = 0; loadOrders(true); }, 350);
+});
+$("ordersMoreBtn").onclick = () => { orderPage++; loadOrders(false); };
+
+async function loadOrders(reset){
+  try {
+    let q = supabaseClient.from("orders").select("id,link,service,contact,source,status,created_at")
+      .order("created_at",{ascending:false})
+      .range(orderPage*ORDER_PAGE_SIZE, orderPage*ORDER_PAGE_SIZE + ORDER_PAGE_SIZE - 1);
+    if (orderStatusFilter) q = q.eq("status", orderStatusFilter);
+    if (orderSearchTerm) q = q.or(`contact.ilike.%${orderSearchTerm}%,link.ilike.%${orderSearchTerm}%`);
+    const { data, error } = await q;
+    if (error) throw error;
+    const body = $("ordersBody");
+    if (reset) body.innerHTML = "";
+    (data||[]).forEach(o => body.insertAdjacentHTML("beforeend", orderRow(o)));
+    $("ordersEmpty").classList.toggle("hidden", !(reset && (!data || !data.length)));
+    $("ordersMoreBtn").classList.toggle("hidden", !(data && data.length === ORDER_PAGE_SIZE));
+    body.querySelectorAll("select.order-status").forEach(sel => {
+      sel.onchange = () => updateOrderStatus(sel.dataset.id, sel.value, sel);
+    });
+  } catch(e){ console.error(e); toast("Lỗi tải đơn hàng: " + (e.message||""), false); }
+}
+function orderRow(o){
+  return `<tr class="border-b border-white/6 row-anim hover:bg-white/[.02]">
+    <td class="p-3 text-xs text-zinc-400 whitespace-nowrap">${dt(o.created_at)}</td>
+    <td class="p-3 font-semibold">${esc(o.service||"—")}</td>
+    <td class="p-3 max-w-[220px] truncate"><a href="${esc(o.link||'#')}" target="_blank" rel="noopener" class="text-blue-400 hover:underline">${esc(o.link||"—")}</a></td>
+    <td class="p-3 text-zinc-300">${esc(o.contact||"—")}</td>
+    <td class="p-3 text-xs text-zinc-500">${esc(o.source||"—")}</td>
+    <td class="p-3 text-right">
+      <select class="field order-status !w-auto !py-1.5 !px-2 !text-xs" data-id="${o.id}">
+        ${["pending","done","canceled"].map(s=>`<option value="${s}" ${o.status===s?"selected":""}>${STATUS_LABEL[s]}</option>`).join("")}
+      </select>
+    </td>
+  </tr>`;
+}
+async function updateOrderStatus(id, status, sel){
+  sel.disabled = true;
+  try {
+    const { error } = await supabaseClient.from("orders").update({ status }).eq("id", id);
+    if (error) throw error;
+    toast("Đã cập nhật trạng thái đơn hàng!");
+    loadOverviewStats();
+  } catch(e){ toast("Lỗi cập nhật: " + (e.message||""), false); }
+  finally { sel.disabled = false; }
+}
+
+/* ============ KHÁCH HÀNG ============ */
+$("custSearchForm").onsubmit = async e => {
+  e.preventDefault();
+  await searchCustomers($("custSearchInput").value.trim());
+};
+async function searchCustomers(q){
+  const box = $("custResults");
+  box.innerHTML = `<p class="text-zinc-500 text-sm col-span-2 py-6 text-center"><i class="fa-solid fa-circle-notch spin mr-2"></i>Đang tìm...</p>`;
+  $("custEmpty").classList.add("hidden");
+  try {
+    let query = supabaseClient.from("profiles").select("id,email,balance,total_deposit,total_spent,is_admin").order("created_at",{ascending:false}).limit(20);
+    if (q) query = supabaseClient.from("profiles").select("id,email,balance,total_deposit,total_spent,is_admin").ilike("email", `%${q}%`).limit(20);
+    const { data, error } = await query;
+    if (error) throw error;
+    box.innerHTML = "";
+    if (!data || !data.length){ $("custEmpty").classList.remove("hidden"); return; }
+    data.forEach(r => box.insertAdjacentHTML("beforeend", customerCard(r)));
+    bindCustomerCards();
+  } catch(e){ box.innerHTML=""; toast("Lỗi tìm khách hàng: " + (e.message||""), false); }
+}
+function customerCard(r){
+  return `<div class="card p-4 row-anim" data-row="${r.id}">
+    <div class="flex items-start justify-between gap-2">
+      <div class="min-w-0">
+        <p class="font-bold text-sm truncate">${esc(r.email||"(không rõ email)")}${r.is_admin?` <span class="badge badge-admin ml-1">ADMIN</span>`:""}</p>
+        <p class="text-[10.5px] text-zinc-500 mt-0.5 truncate" style="font-family:ui-monospace,monospace">${r.id}</p>
+      </div>
+      <p class="cust-balance text-base font-extrabold text-emerald-400 shrink-0">${vnd(r.balance)}đ</p>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-3 text-[11px] text-zinc-500">
+      <p>Đã nạp: <span class="text-zinc-300 font-semibold">${vnd(r.total_deposit)}đ</span></p>
+      <p>Đã chi: <span class="text-zinc-300 font-semibold">${vnd(r.total_spent)}đ</span></p>
+    </div>
+    <div class="flex items-center gap-2 mt-3">
+      <input type="number" min="1000" step="1000" placeholder="Số tiền" class="field cust-amount !py-2 !text-sm">
+      <button type="button" class="btn btn-dark px-3 py-2 text-xs cust-sub">Trừ</button>
+      <button type="button" class="btn btn-red px-3 py-2 text-xs cust-add">Cộng</button>
+    </div>
+  </div>`;
+}
+function bindCustomerCards(){
+  $("custResults").querySelectorAll("[data-row]").forEach(row => {
+    row.querySelector(".cust-add").onclick = () => adjustCustomerBalance(row, 1);
+    row.querySelector(".cust-sub").onclick = () => adjustCustomerBalance(row, -1);
+  });
+}
+async function adjustCustomerBalance(row, sign){
+  const id = row.dataset.row;
+  const amountInput = row.querySelector(".cust-amount");
+  const amount = Number(amountInput.value);
+  if (!amount || amount <= 0) return toast("Nhập số tiền hợp lệ.", false);
+  const balEl = row.querySelector(".cust-balance");
+  const current = Number((balEl.textContent||"0").replace(/\D/g,"")) || 0;
+  const next = Math.max(0, current + sign*amount);
+  try {
+    const { error } = await supabaseClient.from("profiles").update({ balance: next }).eq("id", id);
+    if (error) throw error;
+    balEl.textContent = vnd(next) + "đ";
+    amountInput.value = "";
+    toast(sign>0 ? "Đã cộng tiền thành công!" : "Đã trừ tiền thành công!");
+  } catch(e){ toast("Lỗi: " + (e.message||""), false); }
+}
+searchCustomers("");
+
+/* ============ NẠP TIỀN ============ */
+let depStatusFilter = "pending";
+document.querySelectorAll("#depFilters .tab-pill").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#depFilters .tab-pill").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+    depStatusFilter = el.dataset.status;
+    loadDeposits(true);
+  };
+});
+async function loadDeposits(){
+  const box = $("depResults");
+  box.innerHTML = `<p class="text-zinc-500 text-sm py-6 text-center"><i class="fa-solid fa-circle-notch spin mr-2"></i>Đang tải...</p>`;
+  $("depEmpty").classList.add("hidden");
+  try {
+    let q = supabaseClient.from("deposits").select("id,user_id,username,amount,note,status,tx_ref,created_at").order("created_at",{ascending:false}).limit(50);
+    if (depStatusFilter) q = q.eq("status", depStatusFilter);
+    const { data, error } = await q;
+    if (error) throw error;
+    box.innerHTML = "";
+    if (!data || !data.length){ $("depEmpty").classList.remove("hidden"); return; }
+    data.forEach(r => box.insertAdjacentHTML("beforeend", depositCard(r)));
+    bindDepositCards();
+  } catch(e){ box.innerHTML=""; toast("Lỗi tải danh sách nạp tiền: " + (e.message||""), false); }
+}
+function depositCard(r){
+  const pending = (r.status||"pending") === "pending";
+  return `<div class="card p-4 row-anim flex items-center justify-between gap-3 flex-wrap" data-dep="${r.id}">
+    <div class="min-w-0">
+      <p class="font-bold text-sm">${esc(r.username||"—")} <span class="text-emerald-400">${vnd(r.amount)}đ</span></p>
+      <p class="text-[11px] text-zinc-500 mt-0.5">${esc(r.note||"")}${r.tx_ref?` · Mã GD: ${esc(r.tx_ref)}`:""} · ${dt(r.created_at)}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      ${badge(r.status)}
+      ${pending ? `<button class="btn btn-dark px-3 py-1.5 text-xs dep-reject">Từ chối</button><button class="btn btn-emerald px-3 py-1.5 text-xs dep-approve">Duyệt</button>` : ""}
+    </div>
+  </div>`;
+}
+function bindDepositCards(){
+  $("depResults").querySelectorAll("[data-dep]").forEach(card => {
+    const id = card.dataset.dep;
+    const approveBtn = card.querySelector(".dep-approve");
+    const rejectBtn = card.querySelector(".dep-reject");
+    if (approveBtn) approveBtn.onclick = () => processDeposit(id, "approve", card);
+    if (rejectBtn) rejectBtn.onclick = () => processDeposit(id, "reject", card);
+  });
+}
+async function processDeposit(id, action, card){
+  card.querySelectorAll("button").forEach(b=>b.disabled=true);
+  try {
+    const fn = action === "approve" ? "admin_approve_deposit" : "admin_reject_deposit";
+    const { error } = await supabaseClient.rpc(fn, { p_id: Number(id) });
+    if (error) throw error;
+    toast(action === "approve" ? "Đã duyệt nạp tiền, cộng số dư thành công!" : "Đã từ chối giao dịch.");
+    loadDeposits(true);
+    loadOverviewStats();
+  } catch(e){ toast("Lỗi: " + (e.message||"không xử lý được"), false); card.querySelectorAll("button").forEach(b=>b.disabled=false); }
+}
+
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+boot();
+</script>
+</body>
+</html>
