@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mua tài nguyên — BR-34</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+<style>
+:root{--red:#f43f5e;--red2:#e11d48}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:100%;max-width:100vw}
+
+/* ============ AURORA + NỀN (copy từ web mẹ) ============ */
+.aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;contain:strict;max-width:100vw}
+.aurora span{position:absolute;width:60vmax;height:60vmax;border-radius:50%;opacity:.28;mix-blend-mode:screen;
+  background:radial-gradient(circle,currentColor,transparent 68%);
+  will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.aurora .a1{color:#f43f5e;top:-15%;left:-15%;animation:float1 26s ease-in-out infinite}
+.aurora .a2{color:#8b5cf6;top:15%;right:-18%;animation:float2 30s ease-in-out infinite}
+.aurora .a3{color:#06b6d4;bottom:-20%;left:25%;animation:float3 34s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(6vw,4vh,0)}}
+@keyframes float2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,6vh,0)}}
+@keyframes float3{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4vw,-5vh,0)}}
+
+.spotlight{position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(244,63,94,.10),transparent 60%);
+  will-change:transform;transform:translate3d(0,0,0);opacity:0;transition:opacity .4s}
+@media(hover:hover) and (pointer:fine){.spotlight{opacity:1}}
+
+.grid-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent);
+  mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent)}
+
+/* ============ LIQUID GLASS CARD ============ */
+.card{
+  position:relative;border-radius:1.25rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 20px 40px -22px rgba(0,0,0,.7);
+  transition:border-color .3s,transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s;
+  overflow:hidden;contain:paint;
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  backdrop-filter:blur(14px) saturate(160%);
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.10),transparent 45%),
+    radial-gradient(120% 80% at 100% 100%,rgba(244,63,94,.10),transparent 45%);
+  opacity:.9;
+}
+.card:hover{
+  border-color:rgba(244,63,94,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 24px 48px -22px rgba(244,63,94,.45);
+}
+
+/* ============ LIQUID GLASS PRODUCT (đặc trưng) ============ */
+.glass-card{
+  position:relative;border-radius:1.25rem;
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,.10) 0%,
+      rgba(255,255,255,.03) 45%,
+      rgba(255,255,255,.07) 100%);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -1px 0 rgba(255,255,255,.05),
+    0 20px 44px -22px rgba(0,0,0,.75);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+  overflow:hidden;contain:paint;
+}
+/* vệt sáng xoay chậm tạo cảm giác "thuỷ tinh lỏng" */
+.glass-card::before{
+  content:"";position:absolute;inset:-60%;z-index:0;pointer-events:none;
+  background:conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(255,255,255,.10) 40deg,
+    rgba(244,63,94,.14) 90deg,
+    transparent 140deg,
+    transparent 360deg);
+  animation:liquid 14s linear infinite;
+  opacity:.55;
+}
+/* lớp highlight cố định ở góc trên - giả lập ánh sáng phản chiếu */
+.glass-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(140% 70% at 0% 0%,rgba(255,255,255,.16),transparent 55%),
+    radial-gradient(140% 70% at 100% 100%,rgba(139,92,246,.10),transparent 55%);
+}
+.glass-card > *{position:relative;z-index:1}
+.glass-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(244,63,94,.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    0 26px 52px -22px rgba(244,63,94,.5);
+}
+@keyframes liquid{to{transform:rotate(360deg)}}
+
+/* ============ BUTTON (copy web mẹ) ============ */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.8rem;cursor:pointer;overflow:hidden;
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s,box-shadow .2s}
+.btn:active{transform:scale(.96)}
+.btn-red{color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 10px 30px -8px rgba(244,63,94,.85)}
+.btn-red:hover{filter:brightness(1.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 34px -8px rgba(244,63,94,1)}
+.btn-dark{color:#f4f4f5;background:rgba(24,24,27,.7);border:1px solid rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn-dark:hover{background:rgba(35,35,39,.85);border-color:rgba(244,63,94,.4)}
+.btn-shine::after{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
+.btn-shine:hover::after{left:100%}
+.btn[disabled]{cursor:not-allowed}
+
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+/* ============ TAB (glass style) ============ */
+.tab-btn{
+  white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  padding:.75rem .5rem;border-radius:1rem;border:1px solid transparent;transition:.25s cubic-bezier(.2,.8,.2,1);
+  color:#a1a1aa;background:transparent;
+}
+.tab-btn:hover{color:#f4f4f5;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.tab-btn.active{
+  color:#fff;
+  background:linear-gradient(135deg,rgba(244,63,94,.18),rgba(139,92,246,.10));
+  border-color:rgba(244,63,94,.45);
+  -webkit-backdrop-filter:blur(16px) saturate(180%);
+  backdrop-filter:blur(16px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 10px 30px -10px rgba(244,63,94,.55);
+}
+.tab-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:.25s;overflow:hidden}
+.tab-icon svg,.tab-icon i{width:26px;height:26px;font-size:22px}
+.tab-btn.active .tab-icon{
+  background:linear-gradient(180deg,#ff5c7a,#e11d48);
+  border-color:transparent;
+  box-shadow:0 8px 20px -6px rgba(244,63,94,.6);
+}
+.tab-btn.active .tab-icon svg *{fill:#fff}
+
+.tabs-scroll{overflow-x:auto;scrollbar-width:none}
+.tabs-scroll::-webkit-scrollbar{display:none}
+
+.stock-line{font-size:.72rem;color:#71717a}
+.fade-swap{animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ============ LOGO ============ */
+.product-logo{
+  width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);flex-shrink:0;overflow:hidden;
+}
+.product-logo svg{width:34px;height:34px}
+.glass-card:hover .product-logo{transform:scale(1.06)}
+
+/* ============ JS REVEAL ============ */
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+
+/* ============ REDUCED MOTION ============ */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .aurora span,.glass-card::before{animation:none!important}
+  .js .rv{opacity:1;transform:none;transition:none}
+  .spotlight{display:none}
+}
+</style>
+</head>
+<body class="font-sans antialiased">
+
+<!-- AURORA + SPOTLIGHT (giống web mẹ) -->
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div id="spotlight" class="spotlight"></div>
+
+<main class="relative max-w-[1400px] mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
+  <div class="grid-bg"></div>
+
+  <!-- Tabs phụ -->
+  <div class="rv flex gap-2 mb-6">
+    <button class="btn btn-red btn-shine px-5 py-2.5 text-sm">Mua tài nguyên</button>
+    <button class="btn btn-dark px-5 py-2.5 text-sm !cursor-pointer">Lịch sử mua TN</button>
+  </div>
+
+  <!-- Danh mục -->
+  <div class="rv tabs-scroll mb-8">
+    <div id="categoryTabs" class="flex gap-2 min-w-max pb-1"></div>
+  </div>
+
+  <!-- Lưới sản phẩm -->
+  <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+  <p id="emptyState" class="hidden text-center text-zinc-500 py-16">Chưa có sản phẩm nào trong mục này.</p>
+</main>
+
+<script>
+/* ============================================================
+   LOGO SVG INLINE — không phụ thuộc CDN
+   ============================================================ */
+const LOGOS = {
+  canva: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#7d2ae8"/>
+    </linearGradient></defs>
+    <circle cx="12" cy="12" r="11" fill="url(#cv)"/>
+    <path fill="#fff" d="M12.5 6.5c-3.3 0-6 3-6 6.8 0 2.5 1.5 4.2 3.6 4.2 1.7 0 3-1.1 3.7-2.6.3-.6-.1-1.1-.7-.9-.9.3-1.7.4-2.4.1-.7-.3-1.2-1-1.2-2.1 0-2.3 1.6-4.1 3.4-4.1 1.2 0 2 .7 2 1.7 0 .5-.2 1-.5 1.4-.3.3 0 .8.4.7 1.3-.3 2.3-1.5 2.3-3 0-2-1.8-3.4-4.6-3.4z" transform="translate(-.5 0)"/>
+  </svg>`,
+
+  capcut: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="5" fill="#000"/>
+    <path fill="#fff" d="M8 5.5v2.3l6 3.7-6 3.7v2.3l9.5-6L8 5.5z"/>
+  </svg>`,
+
+  openai: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+    <path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.97 5.97 0 0 0-4 2.9 6.05 6.05 0 0 0 .74 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.51 2.9A5.97 5.97 0 0 0 13.25 24a6.06 6.06 0 0 0 5.77-4.21 5.97 5.97 0 0 0 4-2.9 6.06 6.06 0 0 0-.74-7.07zM13.25 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.78.78 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.05v5.59a4.51 4.51 0 0 1-4.49 4.49zM3.6 18.3a4.47 4.47 0 0 1-.54-3.01l.14.09 4.78 2.76a.78.78 0 0 0 .79 0l5.83-3.37v2.33a.08.08 0 0 1-.03.06L9.74 20.05A4.5 4.5 0 0 1 3.6 18.3zM2.34 7.9a4.48 4.48 0 0 1 2.34-1.97v5.68a.78.78 0 0 0 .39.68l5.83 3.37-2.02 1.17a.08.08 0 0 1-.07 0L3.99 13.8A4.5 4.5 0 0 1 2.34 7.9zm16.48 3.83-5.83-3.37L15 7.2a.08.08 0 0 1 .07 0l4.82 2.78a4.49 4.49 0 0 1-.69 8.11v-5.68a.78.78 0 0 0-.38-.68zm2.01-3.02-.14-.09-4.78-2.76a.78.78 0 0 0-.79 0L9.29 9.23V6.9a.07.07 0 0 1 .03-.06l4.82-2.78a4.5 4.5 0 0 1 6.68 4.66zM8.3 12.84l-2.02-1.17a.08.08 0 0 1-.04-.06V6.03a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.7 5.42a.78.78 0 0 0-.39.68v6.74zm1.1-2.36L12 8.95l2.6 1.5v3l-2.6 1.5-2.6-1.5v-3z"/>
+  </svg>`,
+
+  anthropic: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#d97757">
+    <path d="M13.79 3h-3.1L4 21h3.36l1.36-4.07h6.42L16.5 21h3.36L13.79 3zm-4.1 11.03L12.24 6.4l2.55 7.63H9.69z"/>
+  </svg>`,
+
+  freepik: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="5" fill="#1273eb"/>
+    <path fill="#fff" d="M14.5 6H8v3h5.2c.7 0 1.3.6 1.3 1.3v.4h-6.5v3h6.5v.3c0 .7-.6 1.3-1.3 1.3H8v3h5.8c2.5 0 4.5-2 4.5-4.5v-3.3c0-2.5-2-4.5-4.5-4.5z"/>
+  </svg>`,
+
+  x: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+    <path d="M18.9 2H22l-7.3 8.4L23.3 22h-6.7l-5.3-6.9L5.3 22H2.1l7.8-9L1 2h6.9l4.8 6.3L18.9 2zm-1.2 18h1.9L7.3 3.9H5.3L17.7 20z"/>
+  </svg>`,
+
+  gemini: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/>
+    </linearGradient></defs>
+    <path fill="url(#gm)" d="M12 2c.3 5.1 4.9 9.7 10 10-5.1.3-9.7 4.9-10 10-.3-5.1-4.9-9.7-10-10 5.1-.3 9.7-4.9 10-10z"/>
+  </svg>`,
+
+  netflix: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="5" fill="#000"/>
+    <path fill="#e50914" d="M8 4v16h2.4V9.2L15.8 20H18V4h-2.4v10.6L8 4z"/>
+  </svg>`,
+
+  youtube: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000">
+    <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/>
+  </svg>`,
+
+  twitter: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1d9bf0">
+    <path d="M23.95 4.57a10 10 0 0 1-2.82.77 4.96 4.96 0 0 0 2.16-2.72c-.95.56-2 .96-3.13 1.19a4.92 4.92 0 0 0-8.38 4.48A13.94 13.94 0 0 1 1.64 3.16a4.92 4.92 0 0 0 1.52 6.57 4.9 4.9 0 0 1-2.23-.62v.06a4.92 4.92 0 0 0 3.95 4.83 4.96 4.96 0 0 1-2.22.08 4.93 4.93 0 0 0 4.6 3.42A9.87 9.87 0 0 1 0 19.54a13.94 13.94 0 0 0 7.55 2.21c9.05 0 14-7.5 14-14 0-.21 0-.42-.02-.63A10 10 0 0 0 24 4.59z"/>
+  </svg>`,
+
+  autodesk: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="5" fill="#000"/>
+    <path fill="#0696d7" d="M12.4 5h-2.6L4 19h2.7l1.2-3.1h5.3L14.4 19h2.7L12.4 5zm-3.6 8.6L11 7.9l2.2 5.7H8.8z"/>
+    <path fill="#fff" d="M19.5 5l-3.1 8 1.3 3.3L21 5h-1.5z" opacity=".7"/>
+  </svg>`,
+
+  zalo: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="5" fill="#0068ff"/>
+    <path fill="#fff" d="M12 4.5c-4.7 0-8.5 3.1-8.5 6.9 0 2.2 1.2 4.1 3.1 5.4-.1.8-.5 2-1.2 2.8 0 0 1.8-.3 3.3-1.3.9.3 2 .4 3.3.4 4.7 0 8.5-3.1 8.5-6.9S16.7 4.5 12 4.5zm-3.4 9.3H6.3v-4.8h.9v3.9h1.4v.9zm1.5 0h-.9v-4.8h.9v4.8zm5.1 0h-.8l-2-3.2v3.2h-.9v-4.8h.9l2 3.2v-3.2h.8v4.8zm1.7 0h-.9v-4.8h.9v4.8z"/>
+  </svg>`,
+
+  hubspot: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff7a59">
+    <path d="M18.2 8.6V5.9a1.7 1.7 0 0 0 1-1.5A1.7 1.7 0 0 0 17.5 2.7a1.7 1.7 0 0 0-1.7 1.7c0 .7.4 1.3 1 1.5v2.7a4.7 4.7 0 0 0-2.3 1L7.4 6.4a2 2 0 0 0 .1-.5 2 2 0 1 0-2 2c.3 0 .7-.1.9-.2l7 3.2a4.7 4.7 0 0 0-.1 1 4.7 4.7 0 0 0 8.6 2.7l2.1 1.5a1.7 1.7 0 1 0 1-1.4l-2-1.5a4.7 4.7 0 0 0 .3-1.6 4.7 4.7 0 0 0-5-5zm.5 7.8a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z"/>
+  </svg>`,
+
+  beauty: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="bt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#a855f7"/>
+    </linearGradient></defs>
+    <path fill="url(#bt)" d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10zm0-2.2c1.8-1.3 5-4 5-7.8a5 5 0 0 0-10 0c0 3.8 3.2 6.5 5 7.8zm-2-8.3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-2.5 4.5c-.8 0-1.5-.4-1.8-1h3.6c-.3.6-1 1-1.8 1z"/>
+  </svg>`,
+
+  kimi: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="km" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6366f1"/>
+    </linearGradient></defs>
+    <path fill="url(#km)" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>
+    <circle cx="16" cy="8" r="1" fill="#fff"/><circle cx="19" cy="10.5" r=".7" fill="#fff"/><circle cx="14" cy="6" r=".6" fill="#fff"/>
+  </svg>`,
+
+  default: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa">
+    <path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.6l6 3.3v6.8l-6-3.3V9.6zm8 10.1v-6.8l6-3.3v6.8l-6 3.3z"/>
+  </svg>`,
+
+  all: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f43f5e">
+    <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+  </svg>`,
+};
+
+/* ============ DANH MỤC ============ */
+const CATEGORIES = [
+  { id:"all",       name:"Tất Cả",              logo:"all" },
+  { id:"api-ai",    name:"API TOKEN AI",        logo:"openai" },
+  { id:"lam-dep",   name:"APP Làm Đẹp",         logo:"beauty" },
+  { id:"canva",     name:"Canva Pro",           logo:"canva" },
+  { id:"capcut",    name:"CapCut Pro",          logo:"capcut" },
+  { id:"chatgpt",   name:"ChatGPT",             logo:"openai" },
+  { id:"marketing", name:"Công Cụ Marketing",   logo:"hubspot" },
+  { id:"gemini",    name:"Gemini",              logo:"gemini" },
+  { id:"netflix",   name:"NETFLIX ULTRA 4K HD", logo:"netflix" },
+  { id:"tick-xanh", name:"Tick Xanh - Via Chat",logo:"twitter" },
+  { id:"youtube",   name:"Youtube Premium",     logo:"youtube" },
+];
+
+/* ============ SẢN PHẨM ============ */
+const PRODUCTS = [
+  { name:"CapCut Pro 7Days - FREE",                        cat:"capcut",    price:20000,   stock:0, logo:"capcut" },
+  { name:"100$ API Claude 30D (FW)",                       cat:"api-ai",    price:20000,   stock:0, logo:"anthropic" },
+  { name:"API Freepik Magnific Premium 2 tháng BHF",       cat:"api-ai",    price:190000,  stock:0, logo:"freepik" },
+  { name:"API Grok xAI 100$ 1 tháng BHF",                  cat:"api-ai",    price:1220000, stock:0, logo:"x" },
+  { name:"API KIMI 15M TOKEN 1D",                          cat:"api-ai",    price:20000,   stock:0, logo:"kimi" },
+  { name:"Autodesk Full Apps Bản quyền 1 năm BHF",         cat:"marketing", price:79000,   stock:0, logo:"autodesk" },
+  { name:"Bot Zalo Rải Link 1 Tháng",                      cat:"marketing", price:70000,   stock:0, logo:"zalo" },
+  { name:"Canva Pro 1 Tháng",                               cat:"canva",     price:50000,   stock:0, logo:"canva" },
+  { name:"Canva Pro 2",                                     cat:"canva",     price:70000,   stock:0, logo:"canva" },
+  { name:"CapCut Pro 1 Tháng - BHF",                        cat:"capcut",    price:35000,   stock:0, logo:"capcut" },
+  { name:"CapCut Pro 1 Year - BHF",                         cat:"capcut",    price:219999,  stock:0, logo:"capcut" },
+  { name:"CapCut Pro 3 Tháng - BHF",                        cat:"capcut",    price:75555,   stock:0, logo:"capcut" },
+  { name:"CapCut Pro 6 Tháng - BHF",                        cat:"capcut",    price:119000,  stock:0, logo:"capcut" },
+  { name:"CapCut Pro 7Days - BHF",                          cat:"capcut",    price:23000,   stock:0, logo:"capcut" },
+  { name:"CHATGPT - API Codex Astra 50$ Token 1 tháng BHF", cat:"chatgpt",   price:160000,  stock:0, logo:"openai" },
+];
+
+const fmt = n => n.toLocaleString("vi-VN") + "đ";
+const logoSVG = key => LOGOS[key] || LOGOS.default;
+
+/* ============ RENDER ============ */
+const tabsEl = document.getElementById("categoryTabs");
+const gridEl = document.getElementById("productGrid");
+const emptyEl = document.getElementById("emptyState");
+let activeCat = "all";
+
+function renderTabs(){
+  tabsEl.innerHTML = CATEGORIES.map(c => `
+    <button class="tab-btn ${c.id===activeCat ? "active":""}" data-cat="${c.id}">
+      <span class="tab-icon">${logoSVG(c.logo)}</span>
+      <span class="text-xs font-semibold text-center leading-tight">${c.name}</span>
+    </button>
+  `).join("");
+  tabsEl.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.onclick = () => { activeCat = btn.dataset.cat; renderTabs(); renderGrid(); };
+  });
+}
+
+function renderGrid(){
+  const list = activeCat === "all" ? PRODUCTS : PRODUCTS.filter(p => p.cat === activeCat);
+  emptyEl.classList.toggle("hidden", list.length > 0);
+
+  gridEl.innerHTML = list.map(p => `
+    <div class="glass-card fade-swap lift p-4 flex gap-4 items-start">
+      <div class="product-logo">${logoSVG(p.logo)}</div>
+      <div class="flex-1 min-w-0">
+        <h3 class="font-bold text-sm leading-snug mb-1 truncate">${p.name}</h3>
+        <p class="stock-line mb-2">Kho: ${p.stock}</p>
+        <p class="font-extrabold text-base">${fmt(p.price)}</p>
+      </div>
+      <button class="btn btn-dark self-center px-4 py-2 text-xs shrink-0" disabled>
+        <i class="fa-solid fa-cart-shopping"></i> Hết hàng
+      </button>
+    </div>
+  `).join("");
+}
+
+renderTabs();
+renderGrid();
+
+/* ============ HIỆU ỨNG (copy từ web mẹ) ============ */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return;
+  e.target.classList.add("in"); io.unobserve(e.target);
+}), {threshold:.12});
+document.querySelectorAll(".rv").forEach(el => io.observe(el));
+
+// Spotlight — tự ngủ khi đứng yên (giống web mẹ)
+if (matchMedia("(hover:hover) and (pointer:fine)").matches && !reduce){
+  const sp = document.getElementById("spotlight");
+  let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my, raf = null, idle = 0;
+  addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; idle = 0; if (!raf) raf = requestAnimationFrame(tick); }, {passive:true});
+  function tick(){
+    cx += (mx-cx) * 0.14; cy += (my-cy) * 0.14;
+    sp.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    idle++;
+    if (idle > 60 && Math.abs(mx-cx) < .5 && Math.abs(my-cy) < .5){ raf = null; return; }
+    raf = requestAnimationFrame(tick);
+  }
+}
+
+// Ripple
+document.addEventListener("click", e => {
+  const el = e.target.closest(".btn, .glass-card, .tab-btn");
+  if (!el || reduce) return;
+  const r = el.getBoundingClientRect();
+  const s = Math.max(r.width, r.height);
+  const rip = document.createElement("span");
+  rip.className = "ripple";
+  rip.style.width = rip.style.height = s+"px";
+  rip.style.left = (e.clientX - r.left - s/2)+"px";
+  rip.style.top  = (e.clientY - r.top  - s/2)+"px";
+  if (getComputedStyle(el).position === "static") el.style.position = "relative";
+  el.appendChild(rip);
+  setTimeout(()=>rip.remove(), 650);
+});
+</script>
+</body>
+</html>
