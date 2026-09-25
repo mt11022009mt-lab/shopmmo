@@ -85,7 +85,7 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 @keyframes spin{to{--a:360deg}}
 .orbit>div{border-radius:calc(1.1rem - 1.5px);background:#0f0f12}
 
-/* ===== NAV PILL — nằm trong header-pill, không tạo viên thuốc lồng nhau nữa ===== */
+/* ===== NAV PILL ===== */
 .nav-glass{
   position:relative;display:flex;align-items:center;gap:.25rem;
 }
@@ -181,21 +181,19 @@ select.field option{background:#0c0c0f}
   pointer-events:none;
 }
 
-/* ===== HEADER / MODAL / MENU / TOAST ===== */
-
-/* ===== HEADER PILL — VIÊN THUỐC GLASS ===== */
+/* ===== HEADER PILL ===== */
 .header-pill{
   position:relative;border-radius:9999px;
   background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
   border:1px solid rgba(255,255,255,.13);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -12px 22px -16px rgba(0,0,0,.6),0 16px 38px -18px rgba(0,0,0,.8);
-  overflow:hidden;isolation:isolate;
+  overflow:visible;isolation:isolate;
 }
 @media(hover:hover) and (pointer:fine){
   .header-pill{-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%)}
 }
 .header-pill::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
   background:linear-gradient(115deg,rgba(255,255,255,.22) 0%,transparent 24%,transparent 76%,rgba(255,255,255,.10) 100%);
   mix-blend-mode:overlay;opacity:.75;transform:translateX(-8%) skewX(-6deg);
   animation:nav-sheen 8s ease-in-out infinite alternate;
@@ -206,6 +204,31 @@ select.field option{background:#0c0c0f}
 }
 .header-pill>*{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce){.header-pill::before{animation:none}}
+
+/* ===== USER BOX — viên thuốc con bên trong, dài ra cho thoáng ===== */
+#userBox{
+  min-width:0;
+  padding:.3rem .5rem .3rem .3rem;
+  border-radius:9999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  gap:.5rem;
+}
+@media(min-width:640px){
+  #userBox{min-width:280px;justify-content:flex-end}
+}
+#userBox #headerBalance{max-width:none}
+
+/* Menu avatar */
+#avatarMenu{
+  min-width:230px;
+}
+#avatarMenu button,
+#avatarMenu a{
+  white-space:nowrap;
+}
+
+/* ===== MODALS ===== */
 #authModal{background:rgba(0,0,0,.75)}
 #authModal .card{background:rgba(18,18,23,.96)}
 #accountModal{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
@@ -254,7 +277,6 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
   <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
     <div class="header-pill grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
       <a href="#" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
-        <!-- LOGO HEADER — ẢNH MỚI CỦA BẠN -->
         <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
           <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
         </div>
@@ -282,7 +304,7 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
           </div>
           <input id="avatarFile" type="file" accept="image/*" hidden>
         </div>
-        <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm">Đăng nhập</button>
+        <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm whitespace-nowrap">Đăng nhập</button>
         <button id="menuBtn" type="button" aria-label="Mở menu" class="md:hidden w-10 h-10 rounded-xl btn-dark grid place-items-center"><i class="fa-solid fa-bars"></i></button>
       </div>
     </div>
@@ -435,7 +457,6 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
     <button id="closeWelcomeModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
     
     <div class="text-center mb-5">
-      <!-- LOGO TRONG MODAL — ẢNH MỚI CỦA BẠN -->
       <div class="w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-rose-500/60 mb-3 shadow-lg shadow-rose-500/40">
         <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover object-top">
       </div>
@@ -646,9 +667,7 @@ const SHOP_NAME = "BR-34";
 document.querySelectorAll("[data-brand]").forEach(el => el.textContent = SHOP_NAME);
 document.title = "SMM Panel — " + SHOP_NAME;
 
-/* ============ ĐÃ SỬA: MỤC "MUA TÀI NGUYÊN" TRỎ ĐÚNG FILE ============ */
 const NAV = [["Trang chủ","#",""],["Nạp tiền","nap-tien.html",""],["Mua tài nguyên","mua-tai-nguyen.html","Mới"],["Tài liệu","#",""],["Hỏi đáp","#",""]];
-/* ==================================================================== */
 
 const SERVICES = [
   {ic:"fa-solid fa-heart", logos:["fa-solid fa-heart"], n:"Locket Gold", c:"#fbbf24", d:"Nâng cấp Locket Gold, kích hoạt nhanh, bảo hành uy tín."},
@@ -950,13 +969,48 @@ function resizeImg(file, size){
     img.src = u;
   });
 }
-avatarBtn.onclick = e => { e.stopPropagation(); avatarMenu.classList.toggle("hidden"); };
-document.addEventListener("click", e => { if (!$("userBox").contains(e.target)) avatarMenu.classList.add("hidden"); });
-$("avatarChange").onclick = () => { avatarMenu.classList.add("hidden"); avatarFile.click(); };
-$("avatarRemove").onclick = async () => {
+
+/* ============================================================
+   MENU AVATAR — SỬA LỖI: mở/đóng đúng cách, không tự đóng khi
+   bấm vào các mục bên trong.
+   ============================================================ */
+avatarBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  avatarMenu.classList.toggle("hidden");
+});
+// Đóng menu khi click ra ngoài #userBox
+document.addEventListener("click", (e) => {
+  if (!$("userBox").contains(e.target)) avatarMenu.classList.add("hidden");
+});
+// Đóng menu khi bấm ESC
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") avatarMenu.classList.add("hidden");
+});
+// Ngăn click bên trong menu đóng menu
+avatarMenu.addEventListener("click", (e) => e.stopPropagation());
+
+// Các nút trong menu — gọi stopPropagation để không bị đóng bởi document listener
+$("avatarChange").addEventListener("click", (e) => {
+  e.stopPropagation();
   avatarMenu.classList.add("hidden");
-  try { await saveAvatar(null); toast("Đã xoá ảnh, dùng avatar mặc định."); } catch(x) { toast("Lỗi: " + x.message, false); }
-};
+  avatarFile.click();
+});
+$("avatarRemove").addEventListener("click", async (e) => {
+  e.stopPropagation();
+  avatarMenu.classList.add("hidden");
+  try { await saveAvatar(null); toast("Đã xoá ảnh, dùng avatar mặc định."); }
+  catch(x) { toast("Lỗi: " + x.message, false); }
+});
+$("openAccount").addEventListener("click", (e) => {
+  e.stopPropagation();
+  avatarMenu.classList.add("hidden");
+  openAccountModal();
+});
+$("openAdminBtn").addEventListener("click", () => {
+  avatarMenu.classList.add("hidden");
+});
+
 avatarFile.onchange = async () => {
   const f = avatarFile.files[0]; avatarFile.value = "";
   if (!f) return;
@@ -975,7 +1029,6 @@ function checkAdmin(user){
     .then(({data, error}) => {
       if (error) {
         console.error("checkAdmin lỗi:", error);
-        toast("Không kiểm tra được quyền admin: " + error.message, false);
       }
       isAdmin = !!(data && data.is_admin);
       $("openAdminBtn").classList.toggle("hidden", !isAdmin);
@@ -1164,7 +1217,6 @@ function openAccountModal(){
 }
 function closeAccountModal(){ accountModal.classList.add("opacity-0", "pointer-events-none"); }
 
-$("openAccount").onclick = () => { avatarMenu.classList.add("hidden"); openAccountModal(); };
 $("closeAccountModal").onclick = closeAccountModal;
 accountModal.addEventListener("click", e => { if (e.target === accountModal) closeAccountModal(); });
 
