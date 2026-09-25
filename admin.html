@@ -67,6 +67,12 @@ select.field option{background:#0c0c0f}
 .badge-canceled{background:rgba(244,63,94,.15);color:#fb7185}
 .badge-admin{background:rgba(139,92,246,.18);color:#c4b5fd}
 
+/* ====== BADGE LOẠI ĐƠN ====== */
+.badge-type{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .55rem;border-radius:.5rem;
+  font-size:10.5px;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+.badge-type-smm{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+.badge-type-res{background:rgba(139,92,246,.15);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
+
 .row-anim{animation:rowin .35s cubic-bezier(.2,.8,.2,1)}
 @keyframes rowin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
@@ -201,17 +207,28 @@ select.field option{background:#0c0c0f}
           <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="done">Hoàn thành</div>
           <div class="tab-pill !py-1.5 !px-3 !text-xs" data-status="canceled">Đã huỷ</div>
         </div>
-        <input id="orderSearch" type="text" placeholder="Tìm theo liên hệ / link..." class="field !py-1.5 !text-sm ml-auto max-w-[220px]">
+        <!-- Bộ lọc loại đơn -->
+        <div class="flex gap-1.5 flex-wrap" id="orderTypeFilters">
+          <div class="tab-pill active !py-1.5 !px-3 !text-xs" data-type="">Cả 2 loại</div>
+          <div class="tab-pill !py-1.5 !px-3 !text-xs" data-type="smm">
+            <i class="fa-solid fa-bolt mr-1"></i>SMM
+          </div>
+          <div class="tab-pill !py-1.5 !px-3 !text-xs" data-type="resource">
+            <i class="fa-solid fa-cube mr-1"></i>Tài nguyên
+          </div>
+        </div>
+        <input id="orderSearch" type="text" placeholder="Tìm theo liên hệ / link / mã đơn..." class="field !py-1.5 !text-sm ml-auto max-w-[240px]">
       </div>
       <div class="card overflow-x-auto">
-        <table class="w-full text-sm min-w-[720px]">
+        <table class="w-full text-sm min-w-[880px]">
           <thead>
             <tr class="text-left text-[11px] text-zinc-500 border-b border-white/8">
               <th class="p-3 font-semibold">Thời gian</th>
-              <th class="p-3 font-semibold">Dịch vụ</th>
-              <th class="p-3 font-semibold">Link</th>
-              <th class="p-3 font-semibold">Liên hệ</th>
-              <th class="p-3 font-semibold">Nguồn</th>
+              <th class="p-3 font-semibold">Loại</th>
+              <th class="p-3 font-semibold">Dịch vụ / Sản phẩm</th>
+              <th class="p-3 font-semibold">Link / Mã đơn</th>
+              <th class="p-3 font-semibold">Liên hệ / Khách</th>
+              <th class="p-3 font-semibold text-right">Giá</th>
               <th class="p-3 font-semibold text-right">Trạng thái</th>
             </tr>
           </thead>
@@ -293,7 +310,7 @@ async function checkAndEnter(user){
     isAdmin = !!(data && data.is_admin);
   } catch(e){ isAdmin = false; }
   if (isAdmin){
-    $("adminWho").textContent = (data_email(user));
+    $("adminWho").textContent = data_email(user);
     $("gateScreen").classList.add("hidden");
     $("dash").classList.remove("hidden");
     loadAll();
@@ -346,12 +363,15 @@ async function loadAll(){
 /* ============ TỔNG QUAN ============ */
 async function loadOverviewStats(){
   try {
-    const [{count:ordersTotal}, {count:ordersPending}] = await Promise.all([
+    // Tổng đơn = orders + resource_orders
+    const [oTotal, oPending, rTotal, rPending] = await Promise.all([
       supabaseClient.from("orders").select("id",{count:"exact",head:true}),
-      supabaseClient.from("orders").select("id",{count:"exact",head:true}).eq("status","pending")
+      supabaseClient.from("orders").select("id",{count:"exact",head:true}).eq("status","pending"),
+      supabaseClient.from("resource_orders").select("id",{count:"exact",head:true}),
+      supabaseClient.from("resource_orders").select("id",{count:"exact",head:true}).eq("status","pending"),
     ]);
-    $("statOrders").textContent = ordersTotal ?? 0;
-    $("statOrdersPending").textContent = ordersPending ?? 0;
+    $("statOrders").textContent = (oTotal.count||0) + (rTotal.count||0);
+    $("statOrdersPending").textContent = (oPending.count||0) + (rPending.count||0);
 
     const { data: depDone } = await supabaseClient.from("deposits").select("amount").eq("status","done");
     const sumDone = (depDone||[]).reduce((s,r)=>s+Number(r.amount||0),0);
@@ -365,15 +385,29 @@ async function loadOverviewStats(){
 
   loadViews();
 
+  // Đơn mới nhất (gộp 2 loại)
   try {
-    const { data: recent } = await supabaseClient.from("orders").select("service,contact,status,created_at").order("created_at",{ascending:false}).limit(5);
+    const [oRes, rRes] = await Promise.all([
+      supabaseClient.from("orders").select("service,contact,status,created_at").order("created_at",{ascending:false}).limit(5),
+      supabaseClient.from("resource_orders").select("product_name,order_code,status,created_at").order("created_at",{ascending:false}).limit(5),
+    ]);
+    const merged = [
+      ...(oRes.data||[]).map(o => ({ type:"smm", name:o.service, sub:o.contact, status:o.status, created_at:o.created_at })),
+      ...(rRes.data||[]).map(r => ({ type:"res", name:r.product_name, sub:r.order_code, status:r.status, created_at:r.created_at })),
+    ].sort((a,b)=> new Date(b.created_at) - new Date(a.created_at)).slice(0,5);
+
     const box = $("overviewOrders");
-    if (!recent || !recent.length){ box.innerHTML = `<p class="text-zinc-500 py-4">Chưa có đơn hàng nào.</p>`; }
-    else box.innerHTML = recent.map(o => `
+    if (!merged.length){ box.innerHTML = `<p class="text-zinc-500 py-4">Chưa có đơn hàng nào.</p>`; }
+    else box.innerHTML = merged.map(o => `
       <div class="flex items-center justify-between gap-3 py-2.5">
-        <div class="min-w-0">
-          <p class="font-semibold truncate">${esc(o.service||"—")}</p>
-          <p class="text-[11px] text-zinc-500">${esc(o.contact||"")} · ${dt(o.created_at)}</p>
+        <div class="min-w-0 flex items-center gap-2">
+          ${o.type === "smm"
+            ? `<span class="badge-type badge-type-smm">SMM</span>`
+            : `<span class="badge-type badge-type-res">Tài nguyên</span>`}
+          <div class="min-w-0">
+            <p class="font-semibold truncate">${esc(o.name||"—")}</p>
+            <p class="text-[11px] text-zinc-500">${esc(o.sub||"")} · ${dt(o.created_at)}</p>
+          </div>
         </div>
         ${badge(o.status)}
       </div>`).join("");
@@ -416,8 +450,11 @@ async function loadViews(){
     </div>`).join("");
 }
 
-/* ============ ĐƠN HÀNG ============ */
-let orderStatusFilter = "", orderSearchTerm = "", orderPage = 0;
+/* ============ ĐƠN HÀNG (GỘP 2 LOẠI) ============ */
+let orderStatusFilter = "";
+let orderTypeFilter = ""; // "" | "smm" | "resource"
+let orderSearchTerm = "";
+let orderPage = 0;
 const ORDER_PAGE_SIZE = 20;
 
 document.querySelectorAll("#orderFilters .tab-pill").forEach(el => {
@@ -428,6 +465,14 @@ document.querySelectorAll("#orderFilters .tab-pill").forEach(el => {
     loadOrders(true);
   };
 });
+document.querySelectorAll("#orderTypeFilters .tab-pill").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#orderTypeFilters .tab-pill").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+    orderTypeFilter = el.dataset.type; orderPage = 0;
+    loadOrders(true);
+  };
+});
 let orderSearchDeb;
 $("orderSearch").addEventListener("input", e => {
   clearTimeout(orderSearchDeb);
@@ -435,48 +480,154 @@ $("orderSearch").addEventListener("input", e => {
 });
 $("ordersMoreBtn").onclick = () => { orderPage++; loadOrders(false); };
 
-async function loadOrders(reset){
-  try {
-    let q = supabaseClient.from("orders").select("id,link,service,contact,source,status,created_at")
-      .order("created_at",{ascending:false})
-      .range(orderPage*ORDER_PAGE_SIZE, orderPage*ORDER_PAGE_SIZE + ORDER_PAGE_SIZE - 1);
-    if (orderStatusFilter) q = q.eq("status", orderStatusFilter);
-    if (orderSearchTerm) q = q.or(`contact.ilike.%${orderSearchTerm}%,link.ilike.%${orderSearchTerm}%`);
+/* Load 1 loại đơn */
+async function fetchOrderType(type, from, to, searchTerm, status){
+  const isSMM = type === "smm";
+  if (isSMM){
+    let q = supabaseClient
+      .from("orders")
+      .select("id,link,service,contact,source,status,created_at")
+      .order("created_at", {ascending:false})
+      .range(from, to);
+    if (status) q = q.eq("status", status);
+    if (searchTerm) q = q.or(`contact.ilike.%${searchTerm}%,link.ilike.%${searchTerm}%,service.ilike.%${searchTerm}%`);
     const { data, error } = await q;
     if (error) throw error;
+    return (data||[]).map(o => ({
+      ...o,
+      _type: "smm",
+      _name: o.service,
+      _sub: o.contact,
+      _link: o.link,
+      _price: null, // orders SMM không có cột price
+    }));
+  } else {
+    let q = supabaseClient
+      .from("resource_orders")
+      .select("id,order_code,product_id,product_name,product_logo,category,price,status,note,user_id,created_at")
+      .order("created_at", {ascending:false})
+      .range(from, to);
+    if (status) q = q.eq("status", status);
+    if (searchTerm) q = q.or(`product_name.ilike.%${searchTerm}%,order_code.ilike.%${searchTerm}%,note.ilike.%${searchTerm}%`);
+    const { data, error } = await q;
+    if (error) throw error;
+
+    // Lấy email khách
+    const userIds = [...new Set((data||[]).map(r => r.user_id).filter(Boolean))];
+    let profileMap = {};
+    if (userIds.length){
+      const { data: profs } = await supabaseClient
+        .from("profiles").select("id,email").in("id", userIds);
+      (profs||[]).forEach(p => profileMap[p.id] = p.email);
+    }
+    return (data||[]).map(r => ({
+      ...r,
+      _type: "resource",
+      _name: r.product_name,
+      _sub: profileMap[r.user_id] || r.order_code,
+      _link: null,
+      _price: r.price,
+    }));
+  }
+}
+
+async function loadOrders(reset){
+  try {
+    let merged = [];
+
+    if (!orderTypeFilter || orderTypeFilter === "smm"){
+      // Nếu đang lọc chỉ 1 loại thì phân trang riêng, nếu gộp thì lấy nhiều hơn
+      const isOnly = orderTypeFilter === "smm";
+      const from = orderPage * ORDER_PAGE_SIZE;
+      const to = from + ORDER_PAGE_SIZE - 1;
+      const rows = await fetchOrderType("smm", isOnly ? from : 0, isOnly ? to : ORDER_PAGE_SIZE - 1, orderSearchTerm, orderStatusFilter);
+      merged.push(...rows);
+    }
+    if (!orderTypeFilter || orderTypeFilter === "resource"){
+      const isOnly = orderTypeFilter === "resource";
+      const from = orderPage * ORDER_PAGE_SIZE;
+      const to = from + ORDER_PAGE_SIZE - 1;
+      const rows = await fetchOrderType("resource", isOnly ? from : 0, isOnly ? to : ORDER_PAGE_SIZE - 1, orderSearchTerm, orderStatusFilter);
+      merged.push(...rows);
+    }
+
+    // Khi gộp 2 loại: sort + cắt lại cho trang hiện tại
+    if (!orderTypeFilter){
+      merged.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      const from = orderPage * ORDER_PAGE_SIZE;
+      merged = merged.slice(from, from + ORDER_PAGE_SIZE);
+    }
+
     const body = $("ordersBody");
     if (reset) body.innerHTML = "";
-    (data||[]).forEach(o => body.insertAdjacentHTML("beforeend", orderRow(o)));
-    $("ordersEmpty").classList.toggle("hidden", !(reset && (!data || !data.length)));
-    $("ordersMoreBtn").classList.toggle("hidden", !(data && data.length === ORDER_PAGE_SIZE));
+    merged.forEach(o => body.insertAdjacentHTML("beforeend", orderRow(o)));
+
+    $("ordersEmpty").classList.toggle("hidden", !(reset && merged.length === 0));
+    $("ordersMoreBtn").classList.toggle("hidden", merged.length < ORDER_PAGE_SIZE);
+
+    // Bind đổi trạng thái
     body.querySelectorAll("select.order-status").forEach(sel => {
-      sel.onchange = () => updateOrderStatus(sel.dataset.id, sel.value, sel);
+      sel.onchange = () => updateOrderStatus(sel.dataset.type, sel.dataset.id, sel.value, sel);
     });
-  } catch(e){ console.error(e); toast("Lỗi tải đơn hàng: " + (e.message||""), false); }
+  } catch(e){
+    console.error(e);
+    toast("Lỗi tải đơn hàng: " + (e.message||""), false);
+  }
 }
+
 function orderRow(o){
+  const isSMM = o._type === "smm";
+  const typeBadge = isSMM
+    ? `<span class="badge-type badge-type-smm"><i class="fa-solid fa-bolt"></i>SMM</span>`
+    : `<span class="badge-type badge-type-res"><i class="fa-solid fa-cube"></i>Tài nguyên</span>`;
+
+  // Cột "Link / Mã đơn"
+  let linkCell;
+  if (isSMM){
+    linkCell = `<a href="${esc(o._link||'#')}" target="_blank" rel="noopener" class="text-blue-400 hover:underline truncate inline-block max-w-[200px]">${esc(o._link||"—")}</a>`;
+  } else {
+    linkCell = `<span class="font-mono text-xs text-zinc-300">${esc(o.order_code||"—")}</span>`;
+  }
+
+  // Cột giá
+  const priceCell = isSMM
+    ? `<span class="text-zinc-600">—</span>`
+    : `<span class="font-extrabold text-emerald-400">${vnd(o._price)}đ</span>`;
+
+  // Sản phẩm / Dịch vụ (với note nếu có)
+  const nameCell = isSMM
+    ? `<p class="font-semibold truncate max-w-[220px]">${esc(o._name||"—")}</p>
+       <p class="text-[10.5px] text-zinc-500">Nguồn: ${esc(o.source||"—")}</p>`
+    : `<p class="font-semibold truncate max-w-[220px]">${esc(o._name||"—")}</p>
+       ${o.note ? `<p class="text-[10.5px] text-zinc-500 truncate max-w-[220px]"><i class="fa-regular fa-note-sticky mr-1"></i>${esc(o.note)}</p>` : ""}`;
+
   return `<tr class="border-b border-white/6 row-anim hover:bg-white/[.02]">
     <td class="p-3 text-xs text-zinc-400 whitespace-nowrap">${dt(o.created_at)}</td>
-    <td class="p-3 font-semibold">${esc(o.service||"—")}</td>
-    <td class="p-3 max-w-[220px] truncate"><a href="${esc(o.link||'#')}" target="_blank" rel="noopener" class="text-blue-400 hover:underline">${esc(o.link||"—")}</a></td>
-    <td class="p-3 text-zinc-300">${esc(o.contact||"—")}</td>
-    <td class="p-3 text-xs text-zinc-500">${esc(o.source||"—")}</td>
+    <td class="p-3">${typeBadge}</td>
+    <td class="p-3">${nameCell}</td>
+    <td class="p-3 max-w-[220px]">${linkCell}</td>
+    <td class="p-3 text-zinc-300 truncate max-w-[180px]">${esc(o._sub||"—")}</td>
+    <td class="p-3 text-right whitespace-nowrap">${priceCell}</td>
     <td class="p-3 text-right">
-      <select class="field order-status !w-auto !py-1.5 !px-2 !text-xs" data-id="${o.id}">
+      <select class="field order-status !w-auto !py-1.5 !px-2 !text-xs"
+              data-type="${o._type}" data-id="${o.id}">
         ${["pending","done","canceled"].map(s=>`<option value="${s}" ${o.status===s?"selected":""}>${STATUS_LABEL[s]}</option>`).join("")}
       </select>
     </td>
   </tr>`;
 }
-async function updateOrderStatus(id, status, sel){
+
+async function updateOrderStatus(type, id, status, sel){
   sel.disabled = true;
   try {
-    const { error } = await supabaseClient.from("orders").update({ status }).eq("id", id);
+    const table = type === "smm" ? "orders" : "resource_orders";
+    const { error } = await supabaseClient.from(table).update({ status }).eq("id", id);
     if (error) throw error;
     toast("Đã cập nhật trạng thái đơn hàng!");
     loadOverviewStats();
-  } catch(e){ toast("Lỗi cập nhật: " + (e.message||""), false); }
-  finally { sel.disabled = false; }
+  } catch(e){
+    toast("Lỗi cập nhật: " + (e.message||""), false);
+  } finally { sel.disabled = false; }
 }
 
 /* ============ KHÁCH HÀNG ============ */
