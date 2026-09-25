@@ -88,7 +88,7 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
 .btn-shine:hover::after{left:100%}
 
-/* RIPPLE — nhẹ, gọn */
+/* RIPPLE */
 .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.25);transform:scale(0);animation:rip .45s ease-out;pointer-events:none}
 @keyframes rip{to{transform:scale(1.8);opacity:0}}
 
@@ -115,11 +115,10 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
   box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 10px 30px -10px rgba(244,63,94,.55);
 }
 .tab-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:.25s;overflow:hidden}
-.tab-icon svg{width:26px;height:26px}
-.tab-btn.active .tab-icon{background:linear-gradient(180deg,#ff5c7a,#e11d48);border-color:transparent;
+  background:#fff;border:1px solid rgba(255,255,255,.18);transition:.25s;overflow:hidden}
+.tab-icon img{width:100%;height:100%;object-fit:contain;padding:8px;display:block}
+.tab-btn.active .tab-icon{background:#fff;border-color:rgba(244,63,94,.6);
   box-shadow:0 8px 20px -6px rgba(244,63,94,.6)}
-.tab-btn.active .tab-icon svg *{fill:#fff}
 
 .tabs-scroll{overflow-x:auto;scrollbar-width:none}
 .tabs-scroll::-webkit-scrollbar{display:none}
@@ -129,12 +128,12 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
 
 .product-logo{
   width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
-  background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.12);
+  background:#fff;
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
   transition:transform .3s cubic-bezier(.2,.8,.2,1);flex-shrink:0;overflow:hidden;
 }
-.product-logo svg{width:34px;height:34px}
+.product-logo img{width:100%;height:100%;object-fit:contain;padding:8px;display:block}
 .glass-card:hover .product-logo{transform:scale(1.06)}
 
 .search-wrap{position:relative}
@@ -236,7 +235,7 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
 <div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
 <div id="spotlight" class="spotlight"></div>
 
-<!-- ============ HEADER (giống web mẹ) ============ -->
+<!-- ============ HEADER ============ -->
 <header class="glass" style="padding-top:env(safe-area-inset-top,0px)">
   <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
     <a href="index.html" class="flex items-center gap-2.5 font-extrabold text-lg shrink-0">
@@ -277,6 +276,18 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
     </div>
     <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     <p id="emptyState" class="hidden text-center text-zinc-500 py-16">Chưa có sản phẩm nào trong mục này.</p>
+
+    <div class="rv mt-6 glass-card p-4 sm:p-5 !bg-amber-500/10 !border-amber-400/30">
+      <div class="flex items-start gap-3">
+        <span class="w-9 h-9 rounded-xl grid place-items-center bg-amber-400/15 border border-amber-400/30 text-amber-300 shrink-0">
+          <i class="fa-solid fa-circle-info"></i>
+        </span>
+        <div class="flex-1 min-w-0 text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+          <p class="font-bold text-amber-300 mb-1">Lưu ý khi mua</p>
+          <p>Sau khi nhận tài nguyên, hãy kiểm tra dữ liệu sớm. Nếu account lỗi, vào <b class="text-amber-200">Lịch sử mua TN → Khiếu nại</b>, chọn account lỗi và tải hình ảnh chứng minh.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- VIEW LỊCH SỬ -->
@@ -432,26 +443,50 @@ document.addEventListener("click", (e) => {
 }, true);
 
 /* ============================================================
-   LOGO SVG
+   LOGO ẢNH THẬT
    ============================================================ */
 const LOGOS = {
-  canva: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#7d2ae8"/></linearGradient></defs><circle cx="12" cy="12" r="11" fill="url(#cv)"/><path fill="#fff" d="M12.5 6.5c-3.3 0-6 3-6 6.8 0 2.5 1.5 4.2 3.6 4.2 1.7 0 3-1.1 3.7-2.6.3-.6-.1-1.1-.7-.9-.9.3-1.7.4-2.4.1-.7-.3-1.2-1-1.2-2.1 0-2.3 1.6-4.1 3.4-4.1 1.2 0 2 .7 2 1.7 0 .5-.2 1-.5 1.4-.3.3 0 .8.4.7 1.3-.3 2.3-1.5 2.3-3 0-2-1.8-3.4-4.6-3.4z" transform="translate(-.5 0)"/></svg>`,
-  capcut: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" d="M8 5.5v2.3l6 3.7-6 3.7v2.3l9.5-6L8 5.5z"/></svg>`,
-  openai: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.97 5.97 0 0 0-4 2.9 6.05 6.05 0 0 0 .74 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.51 2.9A5.97 5.97 0 0 0 13.25 24a6.06 6.06 0 0 0 5.77-4.21 5.97 5.97 0 0 0 4-2.9 6.06 6.06 0 0 0-.74-7.07zM13.25 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.78.78 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.05v5.59a4.51 4.51 0 0 1-4.49 4.49zM3.6 18.3a4.47 4.47 0 0 1-.54-3.01l.14.09 4.78 2.76a.78.78 0 0 0 .79 0l5.83-3.37v2.33a.08.08 0 0 1-.03.06L9.74 20.05A4.5 4.5 0 0 1 3.6 18.3zM2.34 7.9a4.48 4.48 0 0 1 2.34-1.97v5.68a.78.78 0 0 0 .39.68l5.83 3.37-2.02 1.17a.08.08 0 0 1-.07 0L3.99 13.8A4.5 4.5 0 0 1 2.34 7.9zm16.48 3.83-5.83-3.37L15 7.2a.08.08 0 0 1 .07 0l4.82 2.78a4.49 4.49 0 0 1-.69 8.11v-5.68a.78.78 0 0 0-.38-.68zm2.01-3.02-.14-.09-4.78-2.76a.78.78 0 0 0-.79 0L9.29 9.23V6.9a.07.07 0 0 1 .03-.06l4.82-2.78a4.5 4.5 0 0 1 6.68 4.66zM8.3 12.84l-2.02-1.17a.08.08 0 0 1-.04-.06V6.03a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.7 5.42a.78.78 0 0 0-.39.68v6.74zm1.1-2.36L12 8.95l2.6 1.5v3l-2.6 1.5-2.6-1.5v-3z"/></svg>`,
-  anthropic: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#d97757"><path d="M13.79 3h-3.1L4 21h3.36l1.36-4.07h6.42L16.5 21h3.36L13.79 3zm-4.1 11.03L12.24 6.4l2.55 7.63H9.69z"/></svg>`,
-  freepik: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#1273eb"/><path fill="#fff" d="M14.5 6H8v3h5.2c.7 0 1.3.6 1.3 1.3v.4h-6.5v3h6.5v.3c0 .7-.6 1.3-1.3 1.3H8v3h5.8c2.5 0 4.5-2 4.5-4.5v-3.3c0-2.5-2-4.5-4.5-4.5z"/></svg>`,
-  x: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M18.9 2H22l-7.3 8.4L23.3 22h-6.7l-5.3-6.9L5.3 22H2.1l7.8-9L1 2h6.9l4.8 6.3L18.9 2zm-1.2 18h1.9L7.3 3.9H5.3L17.7 20z"/></svg>`,
-  gemini: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs><path fill="url(#gm)" d="M12 2c.3 5.1 4.9 9.7 10 10-5.1.3-9.7 4.9-10 10-.3-5.1-4.9-9.7-10-10 5.1-.3 9.7-4.9 10-10z"/></svg>`,
-  netflix: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#e50914" d="M8 4v16h2.4V9.2L15.8 20H18V4h-2.4v10.6L8 4z"/></svg>`,
-  youtube: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>`,
-  twitter: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1d9bf0"><path d="M23.95 4.57a10 10 0 0 1-2.82.77 4.96 4.96 0 0 0 2.16-2.72c-.95.56-2 .96-3.13 1.19a4.92 4.92 0 0 0-8.38 4.48A13.94 13.94 0 0 1 1.64 3.16a4.92 4.92 0 0 0 1.52 6.57 4.9 4.9 0 0 1-2.23-.62v.06a4.92 4.92 0 0 0 3.95 4.83 4.96 4.96 0 0 1-2.22.08 4.93 4.93 0 0 0 4.6 3.42A9.87 9.87 0 0 1 0 19.54a13.94 13.94 0 0 0 7.55 2.21c9.05 0 14-7.5 14-14 0-.21 0-.42-.02-.63A10 10 0 0 0 24 4.59z"/></svg>`,
-  autodesk: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#0696d7" d="M12.4 5h-2.6L4 19h2.7l1.2-3.1h5.3L14.4 19h2.7L12.4 5zm-3.6 8.6L11 7.9l2.2 5.7H8.8z"/><path fill="#fff" d="M19.5 5l-3.1 8 1.3 3.3L21 5h-1.5z" opacity=".7"/></svg>`,
-  zalo: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#0068ff"/><path fill="#fff" d="M12 4.5c-4.7 0-8.5 3.1-8.5 6.9 0 2.2 1.2 4.1 3.1 5.4-.1.8-.5 2-1.2 2.8 0 0 1.8-.3 3.3-1.3.9.3 2 .4 3.3.4 4.7 0 8.5-3.1 8.5-6.9S16.7 4.5 12 4.5z"/></svg>`,
-  hubspot: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff7a59"><path d="M18.2 8.6V5.9a1.7 1.7 0 0 0 1-1.5A1.7 1.7 0 0 0 17.5 2.7a1.7 1.7 0 0 0-1.7 1.7c0 .7.4 1.3 1 1.5v2.7a4.7 4.7 0 0 0-2.3 1L7.4 6.4a2 2 0 0 0 .1-.5 2 2 0 1 0-2 2c.3 0 .7-.1.9-.2l7 3.2a4.7 4.7 0 0 0-.1 1 4.7 4.7 0 0 0 8.6 2.7l2.1 1.5a1.7 1.7 0 1 0 1-1.4l-2-1.5a4.7 4.7 0 0 0 .3-1.6 4.7 4.7 0 0 0-5-5zm.5 7.8a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z"/></svg>`,
-  beauty: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><path fill="url(#bt)" d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10zm0-2.2c1.8-1.3 5-4 5-7.8a5 5 0 0 0-10 0c0 3.8 3.2 6.5 5 7.8zm-2-8.3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-2.5 4.5c-.8 0-1.5-.4-1.8-1h3.6c-.3.6-1 1-1.8 1z"/></svg>`,
-  kimi: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="km" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><path fill="url(#km)" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><circle cx="16" cy="8" r="1" fill="#fff"/><circle cx="19" cy="10.5" r=".7" fill="#fff"/><circle cx="14" cy="6" r=".6" fill="#fff"/></svg>`,
-  default: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.6l6 3.3v6.8l-6-3.3V9.6zm8 10.1v-6.8l6-3.3v6.8l-6 3.3z"/></svg>`,
-  all: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f43f5e"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>`,
+  // Danh mục / tổng
+  all:        "https://cdn-icons-png.flaticon.com/512/3524/3524636.png",
+
+  // AI
+  openai:     "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+  anthropic:  "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
+  gemini:     "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+  kimi:       "https://avatars.githubusercontent.com/u/129152888?s=200&v=4",
+
+  // Design / Video
+  canva:      "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
+  capcut:     "https://upload.wikimedia.org/wikipedia/commons/6/6b/CapCut_logo.svg",
+  freepik:    "https://upload.wikimedia.org/wikipedia/commons/5/5f/Freepik_logo.svg",
+
+  // Mạng xã hội
+  zalo:       "https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg",
+  facebook:   "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+  tiktok:     "https://upload.wikimedia.org/wikipedia/commons/3/3b/TikTok_icon.svg",
+  youtube:    "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
+  twitter:    "https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg",
+  x:          "https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg",
+  netflix:    "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+
+  // Game
+  garena:     "https://upload.wikimedia.org/wikipedia/commons/5/5b/Garena_logo.svg",
+  lienquan:   "https://upload.wikimedia.org/wikipedia/commons/8/8d/Lien_Quan_Mobile_logo.png",
+
+  // Công cụ / khác
+  autodesk:   "https://upload.wikimedia.org/wikipedia/commons/6/6f/Autodesk_logo.svg",
+  hubspot:    "https://upload.wikimedia.org/wikipedia/commons/3/3f/HubSpot_Logo.svg",
+  beauty:     "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
+  phone:      "https://cdn-icons-png.flaticon.com/512/724/724664.png",
+  mail:       "https://cdn-icons-png.flaticon.com/512/542/542638.png",
+  default:    "https://cdn-icons-png.flaticon.com/512/3524/3524636.png",
+};
+
+/* Trả về thẻ <img> cho logo */
+const logoSVG = key => {
+  const src = LOGOS[key] || LOGOS.default;
+  return `<img src="${src}" alt="" loading="lazy" referrerpolicy="no-referrer"
+    onerror="this.onerror=null;this.src='${LOGOS.default}'">`;
 };
 
 /* ============ DANH MỤC & SẢN PHẨM ============ */
@@ -470,25 +505,34 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-  { id:"p01", name:"CapCut Pro 7Days - FREE",                        cat:"capcut",    price:20000,   logo:"capcut" },
-  { id:"p02", name:"100$ API Claude 30D (FW)",                       cat:"api-ai",    price:20000,   logo:"anthropic" },
-  { id:"p03", name:"API Freepik Magnific Premium 2 tháng BHF",       cat:"api-ai",    price:190000,  logo:"freepik" },
-  { id:"p04", name:"API Grok xAI 100$ 1 tháng BHF",                  cat:"api-ai",    price:1220000, logo:"x" },
-  { id:"p05", name:"API KIMI 15M TOKEN 1D",                          cat:"api-ai",    price:20000,   logo:"kimi" },
-  { id:"p06", name:"Autodesk Full Apps Bản quyền 1 năm BHF",         cat:"marketing", price:79000,   logo:"autodesk" },
-  { id:"p07", name:"Bot Zalo Rải Link 1 Tháng",                      cat:"marketing", price:70000,   logo:"zalo" },
-  { id:"p08", name:"Canva Pro 1 Tháng",                               cat:"canva",     price:50000,   logo:"canva" },
-  { id:"p09", name:"Canva Pro 2",                                     cat:"canva",     price:70000,   logo:"canva" },
-  { id:"p10", name:"CapCut Pro 1 Tháng - BHF",                        cat:"capcut",    price:35000,   logo:"capcut" },
-  { id:"p11", name:"CapCut Pro 1 Year - BHF",                         cat:"capcut",    price:219999,  logo:"capcut" },
-  { id:"p12", name:"CapCut Pro 3 Tháng - BHF",                        cat:"capcut",    price:75555,   logo:"capcut" },
-  { id:"p13", name:"CapCut Pro 6 Tháng - BHF",                        cat:"capcut",    price:119000,  logo:"capcut" },
-  { id:"p14", name:"CapCut Pro 7Days - BHF",                          cat:"capcut",    price:23000,   logo:"capcut" },
-  { id:"p15", name:"CHATGPT - API Codex Astra 50$ Token 1 tháng BHF", cat:"chatgpt",   price:160000,  logo:"openai" },
+  { id:"p01", name:"CapCut Pro 7Days - FREE",                        cat:"capcut",    price:20000,   logo:"capcut",   stock:0 },
+  { id:"p02", name:"100$ API Claude 30D (FW)",                       cat:"api-ai",    price:20000,   logo:"anthropic",stock:0 },
+  { id:"p03", name:"API Freepik Magnific Premium 2 tháng BHF",       cat:"api-ai",    price:190000,  logo:"freepik",  stock:0 },
+  { id:"p04", name:"API Grok xAI 100$ 1 tháng BHF",                  cat:"api-ai",    price:1220000, logo:"x",        stock:0 },
+  { id:"p05", name:"API KIMI 15M TOKEN 1D",                          cat:"api-ai",    price:20000,   logo:"kimi",     stock:0 },
+  { id:"p06", name:"Autodesk Full Apps Bản quyền 1 năm BHF",         cat:"marketing", price:79000,   logo:"autodesk", stock:0 },
+  { id:"p07", name:"Bot Zalo Rải Link 1 Tháng",                      cat:"marketing", price:50000,   logo:"zalo",     stock:0 },
+  { id:"p16", name:"File ZALO BOT Sài Vĩnh Viễn",                    cat:"marketing", price:370000,  logo:"zalo",     stock:0 },
+  { id:"p17", name:"Nhóm Zalo 9xx Thành Viên Chưa Duyệt",            cat:"marketing", price:119999,  logo:"zalo",     stock:0 },
+  { id:"p18", name:"REG ACC GARENA TRẮNG THÔNG TIN MAX SPEED",       cat:"marketing", price:370000,  logo:"garena",   stock:0 },
+  { id:"p19", name:"Tool Buff View TikTok - Cực Nhanh",              cat:"marketing", price:40000,   logo:"tiktok",   stock:0 },
+  { id:"p20", name:"Tool Check Thông Tin Garena - Vĩnh Viễn",        cat:"marketing", price:470000,  logo:"garena",   stock:0 },
+  { id:"p21", name:"Tool Rải Bài Viết Facebook - có anti spam - vĩnh viễn", cat:"marketing", price:69999, logo:"facebook", stock:0 },
+  { id:"p22", name:"Tool Rải CMT FB - VĨNH VIỄN",                    cat:"marketing", price:69999,   logo:"facebook", stock:0 },
+  { id:"p23", name:"TOOL SCAN ACC LIÊN QUÂN - Vĩnh Viễn",            cat:"marketing", price:170000,  logo:"lienquan", stock:0 },
+  { id:"p24", name:"Tool Spam SDT - Vĩnh Viễn",                      cat:"marketing", price:39000,   logo:"phone",    stock:0 },
+  { id:"p25", name:"TOOL TẠO MAIL ẢO LẤY MÃ - ĐĂNG NHẬP, ĐỔI MK MAIL", cat:"marketing", price:170000, logo:"mail",     stock:0 },
+  { id:"p08", name:"Canva Pro 1 Tháng",                               cat:"canva",     price:50000,   logo:"canva",    stock:0 },
+  { id:"p09", name:"Canva Pro 2",                                     cat:"canva",     price:70000,   logo:"canva",    stock:0 },
+  { id:"p10", name:"CapCut Pro 1 Tháng - BHF",                        cat:"capcut",    price:35000,   logo:"capcut",   stock:0 },
+  { id:"p11", name:"CapCut Pro 1 Year - BHF",                         cat:"capcut",    price:219999,  logo:"capcut",   stock:0 },
+  { id:"p12", name:"CapCut Pro 3 Tháng - BHF",                        cat:"capcut",    price:75555,   logo:"capcut",   stock:0 },
+  { id:"p13", name:"CapCut Pro 6 Tháng - BHF",                        cat:"capcut",    price:119000,  logo:"capcut",   stock:0 },
+  { id:"p14", name:"CapCut Pro 7Days - BHF",                          cat:"capcut",    price:23000,   logo:"capcut",   stock:0 },
+  { id:"p15", name:"CHATGPT - API Codex Astra 50$ Token 1 tháng BHF", cat:"chatgpt",   price:160000,  logo:"openai",   stock:0 },
 ];
 
 const fmt = n => n.toLocaleString("vi-VN") + "đ";
-const logoSVG = key => LOGOS[key] || LOGOS.default;
 const STATUS_MAP = {
   done:     { label:"Hoàn thành", icon:"fa-solid fa-circle-check",   cls:"status-done" },
   pending:  { label:"Đang xử lý", icon:"fa-solid fa-hourglass-half", cls:"status-pending" },
@@ -542,18 +586,26 @@ function renderGrid(){
   const list = activeCat === "all" ? PRODUCTS : PRODUCTS.filter(p => p.cat === activeCat);
   emptyEl.classList.toggle("hidden", list.length > 0);
 
-  gridEl.innerHTML = list.map(p => `
+  gridEl.innerHTML = list.map(p => {
+    const outOfStock = p.stock === 0;
+    return `
     <div class="glass-card fade-swap p-4 flex gap-4 items-start">
       <div class="product-logo">${logoSVG(p.logo)}</div>
       <div class="flex-1 min-w-0">
         <h3 class="font-bold text-sm leading-snug mb-1 line-clamp-2 min-h-[2.5em]">${p.name}</h3>
+        <p class="text-[11px] font-semibold ${outOfStock ? "text-rose-400" : "text-zinc-500"} mb-1">Kho: ${outOfStock ? "0" : "Còn hàng"}</p>
         <p class="font-extrabold text-base">${fmt(p.price)}</p>
       </div>
-      <button class="btn btn-red btn-shine self-center px-4 py-2 text-xs shrink-0" data-buy="${p.id}">
+      ${outOfStock ? `
+      <button type="button" class="btn btn-dark self-center px-4 py-2 text-xs shrink-0 opacity-50 cursor-not-allowed" disabled>
+        <i class="fa-solid fa-cart-shopping"></i>Hết hàng
+      </button>` : `
+      <button type="button" class="btn btn-red btn-shine self-center px-4 py-2 text-xs shrink-0" data-buy="${p.id}">
         <i class="fa-solid fa-cart-shopping"></i>Mua
-      </button>
+      </button>`}
     </div>
-  `).join("");
+  `;
+  }).join("");
 
   gridEl.querySelectorAll("[data-buy]").forEach(btn => {
     btn.onclick = () => handleBuyClick(btn.dataset.buy);
@@ -901,7 +953,7 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches && !reduce){
   }
 }
 
-/* RIPPLE — chỉ trên button, nhẹ nhàng */
+/* RIPPLE */
 document.addEventListener("click", e => {
   const el = e.target.closest(".btn");
   if (!el || reduce) return;
