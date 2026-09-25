@@ -248,6 +248,10 @@ header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border
     <span class="hidden sm:inline text-sm font-bold text-zinc-400 ml-2">/ Mua tài nguyên</span>
 
     <div class="ml-auto flex items-center gap-2">
+      <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
+        <i class="fa-solid fa-wallet text-[11px]"></i>
+        <span id="headerBalanceVal">0đ</span>
+      </div>
       <button type="button" id="goHomeBtn" class="btn btn-dark px-4 py-2 text-sm">
         <i class="fa-solid fa-arrow-left"></i><span class="hidden sm:inline">Trang chủ</span>
       </button>
@@ -533,6 +537,17 @@ const PRODUCTS = [
 ];
 
 const fmt = n => n.toLocaleString("vi-VN") + "đ";
+
+/* ============ SỐ DƯ Ở HEADER ============ */
+async function refreshHeaderBalance(){
+  const el = $("headerBalance"), val = $("headerBalanceVal");
+  if (!currentUser){ el.classList.add("hidden"); return; }
+  try {
+    const { data } = await supabaseClient.from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
+    val.textContent = fmt(Number(data?.balance || 0));
+    el.classList.remove("hidden");
+  } catch(e) { el.classList.add("hidden"); }
+}
 const STATUS_MAP = {
   done:     { label:"Hoàn thành", icon:"fa-solid fa-circle-check",   cls:"status-done" },
   pending:  { label:"Đang xử lý", icon:"fa-solid fa-hourglass-half", cls:"status-pending" },
@@ -737,6 +752,7 @@ $("buyConfirm").onclick = async () => {
 
     await loadMyOrders();
     updateHistBadge();
+    refreshHeaderBalance();
     if (!viewHistory.classList.contains("hidden")) renderHistoryList();
 
     pendingProduct = null;
@@ -980,6 +996,7 @@ renderGrid();
     await loadMyOrders();
   }
   updateHistBadge();
+  refreshHeaderBalance();
 })();
 
 supabaseClient.auth.onAuthStateChange(async (_ev, session) => {
@@ -991,6 +1008,7 @@ supabaseClient.auth.onAuthStateChange(async (_ev, session) => {
     myOrders = [];
   }
   updateHistBadge();
+  refreshHeaderBalance();
   if (!viewHistory.classList.contains("hidden")) renderHistoryView();
 });
 </script>
