@@ -221,7 +221,7 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <header class="glass sticky top-0 z-40 border-b border-white/5" style="padding-top:env(safe-area-inset-top,0px)">
   <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-4">
     <a href="#" class="flex items-center gap-2.5 font-extrabold text-lg">
-      <!-- LOGO HEADER -->
+      <!-- LOGO HEADER — ẢNH MỚI CỦA BẠN -->
       <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
         <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
       </div>
@@ -282,24 +282,14 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
   <!-- ĐẶT ĐƠN NHANH -->
   <section id="dat-don" class="max-w-2xl mx-auto px-4 mt-8 scroll-mt-24 rv">
     <div class="orbit"><div class="p-4 sm:p-5">
-
-      <!-- BANNER LƯU Ý -->
-      <div class="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3.5 py-3 mb-4 flex items-start gap-2.5">
-        <i class="fa-solid fa-circle-info text-amber-300 text-sm mt-0.5 shrink-0"></i>
-        <div class="text-xs text-amber-100 leading-relaxed">
-          <b class="text-amber-200">Lưu ý:</b> Mục này dành cho khách muốn <b>order thêm dịch vụ</b> (tăng like, follow, view, sub...).
-          Vui lòng điền <b>link Facebook cần hỗ trợ</b> và <b>số Zalo / điện thoại</b> để shop liên hệ báo giá và xử lý đơn.
-        </div>
-      </div>
-
       <form id="orderForm" class="grid gap-3" novalidate>
         <div class="relative">
-          <i class="fa-brands fa-facebook absolute left-4 top-1/2 -translate-y-1/2 text-blue-400 text-sm"></i>
-          <input id="link" type="text" inputmode="url" autocomplete="off" class="field !pl-10" placeholder="Dán link Facebook cần hỗ trợ (bài viết / trang / video...)">
+          <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+          <input id="link" type="text" inputmode="url" autocomplete="off" class="field !pl-10" placeholder="Dán link bài viết / trang cá nhân cần hỗ trợ">
         </div>
         <div class="grid sm:grid-cols-2 gap-3">
           <select id="service" class="field"><option value="">— Chọn dịch vụ —</option></select>
-          <input id="contact" type="tel" inputmode="numeric" autocomplete="tel" class="field" placeholder="Số Zalo / điện thoại (bắt buộc)">
+          <input id="contact" type="tel" inputmode="numeric" autocomplete="tel" class="field" placeholder="Số Zalo / điện thoại">
         </div>
         <p id="err" class="hidden text-sm text-rose-400 font-semibold" role="alert"></p>
         <button id="send" type="submit" class="btn btn-red btn-shine w-full py-3.5">GỬI YÊU CẦU</button>
@@ -405,14 +395,15 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <div id="welcomeModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
   <div class="card w-full max-w-lg p-6 relative max-h-[90vh] overflow-y-auto">
     <button id="closeWelcomeModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-
+    
     <div class="text-center mb-5">
+      <!-- LOGO TRONG MODAL — ẢNH MỚI CỦA BẠN -->
       <div class="w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-rose-500/60 mb-3 shadow-lg shadow-rose-500/40">
         <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover object-top">
       </div>
       <h3 class="text-xl font-bold red-text">🌐 Giới thiệu về BR-34</h3>
     </div>
-
+    
     <div class="space-y-3 text-sm text-zinc-300 leading-relaxed">
       <p><b class="text-white">BR-34</b> là một dự án website MMO được mình xây dựng với mong muốn tạo ra một nền tảng hỗ trợ các dịch vụ mạng xã hội một cách nhanh chóng, đơn giản và dễ sử dụng.</p>
       <p>Mình hiện vẫn là một học sinh, bắt đầu xây dựng BR-34 từ niềm yêu thích với công nghệ và lập trình. Đây không chỉ là một website dịch vụ, mà còn là dự án cá nhân giúp mình học hỏi, thực hành và phát triển kỹ năng lập trình, thiết kế web và quản lý hệ thống.</p>
@@ -617,8 +608,9 @@ const SHOP_NAME = "BR-34";
 document.querySelectorAll("[data-brand]").forEach(el => el.textContent = SHOP_NAME);
 document.title = "SMM Panel — " + SHOP_NAME;
 
-/* ============ NAV ============ */
+/* ============ ĐÃ SỬA: MỤC "MUA TÀI NGUYÊN" TRỎ ĐÚNG FILE ============ */
 const NAV = [["Trang chủ","#",""],["Nạp tiền","nap-tien.html",""],["Mua tài nguyên","mua-tai-nguyen.html","Mới"],["Tài liệu","#",""],["Hỏi đáp","#",""]];
+/* ==================================================================== */
 
 const SERVICES = [
   {ic:"fa-solid fa-heart", logos:["fa-solid fa-heart"], n:"Locket Gold", c:"#fbbf24", d:"Nâng cấp Locket Gold, kích hoạt nhanh, bảo hành uy tín."},
@@ -752,7 +744,7 @@ $("orderForm").addEventListener("submit", async e => {
   e.preventDefault();
   const data = { link: $("link").value.trim(), service: $("service").value, contact: $("contact").value.trim(), source: "smm-panel" };
   const d = data.contact.replace(/\D/g,"");
-  const err = !data.link ? "Vui lòng dán link Facebook cần hỗ trợ." : !data.service ? "Vui lòng chọn dịch vụ." : (d.length<9||d.length>11) ? "Số Zalo / điện thoại chưa đúng (cần 9–11 số)." : "";
+  const err = !data.link ? "Vui lòng dán link cần hỗ trợ." : !data.service ? "Vui lòng chọn dịch vụ." : (d.length<9||d.length>11) ? "Số Zalo / điện thoại chưa đúng." : "";
   $("err").textContent = err; $("err").classList.toggle("hidden", !err);
   if (err) return;
 
@@ -861,8 +853,12 @@ const SAMPLE = STATS.map(s => s[2]);
 async function loadAccount(user){
   const uid = user.id; let p = {};
   try { const r = await supabaseClient.from("profiles").select("balance,total_deposit,total_spent").eq("id", uid).maybeSingle(); p = r.data || {}; } catch(e) {}
-  const cnt = async st => { try { let q = supabaseClient.from("orders").select("id", {count:"exact", head:true}).eq("user_id", uid); if (st) q = q.eq("status", st); const r = await q; return r.count || 0; } catch(e) { return 0; } };
-  const [orders, bought, canceled] = await Promise.all([cnt(), cnt("done"), cnt("canceled")]);
+  const cnt = async (table, st) => { try { let q = supabaseClient.from(table).select("id", {count:"exact", head:true}).eq("user_id", uid); if (st) q = q.eq("status", st); const r = await q; return r.count || 0; } catch(e) { return 0; } };
+  const [ordersA, boughtA, canceledA, ordersB, boughtB, canceledB] = await Promise.all([
+    cnt("orders"), cnt("orders", "done"), cnt("orders", "canceled"),
+    cnt("resource_orders"), cnt("resource_orders", "done"), cnt("resource_orders", "canceled")
+  ]);
+  const orders = ordersA + ordersB, bought = boughtA + boughtB, canceled = canceledA + canceledB;
   if (!currentUser || currentUser.id !== uid) return;
   renderStats([p.balance||0, p.total_deposit||0, p.total_spent||0, orders], true);
   $("statBought").textContent = bought; $("statCanceled").textContent = canceled;
@@ -1109,8 +1105,13 @@ function openAccountModal(){
 
   supabaseClient.from("profiles").select("balance").eq("id", u.id).maybeSingle()
     .then(({data}) => { if (data) $("accBalance").textContent = (data.balance||0).toLocaleString("vi-VN") + "đ"; });
-  supabaseClient.from("orders").select("id", {count:"exact", head:true}).eq("user_id", u.id)
-    .then(({count}) => { $("accTotalOrders").textContent = (count||0).toLocaleString("vi-VN"); });
+  Promise.all([
+    supabaseClient.from("orders").select("id", {count:"exact", head:true}).eq("user_id", u.id),
+    supabaseClient.from("resource_orders").select("id", {count:"exact", head:true}).eq("user_id", u.id)
+  ]).then(([r1, r2]) => {
+    const total = (r1.count||0) + (r2.count||0);
+    $("accTotalOrders").textContent = total.toLocaleString("vi-VN");
+  });
 
   accountModal.classList.remove("opacity-0", "pointer-events-none");
 }
