@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#09090b">
 <script>document.documentElement.classList.add('js')</script>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,7 @@
 html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
 body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:100%;max-width:100vw}
 
-/* ============ AURORA + NỀN (copy từ web mẹ) ============ */
+/* AURORA */
 .aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;contain:strict;max-width:100vw}
 .aurora span{position:absolute;width:60vmax;height:60vmax;border-radius:50%;opacity:.28;mix-blend-mode:screen;
   background:radial-gradient(circle,currentColor,transparent 68%);
@@ -40,78 +41,34 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
   -webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent);
   mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent)}
 
-/* ============ LIQUID GLASS CARD ============ */
-.card{
-  position:relative;border-radius:1.25rem;
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 20px 40px -22px rgba(0,0,0,.7);
-  transition:border-color .3s,transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s;
-  overflow:hidden;contain:paint;
-  -webkit-backdrop-filter:blur(14px) saturate(160%);
-  backdrop-filter:blur(14px) saturate(160%);
-}
-.card::before{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:
-    radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.10),transparent 45%),
-    radial-gradient(120% 80% at 100% 100%,rgba(244,63,94,.10),transparent 45%);
-  opacity:.9;
-}
-.card:hover{
-  border-color:rgba(244,63,94,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 24px 48px -22px rgba(244,63,94,.45);
-}
-
-/* ============ LIQUID GLASS PRODUCT (đặc trưng) ============ */
+/* LIQUID GLASS */
 .glass-card{
   position:relative;border-radius:1.25rem;
-  background:
-    linear-gradient(135deg,
-      rgba(255,255,255,.10) 0%,
-      rgba(255,255,255,.03) 45%,
-      rgba(255,255,255,.07) 100%);
+  background:linear-gradient(135deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.03) 45%,rgba(255,255,255,.07) 100%);
   border:1px solid rgba(255,255,255,.14);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.22),
-    inset 0 -1px 0 rgba(255,255,255,.05),
-    0 20px 44px -22px rgba(0,0,0,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.05),0 20px 44px -22px rgba(0,0,0,.75);
   -webkit-backdrop-filter:blur(20px) saturate(180%);
   backdrop-filter:blur(20px) saturate(180%);
   transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
   overflow:hidden;contain:paint;
 }
-/* vệt sáng xoay chậm tạo cảm giác "thuỷ tinh lỏng" */
 .glass-card::before{
   content:"";position:absolute;inset:-60%;z-index:0;pointer-events:none;
-  background:conic-gradient(from 0deg,
-    transparent 0deg,
-    rgba(255,255,255,.10) 40deg,
-    rgba(244,63,94,.14) 90deg,
-    transparent 140deg,
-    transparent 360deg);
-  animation:liquid 14s linear infinite;
-  opacity:.55;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,.10) 40deg,rgba(244,63,94,.14) 90deg,transparent 140deg,transparent 360deg);
+  animation:liquid 14s linear infinite;opacity:.55;
 }
-/* lớp highlight cố định ở góc trên - giả lập ánh sáng phản chiếu */
 .glass-card::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(140% 70% at 0% 0%,rgba(255,255,255,.16),transparent 55%),
-    radial-gradient(140% 70% at 100% 100%,rgba(139,92,246,.10),transparent 55%);
+  background:radial-gradient(140% 70% at 0% 0%,rgba(255,255,255,.16),transparent 55%),radial-gradient(140% 70% at 100% 100%,rgba(139,92,246,.10),transparent 55%);
 }
 .glass-card > *{position:relative;z-index:1}
 .glass-card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(244,63,94,.55);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.28),
-    inset 0 -1px 0 rgba(255,255,255,.06),
-    0 26px 52px -22px rgba(244,63,94,.5);
+  transform:translateY(-3px);border-color:rgba(244,63,94,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.06),0 26px 52px -22px rgba(244,63,94,.5);
 }
 @keyframes liquid{to{transform:rotate(360deg)}}
 
-/* ============ BUTTON (copy web mẹ) ============ */
+/* BUTTON */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.8rem;cursor:pointer;overflow:hidden;
   transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s,box-shadow .2s}
 .btn:active{transform:scale(.96)}
@@ -124,46 +81,43 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 .btn-shine::after{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
 .btn-shine:hover::after{left:100%}
-.btn[disabled]{cursor:not-allowed}
 
 .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
 @keyframes rip{to{transform:scale(4);opacity:0}}
 
-/* ============ TAB (glass style) ============ */
-.tab-btn{
-  white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.5rem;
-  padding:.75rem .5rem;border-radius:1rem;border:1px solid transparent;transition:.25s cubic-bezier(.2,.8,.2,1);
-  color:#a1a1aa;background:transparent;
+.main-tab{padding:.65rem 1.25rem;border-radius:.8rem;font-size:.875rem;font-weight:700;
+  border:1px solid transparent;transition:.25s;color:#a1a1aa;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;background:transparent}
+.main-tab:hover{color:#f4f4f5;background:rgba(255,255,255,.04)}
+.main-tab.active{
+  color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 26px -10px rgba(244,63,94,.7);
 }
+
+.tab-btn{white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  padding:.75rem .5rem;border-radius:1rem;border:1px solid transparent;transition:.25s cubic-bezier(.2,.8,.2,1);
+  color:#a1a1aa;background:transparent;cursor:pointer}
 .tab-btn:hover{color:#f4f4f5;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
 .tab-btn.active{
-  color:#fff;
-  background:linear-gradient(135deg,rgba(244,63,94,.18),rgba(139,92,246,.10));
+  color:#fff;background:linear-gradient(135deg,rgba(244,63,94,.18),rgba(139,92,246,.10));
   border-color:rgba(244,63,94,.45);
   -webkit-backdrop-filter:blur(16px) saturate(180%);
   backdrop-filter:blur(16px) saturate(180%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.20),
-    0 10px 30px -10px rgba(244,63,94,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 10px 30px -10px rgba(244,63,94,.55);
 }
 .tab-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:.25s;overflow:hidden}
-.tab-icon svg,.tab-icon i{width:26px;height:26px;font-size:22px}
-.tab-btn.active .tab-icon{
-  background:linear-gradient(180deg,#ff5c7a,#e11d48);
-  border-color:transparent;
-  box-shadow:0 8px 20px -6px rgba(244,63,94,.6);
-}
+.tab-icon svg{width:26px;height:26px}
+.tab-btn.active .tab-icon{background:linear-gradient(180deg,#ff5c7a,#e11d48);border-color:transparent;
+  box-shadow:0 8px 20px -6px rgba(244,63,94,.6)}
 .tab-btn.active .tab-icon svg *{fill:#fff}
 
 .tabs-scroll{overflow-x:auto;scrollbar-width:none}
 .tabs-scroll::-webkit-scrollbar{display:none}
 
-.stock-line{font-size:.72rem;color:#71717a}
 .fade-swap{animation:fadeIn .35s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* ============ LOGO ============ */
 .product-logo{
   width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
   background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
@@ -174,11 +128,92 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 .product-logo svg{width:34px;height:34px}
 .glass-card:hover .product-logo{transform:scale(1.06)}
 
-/* ============ JS REVEAL ============ */
+.search-wrap{position:relative}
+.search-wrap i{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#71717a;font-size:.875rem;pointer-events:none}
+.search-field{width:100%;background:rgba(12,12,15,.7);color:#fff;font-size:.875rem;
+  padding:.7rem 1rem .7rem 2.5rem;border-radius:.8rem;
+  border:1px solid rgba(255,255,255,.12);transition:border-color .2s,box-shadow .2s;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.search-field::placeholder{color:#71717a}
+.search-field:focus{outline:none;border-color:#f43f5e;box-shadow:0 0 0 3px rgba(244,63,94,.22)}
+
+.filter-pill{padding:.45rem .9rem;border-radius:.7rem;font-size:.75rem;font-weight:700;
+  border:1px solid rgba(255,255,255,.1);background:rgba(24,24,27,.6);color:#a1a1aa;
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.35rem;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.filter-pill:hover{color:#f4f4f5;border-color:rgba(255,255,255,.2)}
+.filter-pill.active{color:#fff;background:rgba(244,63,94,.15);border-color:rgba(244,63,94,.5)}
+.filter-pill .cnt{font-size:.65rem;padding:.1rem .4rem;border-radius:.4rem;background:rgba(255,255,255,.08)}
+.filter-pill.active .cnt{background:rgba(244,63,94,.3)}
+
+.status{display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.7rem;font-weight:800;padding:.3rem .7rem;border-radius:.6rem;
+  border:1px solid transparent;letter-spacing:.02em}
+.status-done{color:#34d399;background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.3)}
+.status-pending{color:#fbbf24;background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.3)}
+.status-canceled{color:#fb7185;background:rgba(251,113,133,.12);border-color:rgba(251,113,133,.3)}
+
+.hist-card{
+  position:relative;border-radius:1.1rem;padding:1rem;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 14px 28px -18px rgba(0,0,0,.7);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  backdrop-filter:blur(16px) saturate(160%);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+  overflow:hidden;
+}
+.hist-card:hover{transform:translateY(-2px);border-color:rgba(244,63,94,.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 20px 40px -18px rgba(244,63,94,.4)}
+
+.empty-state{
+  text-align:center;padding:3.5rem 1rem;
+  border-radius:1.25rem;border:1px dashed rgba(255,255,255,.12);
+  background:rgba(255,255,255,.02)
+}
+.empty-icon{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto;
+  background:radial-gradient(circle,rgba(244,63,94,.15),rgba(244,63,94,.02));
+  border:1px solid rgba(244,63,94,.2);font-size:1.75rem;color:#f43f5e}
+
+.field{width:100%;background:#0c0c0f;color:#fff;font-size:16px;padding:.8rem 1rem;border-radius:.8rem;
+  border:1px solid rgba(255,255,255,.12);transition:border-color .2s,box-shadow .2s}
+.field::placeholder{color:#71717a}
+.field:focus{outline:none;border-color:#f43f5e;box-shadow:0 0 0 3px rgba(244,63,94,.22)}
+
+.modal-backdrop{
+  position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:1rem;
+  background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-backdrop.show{opacity:1;pointer-events:auto}
+.modal-card{
+  width:100%;max-width:460px;position:relative;max-height:92vh;overflow-y:auto;
+  border-radius:1.25rem;padding:1.5rem;
+  background:rgba(18,18,23,.97);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 30px 60px -20px rgba(0,0,0,.8);
+  transform:translateY(12px) scale(.98);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.modal-backdrop.show .modal-card{transform:none}
+
+#toast{
+  position:fixed;left:50%;transform:translate(-50%,1rem);top:5rem;z-index:90;
+  padding:.85rem 1.25rem;border-radius:.9rem;font-size:.875rem;font-weight:600;
+  background:rgba(18,18,23,.96);border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 40px -12px rgba(0,0,0,.8);
+  opacity:0;pointer-events:none;transition:all .3s;max-width:90vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+
+/* Loading skeleton */
+.skel{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));
+  background-size:200% 100%;animation:skel 1.4s ease-in-out infinite;border-radius:1rem}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
 .js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .js .rv.in{opacity:1;transform:none}
 
-/* ============ REDUCED MOTION ============ */
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .aurora span,.glass-card::before{animation:none!important}
@@ -189,125 +224,194 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 </head>
 <body class="font-sans antialiased">
 
-<!-- AURORA + SPOTLIGHT (giống web mẹ) -->
 <div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
 <div id="spotlight" class="spotlight"></div>
 
 <main class="relative max-w-[1400px] mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
   <div class="grid-bg"></div>
 
-  <!-- Tabs phụ -->
-  <div class="rv flex gap-2 mb-6">
-    <button class="btn btn-red btn-shine px-5 py-2.5 text-sm">Mua tài nguyên</button>
-    <button class="btn btn-dark px-5 py-2.5 text-sm !cursor-pointer">Lịch sử mua TN</button>
+  <!-- TAB CHÍNH -->
+  <div class="rv flex gap-2 mb-6 flex-wrap">
+    <button id="tabBuy" class="main-tab active">
+      <i class="fa-solid fa-cart-shopping"></i>Mua tài nguyên
+    </button>
+    <button id="tabHistory" class="main-tab">
+      <i class="fa-solid fa-clock-rotate-left"></i>Lịch sử mua TN
+      <span id="histCount" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10">0</span>
+    </button>
   </div>
 
-  <!-- Danh mục -->
-  <div class="rv tabs-scroll mb-8">
-    <div id="categoryTabs" class="flex gap-2 min-w-max pb-1"></div>
-  </div>
+  <!-- VIEW MUA -->
+  <section id="viewBuy">
+    <div class="rv tabs-scroll mb-6">
+      <div id="categoryTabs" class="flex gap-2 min-w-max pb-1"></div>
+    </div>
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <p id="emptyState" class="hidden text-center text-zinc-500 py-16">Chưa có sản phẩm nào trong mục này.</p>
+  </section>
 
-  <!-- Lưới sản phẩm -->
-  <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <!-- VIEW LỊCH SỬ -->
+  <section id="viewHistory" class="hidden">
+    <div id="histLoginBanner" class="hidden rv mb-6 glass-card p-5">
+      <div class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-2xl grid place-items-center bg-amber-400/15 border border-amber-400/30 text-amber-300 shrink-0">
+          <i class="fa-solid fa-lock text-lg"></i>
+        </span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-sm">Bạn chưa đăng nhập</h3>
+          <p class="text-xs text-zinc-400 mt-1">Vui lòng đăng nhập để xem lịch sử mua tài nguyên của bạn.</p>
+        </div>
+        <button id="histLoginBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-xs shrink-0">
+          <i class="fa-solid fa-right-to-bracket"></i>Đăng nhập
+        </button>
+      </div>
+    </div>
 
-  <p id="emptyState" class="hidden text-center text-zinc-500 py-16">Chưa có sản phẩm nào trong mục này.</p>
+    <div id="histContent" class="hidden">
+      <div class="rv mb-4 grid sm:grid-cols-[1fr_auto] gap-3">
+        <div class="search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="histSearch" type="text" class="search-field" placeholder="Tìm theo tên sản phẩm hoặc mã đơn...">
+        </div>
+        <button id="histRefresh" type="button" class="btn btn-dark px-5 py-2.5 text-sm">
+          <i class="fa-solid fa-rotate-right"></i>Làm mới
+        </button>
+      </div>
+
+      <div class="rv mb-6 flex gap-2 flex-wrap">
+        <button class="filter-pill active" data-status="all">
+          <i class="fa-solid fa-layer-group"></i>Tất cả <span class="cnt" data-cnt="all">0</span>
+        </button>
+        <button class="filter-pill" data-status="pending">
+          <i class="fa-solid fa-hourglass-half"></i>Đang xử lý <span class="cnt" data-cnt="pending">0</span>
+        </button>
+        <button class="filter-pill" data-status="done">
+          <i class="fa-solid fa-circle-check"></i>Hoàn thành <span class="cnt" data-cnt="done">0</span>
+        </button>
+        <button class="filter-pill" data-status="canceled">
+          <i class="fa-solid fa-circle-xmark"></i>Đã huỷ <span class="cnt" data-cnt="canceled">0</span>
+        </button>
+      </div>
+
+      <div id="historyList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+      <div id="historyEmpty" class="hidden empty-state">
+        <div class="empty-icon"><i class="fa-solid fa-receipt"></i></div>
+        <h3 class="mt-4 text-lg font-bold">Chưa có đơn nào</h3>
+        <p class="mt-2 text-sm text-zinc-500">Bạn chưa mua tài nguyên nào. Hãy sang tab <b class="text-rose-300">Mua tài nguyên</b> để bắt đầu.</p>
+        <button id="histEmptyBuy" type="button" class="btn btn-red btn-shine px-5 py-2.5 text-sm mt-5">
+          <i class="fa-solid fa-cart-shopping"></i>Mua ngay
+        </button>
+      </div>
+
+      <div id="historyLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="skel h-32"></div><div class="skel h-32"></div><div class="skel h-32"></div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<!-- MODAL MUA -->
+<div id="buyModal" class="modal-backdrop">
+  <div class="modal-card">
+    <button id="closeBuyModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="text-lg font-extrabold flex items-center gap-2"><i class="fa-solid fa-bag-shopping text-rose-400"></i>Xác nhận mua</h3>
+    <p class="text-xs text-zinc-400 mt-1">Kiểm tra kỹ thông tin trước khi xác nhận</p>
+
+    <div class="mt-4 rounded-2xl border border-white/10 bg-white/[.03] p-3 flex items-center gap-3">
+      <div id="buyLogo" class="product-logo"></div>
+      <div class="flex-1 min-w-0">
+        <p id="buyName" class="font-bold text-sm leading-snug"></p>
+        <p id="buyPrice" class="text-rose-300 font-extrabold text-base mt-1"></p>
+      </div>
+    </div>
+
+    <div class="mt-3 grid grid-cols-2 gap-2">
+      <div class="rounded-xl border border-white/10 bg-white/[.03] px-3 py-2.5">
+        <p class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Số dư hiện tại</p>
+        <p id="buyBalance" class="text-emerald-300 font-extrabold text-base mt-1">0đ</p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-white/[.03] px-3 py-2.5">
+        <p class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Sau khi mua</p>
+        <p id="buyAfter" class="font-extrabold text-base mt-1">0đ</p>
+      </div>
+    </div>
+
+    <div id="buyWarn" class="hidden mt-3 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2.5 text-xs text-amber-200 leading-relaxed">
+      <i class="fa-solid fa-triangle-exclamation mr-1"></i><span id="buyWarnText"></span>
+    </div>
+
+    <div class="mt-3">
+      <label class="block text-xs font-semibold text-zinc-400 mb-1">Ghi chú (không bắt buộc)</label>
+      <textarea id="buyNote" rows="2" class="field" placeholder="VD: email nhận tài khoản, yêu cầu riêng..."></textarea>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-2.5">
+      <button id="buyCancel" type="button" class="btn btn-dark py-3 text-sm">Huỷ</button>
+      <button id="buyConfirm" type="button" class="btn btn-red btn-shine py-3 text-sm">
+        <i class="fa-solid fa-check"></i>Xác nhận mua
+      </button>
+    </div>
+    <button id="buyGoTopUp" type="button" class="hidden btn btn-dark w-full py-2.5 text-sm mt-2">
+      <i class="fa-solid fa-wallet text-amber-400"></i>Nạp tiền ngay
+    </button>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div id="loginModal" class="modal-backdrop">
+  <div class="modal-card">
+    <button id="closeLoginModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="text-lg font-extrabold flex items-center gap-2"><i class="fa-solid fa-right-to-bracket text-rose-400"></i>Cần đăng nhập</h3>
+    <p class="text-xs text-zinc-400 mt-1 mb-4">Bạn cần đăng nhập để mua tài nguyên. Vào trang chủ để đăng nhập?</p>
+    <div class="grid grid-cols-2 gap-2.5">
+      <button id="loginStay" type="button" class="btn btn-dark py-3 text-sm">Ở lại đây</button>
+      <a href="index.html?login=1" class="btn btn-red btn-shine py-3 text-sm">
+        <i class="fa-solid fa-arrow-right"></i>Đăng nhập
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
 /* ============================================================
-   LOGO SVG INLINE — không phụ thuộc CDN
+   SUPABASE — DÙNG CHUNG PROJECT VỚI WEB MẸ
+   ============================================================ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY, {
+  global: {
+    fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" })
+  }
+});
+const $ = id => document.getElementById(id);
+
+/* ============================================================
+   LOGO SVG
    ============================================================ */
 const LOGOS = {
-  canva: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#7d2ae8"/>
-    </linearGradient></defs>
-    <circle cx="12" cy="12" r="11" fill="url(#cv)"/>
-    <path fill="#fff" d="M12.5 6.5c-3.3 0-6 3-6 6.8 0 2.5 1.5 4.2 3.6 4.2 1.7 0 3-1.1 3.7-2.6.3-.6-.1-1.1-.7-.9-.9.3-1.7.4-2.4.1-.7-.3-1.2-1-1.2-2.1 0-2.3 1.6-4.1 3.4-4.1 1.2 0 2 .7 2 1.7 0 .5-.2 1-.5 1.4-.3.3 0 .8.4.7 1.3-.3 2.3-1.5 2.3-3 0-2-1.8-3.4-4.6-3.4z" transform="translate(-.5 0)"/>
-  </svg>`,
-
-  capcut: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="5" fill="#000"/>
-    <path fill="#fff" d="M8 5.5v2.3l6 3.7-6 3.7v2.3l9.5-6L8 5.5z"/>
-  </svg>`,
-
-  openai: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
-    <path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.97 5.97 0 0 0-4 2.9 6.05 6.05 0 0 0 .74 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.51 2.9A5.97 5.97 0 0 0 13.25 24a6.06 6.06 0 0 0 5.77-4.21 5.97 5.97 0 0 0 4-2.9 6.06 6.06 0 0 0-.74-7.07zM13.25 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.78.78 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.05v5.59a4.51 4.51 0 0 1-4.49 4.49zM3.6 18.3a4.47 4.47 0 0 1-.54-3.01l.14.09 4.78 2.76a.78.78 0 0 0 .79 0l5.83-3.37v2.33a.08.08 0 0 1-.03.06L9.74 20.05A4.5 4.5 0 0 1 3.6 18.3zM2.34 7.9a4.48 4.48 0 0 1 2.34-1.97v5.68a.78.78 0 0 0 .39.68l5.83 3.37-2.02 1.17a.08.08 0 0 1-.07 0L3.99 13.8A4.5 4.5 0 0 1 2.34 7.9zm16.48 3.83-5.83-3.37L15 7.2a.08.08 0 0 1 .07 0l4.82 2.78a4.49 4.49 0 0 1-.69 8.11v-5.68a.78.78 0 0 0-.38-.68zm2.01-3.02-.14-.09-4.78-2.76a.78.78 0 0 0-.79 0L9.29 9.23V6.9a.07.07 0 0 1 .03-.06l4.82-2.78a4.5 4.5 0 0 1 6.68 4.66zM8.3 12.84l-2.02-1.17a.08.08 0 0 1-.04-.06V6.03a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.7 5.42a.78.78 0 0 0-.39.68v6.74zm1.1-2.36L12 8.95l2.6 1.5v3l-2.6 1.5-2.6-1.5v-3z"/>
-  </svg>`,
-
-  anthropic: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#d97757">
-    <path d="M13.79 3h-3.1L4 21h3.36l1.36-4.07h6.42L16.5 21h3.36L13.79 3zm-4.1 11.03L12.24 6.4l2.55 7.63H9.69z"/>
-  </svg>`,
-
-  freepik: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="5" fill="#1273eb"/>
-    <path fill="#fff" d="M14.5 6H8v3h5.2c.7 0 1.3.6 1.3 1.3v.4h-6.5v3h6.5v.3c0 .7-.6 1.3-1.3 1.3H8v3h5.8c2.5 0 4.5-2 4.5-4.5v-3.3c0-2.5-2-4.5-4.5-4.5z"/>
-  </svg>`,
-
-  x: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
-    <path d="M18.9 2H22l-7.3 8.4L23.3 22h-6.7l-5.3-6.9L5.3 22H2.1l7.8-9L1 2h6.9l4.8 6.3L18.9 2zm-1.2 18h1.9L7.3 3.9H5.3L17.7 20z"/>
-  </svg>`,
-
-  gemini: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/>
-    </linearGradient></defs>
-    <path fill="url(#gm)" d="M12 2c.3 5.1 4.9 9.7 10 10-5.1.3-9.7 4.9-10 10-.3-5.1-4.9-9.7-10-10 5.1-.3 9.7-4.9 10-10z"/>
-  </svg>`,
-
-  netflix: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="5" fill="#000"/>
-    <path fill="#e50914" d="M8 4v16h2.4V9.2L15.8 20H18V4h-2.4v10.6L8 4z"/>
-  </svg>`,
-
-  youtube: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000">
-    <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/>
-  </svg>`,
-
-  twitter: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1d9bf0">
-    <path d="M23.95 4.57a10 10 0 0 1-2.82.77 4.96 4.96 0 0 0 2.16-2.72c-.95.56-2 .96-3.13 1.19a4.92 4.92 0 0 0-8.38 4.48A13.94 13.94 0 0 1 1.64 3.16a4.92 4.92 0 0 0 1.52 6.57 4.9 4.9 0 0 1-2.23-.62v.06a4.92 4.92 0 0 0 3.95 4.83 4.96 4.96 0 0 1-2.22.08 4.93 4.93 0 0 0 4.6 3.42A9.87 9.87 0 0 1 0 19.54a13.94 13.94 0 0 0 7.55 2.21c9.05 0 14-7.5 14-14 0-.21 0-.42-.02-.63A10 10 0 0 0 24 4.59z"/>
-  </svg>`,
-
-  autodesk: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="5" fill="#000"/>
-    <path fill="#0696d7" d="M12.4 5h-2.6L4 19h2.7l1.2-3.1h5.3L14.4 19h2.7L12.4 5zm-3.6 8.6L11 7.9l2.2 5.7H8.8z"/>
-    <path fill="#fff" d="M19.5 5l-3.1 8 1.3 3.3L21 5h-1.5z" opacity=".7"/>
-  </svg>`,
-
-  zalo: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="5" fill="#0068ff"/>
-    <path fill="#fff" d="M12 4.5c-4.7 0-8.5 3.1-8.5 6.9 0 2.2 1.2 4.1 3.1 5.4-.1.8-.5 2-1.2 2.8 0 0 1.8-.3 3.3-1.3.9.3 2 .4 3.3.4 4.7 0 8.5-3.1 8.5-6.9S16.7 4.5 12 4.5zm-3.4 9.3H6.3v-4.8h.9v3.9h1.4v.9zm1.5 0h-.9v-4.8h.9v4.8zm5.1 0h-.8l-2-3.2v3.2h-.9v-4.8h.9l2 3.2v-3.2h.8v4.8zm1.7 0h-.9v-4.8h.9v4.8z"/>
-  </svg>`,
-
-  hubspot: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff7a59">
-    <path d="M18.2 8.6V5.9a1.7 1.7 0 0 0 1-1.5A1.7 1.7 0 0 0 17.5 2.7a1.7 1.7 0 0 0-1.7 1.7c0 .7.4 1.3 1 1.5v2.7a4.7 4.7 0 0 0-2.3 1L7.4 6.4a2 2 0 0 0 .1-.5 2 2 0 1 0-2 2c.3 0 .7-.1.9-.2l7 3.2a4.7 4.7 0 0 0-.1 1 4.7 4.7 0 0 0 8.6 2.7l2.1 1.5a1.7 1.7 0 1 0 1-1.4l-2-1.5a4.7 4.7 0 0 0 .3-1.6 4.7 4.7 0 0 0-5-5zm.5 7.8a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z"/>
-  </svg>`,
-
-  beauty: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="bt" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#a855f7"/>
-    </linearGradient></defs>
-    <path fill="url(#bt)" d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10zm0-2.2c1.8-1.3 5-4 5-7.8a5 5 0 0 0-10 0c0 3.8 3.2 6.5 5 7.8zm-2-8.3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-2.5 4.5c-.8 0-1.5-.4-1.8-1h3.6c-.3.6-1 1-1.8 1z"/>
-  </svg>`,
-
-  kimi: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="km" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6366f1"/>
-    </linearGradient></defs>
-    <path fill="url(#km)" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>
-    <circle cx="16" cy="8" r="1" fill="#fff"/><circle cx="19" cy="10.5" r=".7" fill="#fff"/><circle cx="14" cy="6" r=".6" fill="#fff"/>
-  </svg>`,
-
-  default: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa">
-    <path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.6l6 3.3v6.8l-6-3.3V9.6zm8 10.1v-6.8l6-3.3v6.8l-6 3.3z"/>
-  </svg>`,
-
-  all: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f43f5e">
-    <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
-  </svg>`,
+  canva: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#7d2ae8"/></linearGradient></defs><circle cx="12" cy="12" r="11" fill="url(#cv)"/><path fill="#fff" d="M12.5 6.5c-3.3 0-6 3-6 6.8 0 2.5 1.5 4.2 3.6 4.2 1.7 0 3-1.1 3.7-2.6.3-.6-.1-1.1-.7-.9-.9.3-1.7.4-2.4.1-.7-.3-1.2-1-1.2-2.1 0-2.3 1.6-4.1 3.4-4.1 1.2 0 2 .7 2 1.7 0 .5-.2 1-.5 1.4-.3.3 0 .8.4.7 1.3-.3 2.3-1.5 2.3-3 0-2-1.8-3.4-4.6-3.4z" transform="translate(-.5 0)"/></svg>`,
+  capcut: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" d="M8 5.5v2.3l6 3.7-6 3.7v2.3l9.5-6L8 5.5z"/></svg>`,
+  openai: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.97 5.97 0 0 0-4 2.9 6.05 6.05 0 0 0 .74 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.51 2.9A5.97 5.97 0 0 0 13.25 24a6.06 6.06 0 0 0 5.77-4.21 5.97 5.97 0 0 0 4-2.9 6.06 6.06 0 0 0-.74-7.07zM13.25 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.78.78 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.05v5.59a4.51 4.51 0 0 1-4.49 4.49zM3.6 18.3a4.47 4.47 0 0 1-.54-3.01l.14.09 4.78 2.76a.78.78 0 0 0 .79 0l5.83-3.37v2.33a.08.08 0 0 1-.03.06L9.74 20.05A4.5 4.5 0 0 1 3.6 18.3zM2.34 7.9a4.48 4.48 0 0 1 2.34-1.97v5.68a.78.78 0 0 0 .39.68l5.83 3.37-2.02 1.17a.08.08 0 0 1-.07 0L3.99 13.8A4.5 4.5 0 0 1 2.34 7.9zm16.48 3.83-5.83-3.37L15 7.2a.08.08 0 0 1 .07 0l4.82 2.78a4.49 4.49 0 0 1-.69 8.11v-5.68a.78.78 0 0 0-.38-.68zm2.01-3.02-.14-.09-4.78-2.76a.78.78 0 0 0-.79 0L9.29 9.23V6.9a.07.07 0 0 1 .03-.06l4.82-2.78a4.5 4.5 0 0 1 6.68 4.66zM8.3 12.84l-2.02-1.17a.08.08 0 0 1-.04-.06V6.03a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.7 5.42a.78.78 0 0 0-.39.68v6.74zm1.1-2.36L12 8.95l2.6 1.5v3l-2.6 1.5-2.6-1.5v-3z"/></svg>`,
+  anthropic: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#d97757"><path d="M13.79 3h-3.1L4 21h3.36l1.36-4.07h6.42L16.5 21h3.36L13.79 3zm-4.1 11.03L12.24 6.4l2.55 7.63H9.69z"/></svg>`,
+  freepik: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#1273eb"/><path fill="#fff" d="M14.5 6H8v3h5.2c.7 0 1.3.6 1.3 1.3v.4h-6.5v3h6.5v.3c0 .7-.6 1.3-1.3 1.3H8v3h5.8c2.5 0 4.5-2 4.5-4.5v-3.3c0-2.5-2-4.5-4.5-4.5z"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M18.9 2H22l-7.3 8.4L23.3 22h-6.7l-5.3-6.9L5.3 22H2.1l7.8-9L1 2h6.9l4.8 6.3L18.9 2zm-1.2 18h1.9L7.3 3.9H5.3L17.7 20z"/></svg>`,
+  gemini: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs><path fill="url(#gm)" d="M12 2c.3 5.1 4.9 9.7 10 10-5.1.3-9.7 4.9-10 10-.3-5.1-4.9-9.7-10-10 5.1-.3 9.7-4.9 10-10z"/></svg>`,
+  netflix: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#e50914" d="M8 4v16h2.4V9.2L15.8 20H18V4h-2.4v10.6L8 4z"/></svg>`,
+  youtube: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>`,
+  twitter: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1d9bf0"><path d="M23.95 4.57a10 10 0 0 1-2.82.77 4.96 4.96 0 0 0 2.16-2.72c-.95.56-2 .96-3.13 1.19a4.92 4.92 0 0 0-8.38 4.48A13.94 13.94 0 0 1 1.64 3.16a4.92 4.92 0 0 0 1.52 6.57 4.9 4.9 0 0 1-2.23-.62v.06a4.92 4.92 0 0 0 3.95 4.83 4.96 4.96 0 0 1-2.22.08 4.93 4.93 0 0 0 4.6 3.42A9.87 9.87 0 0 1 0 19.54a13.94 13.94 0 0 0 7.55 2.21c9.05 0 14-7.5 14-14 0-.21 0-.42-.02-.63A10 10 0 0 0 24 4.59z"/></svg>`,
+  autodesk: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#0696d7" d="M12.4 5h-2.6L4 19h2.7l1.2-3.1h5.3L14.4 19h2.7L12.4 5zm-3.6 8.6L11 7.9l2.2 5.7H8.8z"/><path fill="#fff" d="M19.5 5l-3.1 8 1.3 3.3L21 5h-1.5z" opacity=".7"/></svg>`,
+  zalo: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#0068ff"/><path fill="#fff" d="M12 4.5c-4.7 0-8.5 3.1-8.5 6.9 0 2.2 1.2 4.1 3.1 5.4-.1.8-.5 2-1.2 2.8 0 0 1.8-.3 3.3-1.3.9.3 2 .4 3.3.4 4.7 0 8.5-3.1 8.5-6.9S16.7 4.5 12 4.5z"/></svg>`,
+  hubspot: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff7a59"><path d="M18.2 8.6V5.9a1.7 1.7 0 0 0 1-1.5A1.7 1.7 0 0 0 17.5 2.7a1.7 1.7 0 0 0-1.7 1.7c0 .7.4 1.3 1 1.5v2.7a4.7 4.7 0 0 0-2.3 1L7.4 6.4a2 2 0 0 0 .1-.5 2 2 0 1 0-2 2c.3 0 .7-.1.9-.2l7 3.2a4.7 4.7 0 0 0-.1 1 4.7 4.7 0 0 0 8.6 2.7l2.1 1.5a1.7 1.7 0 1 0 1-1.4l-2-1.5a4.7 4.7 0 0 0 .3-1.6 4.7 4.7 0 0 0-5-5zm.5 7.8a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z"/></svg>`,
+  beauty: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><path fill="url(#bt)" d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10zm0-2.2c1.8-1.3 5-4 5-7.8a5 5 0 0 0-10 0c0 3.8 3.2 6.5 5 7.8zm-2-8.3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-2.5 4.5c-.8 0-1.5-.4-1.8-1h3.6c-.3.6-1 1-1.8 1z"/></svg>`,
+  kimi: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="km" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><path fill="url(#km)" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><circle cx="16" cy="8" r="1" fill="#fff"/><circle cx="19" cy="10.5" r=".7" fill="#fff"/><circle cx="14" cy="6" r=".6" fill="#fff"/></svg>`,
+  default: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.6l6 3.3v6.8l-6-3.3V9.6zm8 10.1v-6.8l6-3.3v6.8l-6 3.3z"/></svg>`,
+  all: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f43f5e"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>`,
 };
 
-/* ============ DANH MỤC ============ */
+/* ============ DANH MỤC & SẢN PHẨM ============ */
 const CATEGORIES = [
   { id:"all",       name:"Tất Cả",              logo:"all" },
   { id:"api-ai",    name:"API TOKEN AI",        logo:"openai" },
@@ -322,32 +426,65 @@ const CATEGORIES = [
   { id:"youtube",   name:"Youtube Premium",     logo:"youtube" },
 ];
 
-/* ============ SẢN PHẨM ============ */
 const PRODUCTS = [
-  { name:"CapCut Pro 7Days - FREE",                        cat:"capcut",    price:20000,   stock:0, logo:"capcut" },
-  { name:"100$ API Claude 30D (FW)",                       cat:"api-ai",    price:20000,   stock:0, logo:"anthropic" },
-  { name:"API Freepik Magnific Premium 2 tháng BHF",       cat:"api-ai",    price:190000,  stock:0, logo:"freepik" },
-  { name:"API Grok xAI 100$ 1 tháng BHF",                  cat:"api-ai",    price:1220000, stock:0, logo:"x" },
-  { name:"API KIMI 15M TOKEN 1D",                          cat:"api-ai",    price:20000,   stock:0, logo:"kimi" },
-  { name:"Autodesk Full Apps Bản quyền 1 năm BHF",         cat:"marketing", price:79000,   stock:0, logo:"autodesk" },
-  { name:"Bot Zalo Rải Link 1 Tháng",                      cat:"marketing", price:70000,   stock:0, logo:"zalo" },
-  { name:"Canva Pro 1 Tháng",                               cat:"canva",     price:50000,   stock:0, logo:"canva" },
-  { name:"Canva Pro 2",                                     cat:"canva",     price:70000,   stock:0, logo:"canva" },
-  { name:"CapCut Pro 1 Tháng - BHF",                        cat:"capcut",    price:35000,   stock:0, logo:"capcut" },
-  { name:"CapCut Pro 1 Year - BHF",                         cat:"capcut",    price:219999,  stock:0, logo:"capcut" },
-  { name:"CapCut Pro 3 Tháng - BHF",                        cat:"capcut",    price:75555,   stock:0, logo:"capcut" },
-  { name:"CapCut Pro 6 Tháng - BHF",                        cat:"capcut",    price:119000,  stock:0, logo:"capcut" },
-  { name:"CapCut Pro 7Days - BHF",                          cat:"capcut",    price:23000,   stock:0, logo:"capcut" },
-  { name:"CHATGPT - API Codex Astra 50$ Token 1 tháng BHF", cat:"chatgpt",   price:160000,  stock:0, logo:"openai" },
+  { id:"p01", name:"CapCut Pro 7Days - FREE",                        cat:"capcut",    price:20000,   logo:"capcut" },
+  { id:"p02", name:"100$ API Claude 30D (FW)",                       cat:"api-ai",    price:20000,   logo:"anthropic" },
+  { id:"p03", name:"API Freepik Magnific Premium 2 tháng BHF",       cat:"api-ai",    price:190000,  logo:"freepik" },
+  { id:"p04", name:"API Grok xAI 100$ 1 tháng BHF",                  cat:"api-ai",    price:1220000, logo:"x" },
+  { id:"p05", name:"API KIMI 15M TOKEN 1D",                          cat:"api-ai",    price:20000,   logo:"kimi" },
+  { id:"p06", name:"Autodesk Full Apps Bản quyền 1 năm BHF",         cat:"marketing", price:79000,   logo:"autodesk" },
+  { id:"p07", name:"Bot Zalo Rải Link 1 Tháng",                      cat:"marketing", price:70000,   logo:"zalo" },
+  { id:"p08", name:"Canva Pro 1 Tháng",                               cat:"canva",     price:50000,   logo:"canva" },
+  { id:"p09", name:"Canva Pro 2",                                     cat:"canva",     price:70000,   logo:"canva" },
+  { id:"p10", name:"CapCut Pro 1 Tháng - BHF",                        cat:"capcut",    price:35000,   logo:"capcut" },
+  { id:"p11", name:"CapCut Pro 1 Year - BHF",                         cat:"capcut",    price:219999,  logo:"capcut" },
+  { id:"p12", name:"CapCut Pro 3 Tháng - BHF",                        cat:"capcut",    price:75555,   logo:"capcut" },
+  { id:"p13", name:"CapCut Pro 6 Tháng - BHF",                        cat:"capcut",    price:119000,  logo:"capcut" },
+  { id:"p14", name:"CapCut Pro 7Days - BHF",                          cat:"capcut",    price:23000,   logo:"capcut" },
+  { id:"p15", name:"CHATGPT - API Codex Astra 50$ Token 1 tháng BHF", cat:"chatgpt",   price:160000,  logo:"openai" },
 ];
 
 const fmt = n => n.toLocaleString("vi-VN") + "đ";
 const logoSVG = key => LOGOS[key] || LOGOS.default;
+const STATUS_MAP = {
+  done:     { label:"Hoàn thành", icon:"fa-solid fa-circle-check",   cls:"status-done" },
+  pending:  { label:"Đang xử lý", icon:"fa-solid fa-hourglass-half", cls:"status-pending" },
+  canceled: { label:"Đã huỷ",     icon:"fa-solid fa-circle-xmark",   cls:"status-canceled" },
+};
 
-/* ============ RENDER ============ */
-const tabsEl = document.getElementById("categoryTabs");
-const gridEl = document.getElementById("productGrid");
-const emptyEl = document.getElementById("emptyState");
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentUser = null;   // Supabase user
+let currentBalance = 0;   // profiles.balance
+let myOrders = [];        // danh sách đơn của user hiện tại
+let pendingProduct = null;
+
+/* ============================================================
+   TAB CHÍNH
+   ============================================================ */
+const tabBuy = $("tabBuy");
+const tabHistory = $("tabHistory");
+const viewBuy = $("viewBuy");
+const viewHistory = $("viewHistory");
+
+function switchView(view){
+  const isBuy = view === "buy";
+  tabBuy.classList.toggle("active", isBuy);
+  tabHistory.classList.toggle("active", !isBuy);
+  viewBuy.classList.toggle("hidden", !isBuy);
+  viewHistory.classList.toggle("hidden", isBuy);
+  if (!isBuy) renderHistoryView();
+}
+tabBuy.onclick = () => switchView("buy");
+tabHistory.onclick = () => switchView("history");
+
+/* ============================================================
+   RENDER TAB MUA
+   ============================================================ */
+const tabsEl = $("categoryTabs");
+const gridEl = $("productGrid");
+const emptyEl = $("emptyState");
 let activeCat = "all";
 
 function renderTabs(){
@@ -367,36 +504,371 @@ function renderGrid(){
   emptyEl.classList.toggle("hidden", list.length > 0);
 
   gridEl.innerHTML = list.map(p => `
-    <div class="glass-card fade-swap lift p-4 flex gap-4 items-start">
+    <div class="glass-card fade-swap p-4 flex gap-4 items-start">
       <div class="product-logo">${logoSVG(p.logo)}</div>
       <div class="flex-1 min-w-0">
-        <h3 class="font-bold text-sm leading-snug mb-1 truncate">${p.name}</h3>
-        <p class="stock-line mb-2">Kho: ${p.stock}</p>
+        <h3 class="font-bold text-sm leading-snug mb-1 line-clamp-2 min-h-[2.5em]">${p.name}</h3>
         <p class="font-extrabold text-base">${fmt(p.price)}</p>
       </div>
-      <button class="btn btn-dark self-center px-4 py-2 text-xs shrink-0" disabled>
-        <i class="fa-solid fa-cart-shopping"></i> Hết hàng
+      <button class="btn btn-red btn-shine self-center px-4 py-2 text-xs shrink-0" data-buy="${p.id}">
+        <i class="fa-solid fa-cart-shopping"></i>Mua
       </button>
     </div>
   `).join("");
+
+  gridEl.querySelectorAll("[data-buy]").forEach(btn => {
+    btn.onclick = () => handleBuyClick(btn.dataset.buy);
+  });
 }
 
-renderTabs();
-renderGrid();
+/* ============================================================
+   MUA — LUỒNG CHÍNH
+   ============================================================ */
+const buyModal = $("buyModal");
+const loginModal = $("loginModal");
 
-/* ============ HIỆU ỨNG (copy từ web mẹ) ============ */
+function openModal(el){ el.classList.add("show"); }
+function closeModal(el){ el.classList.remove("show"); }
+
+async function handleBuyClick(productId){
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (!product) return;
+
+  // Lấy user mới nhất từ Supabase
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session){
+    openModal(loginModal);
+    return;
+  }
+  currentUser = session.user;
+
+  // Lấy số dư mới nhất từ profiles
+  const { data: profile } = await supabaseClient
+    .from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
+  currentBalance = Number(profile?.balance || 0);
+
+  pendingProduct = product;
+
+  $("buyLogo").innerHTML = logoSVG(product.logo);
+  $("buyName").textContent = product.name;
+  $("buyPrice").textContent = fmt(product.price);
+
+  const after = currentBalance - product.price;
+  $("buyBalance").textContent = fmt(currentBalance);
+
+  const afterEl = $("buyAfter");
+  afterEl.textContent = fmt(Math.max(0, after));
+  if (after < 0){
+    afterEl.classList.remove("text-emerald-300");
+    afterEl.classList.add("text-rose-300");
+  } else {
+    afterEl.classList.remove("text-rose-300");
+    afterEl.classList.add("text-emerald-300");
+  }
+
+  const warn = $("buyWarn");
+  const warnText = $("buyWarnText");
+  const confirmBtn = $("buyConfirm");
+  const goTopUpBtn = $("buyGoTopUp");
+
+  if (after < 0){
+    warn.classList.remove("hidden");
+    warnText.textContent = `Số dư không đủ. Bạn còn thiếu ${fmt(Math.abs(after))}. Vui lòng nạp thêm để mua.`;
+    confirmBtn.disabled = true;
+    confirmBtn.style.opacity = ".5";
+    confirmBtn.style.pointerEvents = "none";
+    goTopUpBtn.classList.remove("hidden");
+  } else {
+    warn.classList.add("hidden");
+    confirmBtn.disabled = false;
+    confirmBtn.style.opacity = "";
+    confirmBtn.style.pointerEvents = "";
+    goTopUpBtn.classList.add("hidden");
+  }
+
+  $("buyNote").value = "";
+  openModal(buyModal);
+}
+
+$("closeBuyModal").onclick = () => closeModal(buyModal);
+$("buyCancel").onclick = () => closeModal(buyModal);
+buyModal.addEventListener("click", e => { if (e.target === buyModal) closeModal(buyModal); });
+
+$("closeLoginModal").onclick = () => closeModal(loginModal);
+$("loginStay").onclick = () => closeModal(loginModal);
+loginModal.addEventListener("click", e => { if (e.target === loginModal) closeModal(loginModal); });
+
+$("buyGoTopUp").onclick = () => { location.href = "nap-tien.html"; };
+
+/* XÁC NHẬN MUA — TRỪ SỐ DƯ + TẠO ĐƠN SUPABASE */
+$("buyConfirm").onclick = async () => {
+  if (!pendingProduct || !currentUser) return;
+
+  const product = pendingProduct;
+  const btn = $("buyConfirm");
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>Đang xử lý...';
+
+  try {
+    // 1. Lấy số dư mới nhất (tránh race condition)
+    const { data: profile, error: pErr } = await supabaseClient
+      .from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
+    if (pErr) throw pErr;
+    const balance = Number(profile?.balance || 0);
+
+    if (balance < product.price){
+      throw new Error("Số dư không đủ, vui lòng nạp thêm.");
+    }
+
+    const newBalance = balance - product.price;
+    const note = $("buyNote").value.trim();
+    const orderCode = "TN" + Date.now().toString().slice(-8);
+
+    // 2. Trừ số dư trong profiles
+    const { error: uErr } = await supabaseClient
+      .from("profiles").update({ balance: newBalance }).eq("id", currentUser.id);
+    if (uErr) throw uErr;
+
+    // 3. Tạo đơn trong resource_orders
+    const { error: oErr } = await supabaseClient.from("resource_orders").insert([{
+      user_id: currentUser.id,
+      order_code: orderCode,
+      product_id: product.id,
+      product_name: product.name,
+      product_logo: product.logo,
+      category: product.cat,
+      price: product.price,
+      status: "pending",
+      note: note || null,
+    }]);
+    if (oErr) {
+      // Rollback số dư nếu tạo đơn lỗi
+      await supabaseClient.from("profiles").update({ balance }).eq("id", currentUser.id);
+      throw oErr;
+    }
+
+    currentBalance = newBalance;
+    closeModal(buyModal);
+    toast(`Đã đặt mua "${product.name}"! Đơn đang xử lý.`, true);
+
+    // 4. Load lại danh sách đơn
+    await loadMyOrders();
+    updateHistBadge();
+    if (!viewHistory.classList.contains("hidden")) renderHistoryList();
+
+    pendingProduct = null;
+  } catch (err) {
+    console.error(err);
+    toast("Lỗi: " + (err.message || "Không mua được, thử lại."), false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i>Xác nhận mua';
+  }
+};
+
+/* ============================================================
+   LOAD ĐƠN TỪ SUPABASE
+   ============================================================ */
+async function loadMyOrders(){
+  if (!currentUser){ myOrders = []; return; }
+  const { data, error } = await supabaseClient
+    .from("resource_orders")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending: false });
+  if (error){ console.error("loadMyOrders:", error); myOrders = []; return; }
+  myOrders = data || [];
+}
+
+/* ============================================================
+   RENDER LỊCH SỬ
+   ============================================================ */
+const histListEl = $("historyList");
+const histEmptyEl = $("historyEmpty");
+const histSearchEl = $("histSearch");
+const histCountEl = $("histCount");
+const histLoginBanner = $("histLoginBanner");
+const histContent = $("histContent");
+const histLoading = $("historyLoading");
+let histFilter = "all";
+let histKeyword = "";
+
+function updateHistBadge(){
+  histCountEl.textContent = myOrders.length;
+}
+
+function updateHistCounts(){
+  const counts = {
+    all: myOrders.length,
+    pending: myOrders.filter(o => o.status === "pending").length,
+    done: myOrders.filter(o => o.status === "done").length,
+    canceled: myOrders.filter(o => o.status === "canceled").length,
+  };
+  document.querySelectorAll("[data-cnt]").forEach(el => {
+    el.textContent = counts[el.dataset.cnt] ?? 0;
+  });
+  histCountEl.textContent = counts.all;
+}
+
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleString("vi-VN", {
+    day:"2-digit", month:"2-digit", year:"numeric",
+    hour:"2-digit", minute:"2-digit"
+  });
+}
+
+async function renderHistoryView(){
+  // Lấy session mới
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session){
+    currentUser = null;
+    myOrders = [];
+    histLoginBanner.classList.remove("hidden");
+    histContent.classList.add("hidden");
+    updateHistBadge();
+    return;
+  }
+
+  currentUser = session.user;
+  histLoginBanner.classList.add("hidden");
+  histContent.classList.remove("hidden");
+
+  // Hiện skeleton
+  histLoading.classList.remove("hidden");
+  histListEl.innerHTML = "";
+  histEmptyEl.classList.add("hidden");
+
+  await loadMyOrders();
+
+  histLoading.classList.add("hidden");
+  updateHistCounts();
+  renderHistoryList();
+}
+
+function renderHistoryList(){
+  let list = myOrders.slice();
+
+  if (histFilter !== "all") list = list.filter(o => o.status === histFilter);
+  if (histKeyword) {
+    const k = histKeyword.toLowerCase();
+    list = list.filter(o =>
+      o.product_name.toLowerCase().includes(k) ||
+      o.order_code.toLowerCase().includes(k)
+    );
+  }
+
+  if (!list.length){
+    histListEl.innerHTML = "";
+    histEmptyEl.classList.remove("hidden");
+    const isFiltering = histFilter !== "all" || histKeyword;
+    const h3 = histEmptyEl.querySelector("h3");
+    const p = histEmptyEl.querySelector("p");
+    if (isFiltering){
+      h3.textContent = "Không tìm thấy đơn nào";
+      p.textContent = "Thử đổi từ khoá hoặc bộ lọc trạng thái khác.";
+    } else {
+      h3.textContent = "Chưa có đơn nào";
+      p.textContent = "Bạn chưa mua tài nguyên nào. Hãy sang tab Mua tài nguyên để bắt đầu.";
+    }
+    return;
+  }
+  histEmptyEl.classList.add("hidden");
+
+  histListEl.innerHTML = list.map(o => {
+    const st = STATUS_MAP[o.status] || STATUS_MAP.pending;
+    return `
+      <div class="hist-card fade-swap">
+        <div class="flex items-start gap-3">
+          <div class="product-logo">${logoSVG(o.product_logo)}</div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-bold text-sm leading-snug line-clamp-2">${o.product_name}</h3>
+            <p class="mt-1 text-[11px] text-zinc-500 font-mono">${o.order_code}</p>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between flex-wrap gap-2">
+          <p class="font-extrabold text-base">${fmt(o.price)}</p>
+          <span class="status ${st.cls}"><i class="${st.icon}"></i>${st.label}</span>
+        </div>
+        ${o.note ? `<p class="mt-2 text-[11px] text-zinc-400 line-clamp-2"><i class="fa-regular fa-note-sticky mr-1"></i>${o.note}</p>` : ""}
+        <div class="mt-2 pt-2 border-t border-white/8 flex items-center justify-between text-[11px] text-zinc-500">
+          <span><i class="fa-regular fa-clock mr-1"></i>${fmtDate(o.created_at)}</span>
+          <button type="button" class="text-rose-400 font-bold hover:text-rose-300" data-rebuy="${o.product_id}">
+            Mua lại <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  histListEl.querySelectorAll("[data-rebuy]").forEach(btn => {
+    btn.onclick = () => {
+      switchView("buy");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => handleBuyClick(btn.dataset.rebuy), 350);
+    };
+  });
+}
+
+/* Filter + Search */
+document.querySelectorAll(".filter-pill").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    histFilter = btn.dataset.status;
+    renderHistoryList();
+  };
+});
+
+let searchTimer;
+histSearchEl.oninput = e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    histKeyword = e.target.value.trim();
+    renderHistoryList();
+  }, 250);
+};
+
+$("histRefresh").onclick = async () => {
+  histSearchEl.value = "";
+  histKeyword = "";
+  histFilter = "all";
+  document.querySelectorAll(".filter-pill").forEach(b => {
+    b.classList.toggle("active", b.dataset.status === "all");
+  });
+  await renderHistoryView();
+  toast("Đã làm mới danh sách.");
+};
+
+$("histEmptyBuy").onclick = () => switchView("buy");
+$("histLoginBtn").onclick = () => { location.href = "index.html?login=1"; };
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function toast(msg, ok = true){
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok?"fa-circle-check text-emerald-400":"fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+/* ============================================================
+   HIỆU ỨNG
+   ============================================================ */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Reveal on scroll
 const io = new IntersectionObserver(es => es.forEach(e => {
   if(!e.isIntersecting) return;
   e.target.classList.add("in"); io.unobserve(e.target);
 }), {threshold:.12});
 document.querySelectorAll(".rv").forEach(el => io.observe(el));
 
-// Spotlight — tự ngủ khi đứng yên (giống web mẹ)
 if (matchMedia("(hover:hover) and (pointer:fine)").matches && !reduce){
-  const sp = document.getElementById("spotlight");
+  const sp = $("spotlight");
   let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my, raf = null, idle = 0;
   addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; idle = 0; if (!raf) raf = requestAnimationFrame(tick); }, {passive:true});
   function tick(){
@@ -408,9 +880,8 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches && !reduce){
   }
 }
 
-// Ripple
 document.addEventListener("click", e => {
-  const el = e.target.closest(".btn, .glass-card, .tab-btn");
+  const el = e.target.closest(".btn, .glass-card, .hist-card, .tab-btn, .main-tab, .filter-pill");
   if (!el || reduce) return;
   const r = el.getBoundingClientRect();
   const s = Math.max(r.width, r.height);
@@ -422,6 +893,34 @@ document.addEventListener("click", e => {
   if (getComputedStyle(el).position === "static") el.style.position = "relative";
   el.appendChild(rip);
   setTimeout(()=>rip.remove(), 650);
+});
+
+/* ============================================================
+   KHỞI TẠO
+   ============================================================ */
+renderTabs();
+renderGrid();
+
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session){
+    currentUser = session.user;
+    await loadMyOrders();
+  }
+  updateHistBadge();
+})();
+
+// Lắng nghe đăng nhập / đăng xuất
+supabaseClient.auth.onAuthStateChange(async (_ev, session) => {
+  if (session){
+    currentUser = session.user;
+    await loadMyOrders();
+  } else {
+    currentUser = null;
+    myOrders = [];
+  }
+  updateHistBadge();
+  if (!viewHistory.classList.contains("hidden")) renderHistoryView();
 });
 </script>
 </body>
