@@ -205,19 +205,50 @@ select.field option{background:#0c0c0f}
 .header-pill>*{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce){.header-pill::before{animation:none}}
 
-/* ===== USER BOX — viên thuốc con bên trong, dài ra cho thoáng ===== */
+/* ===== USER BOX — viên thuốc con, dài ra cho thoáng ===== */
 #userBox{
   min-width:0;
-  padding:.3rem .5rem .3rem .3rem;
+  padding:.3rem .6rem .3rem .3rem;
   border-radius:9999px;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
-  gap:.5rem;
+  gap:.6rem;
 }
 @media(min-width:640px){
-  #userBox{min-width:280px;justify-content:flex-end}
+  #userBox{min-width:360px;justify-content:flex-end}
 }
-#userBox #headerBalance{max-width:none}
+
+/* ===== SỐ DƯ TO HẲN RA ===== */
+#headerBalance{
+  padding:.55rem 1.05rem;
+  border-radius:9999px;
+  border:1px solid rgba(52,211,153,.45);
+  background:linear-gradient(180deg,rgba(52,211,153,.20),rgba(52,211,153,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 22px -8px rgba(52,211,153,.55);
+  color:#6ee7b7;
+  font-size:1rem;
+  font-weight:900;
+  letter-spacing:.3px;
+  line-height:1;
+  gap:.55rem;
+  white-space:nowrap;
+}
+#headerBalance i{
+  font-size:1rem;
+  color:#34d399;
+}
+#headerBalanceVal{
+  font-size:1.05rem;
+  font-weight:900;
+}
+@media(max-width:640px){
+  #headerBalance{
+    padding:.4rem .7rem;
+    font-size:.8rem;
+  }
+  #headerBalance i{font-size:.8rem}
+  #headerBalanceVal{font-size:.85rem}
+}
 
 /* Menu avatar */
 #avatarMenu{
@@ -285,8 +316,8 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
       <nav id="navDesk" class="nav-glass justify-self-center hidden md:flex items-center gap-1 text-sm font-medium shrink-0"></nav>
       <div class="justify-self-end flex items-center gap-2 shrink-0">
         <div id="userBox" class="relative hidden flex items-center gap-2">
-          <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
-            <i class="fa-solid fa-wallet text-[11px]"></i>
+          <div id="headerBalance" class="hidden sm:flex items-center">
+            <i class="fa-solid fa-wallet"></i>
             <span id="headerBalanceVal">0đ</span>
           </div>
           <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
@@ -971,26 +1002,21 @@ function resizeImg(file, size){
 }
 
 /* ============================================================
-   MENU AVATAR — SỬA LỖI: mở/đóng đúng cách, không tự đóng khi
-   bấm vào các mục bên trong.
+   MENU AVATAR — mở/đóng đúng cách
    ============================================================ */
 avatarBtn.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
   avatarMenu.classList.toggle("hidden");
 });
-// Đóng menu khi click ra ngoài #userBox
 document.addEventListener("click", (e) => {
   if (!$("userBox").contains(e.target)) avatarMenu.classList.add("hidden");
 });
-// Đóng menu khi bấm ESC
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") avatarMenu.classList.add("hidden");
 });
-// Ngăn click bên trong menu đóng menu
 avatarMenu.addEventListener("click", (e) => e.stopPropagation());
 
-// Các nút trong menu — gọi stopPropagation để không bị đóng bởi document listener
 $("avatarChange").addEventListener("click", (e) => {
   e.stopPropagation();
   avatarMenu.classList.add("hidden");
@@ -1027,9 +1053,7 @@ function checkAdmin(user){
   if (!user){ isAdmin = false; $("openAdminBtn").classList.add("hidden"); return; }
   supabaseClient.from("profiles").select("is_admin").eq("id", user.id).maybeSingle()
     .then(({data, error}) => {
-      if (error) {
-        console.error("checkAdmin lỗi:", error);
-      }
+      if (error) console.error("checkAdmin lỗi:", error);
       isAdmin = !!(data && data.is_admin);
       $("openAdminBtn").classList.toggle("hidden", !isAdmin);
     })
