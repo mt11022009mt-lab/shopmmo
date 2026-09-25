@@ -198,11 +198,30 @@ select.field option{background:#0c0c0f}
 }
 
 /* ===== HEADER / MODAL / MENU / TOAST ===== */
-header.glass{background:rgba(9,9,11,.92)!important}
-@media(hover:hover) and (pointer:fine){
-  header.glass{background:rgba(9,9,11,.72)!important;
-    -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+
+/* ===== HEADER PILL — VIÊN THUỐC GLASS ===== */
+.header-pill{
+  position:relative;border-radius:9999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -12px 22px -16px rgba(0,0,0,.6),0 16px 38px -18px rgba(0,0,0,.8);
+  overflow:hidden;isolation:isolate;
 }
+@media(hover:hover) and (pointer:fine){
+  .header-pill{-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%)}
+}
+.header-pill::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.22) 0%,transparent 24%,transparent 76%,rgba(255,255,255,.10) 100%);
+  mix-blend-mode:overlay;opacity:.75;transform:translateX(-8%) skewX(-6deg);
+  animation:nav-sheen 8s ease-in-out infinite alternate;
+}
+.header-pill::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.header-pill>*{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){.header-pill::before{animation:none}}
 #authModal{background:rgba(0,0,0,.75)}
 #authModal .card{background:rgba(18,18,23,.96)}
 #accountModal{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
@@ -247,42 +266,44 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <div id="spotlight" class="spotlight"></div>
 
 <!-- ============ THANH ĐIỀU HƯỚNG ============ -->
-<header class="glass sticky top-0 z-40 border-b border-white/5" style="padding-top:env(safe-area-inset-top,0px)">
-  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-4">
-    <a href="#" class="flex items-center gap-2.5 font-extrabold text-lg">
-      <!-- LOGO HEADER — ẢNH MỚI CỦA BẠN -->
-      <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
-        <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
-      </div>
-      <span data-brand>BR-34</span>
-    </a>
-    <nav id="navDesk" class="nav-glass hidden md:flex items-center gap-1 mx-auto text-sm font-medium"></nav>
-    <div class="ml-auto flex items-center gap-2">
-      <div id="userBox" class="relative hidden flex items-center gap-2">
-        <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
-          <i class="fa-solid fa-wallet text-[11px]"></i>
-          <span id="headerBalanceVal">0đ</span>
+<header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
+    <div class="header-pill flex items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
+      <a href="#" class="flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+        <!-- LOGO HEADER — ẢNH MỚI CỦA BẠN -->
+        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
+          <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
         </div>
-        <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
-          <span>
-            <img id="avatarImg" alt="" hidden>
-            <i id="avatarFallback" class="fa-solid fa-user text-sm"></i>
-          </span>
-        </button>
-        <div id="avatarMenu" class="hidden absolute right-0 top-12 w-56 rounded-2xl border border-white/10 p-2 shadow-2xl z-50">
-          <p id="menuName" class="px-3 py-2 mb-1 text-xs font-bold text-zinc-300 border-b border-white/10 truncate"></p>
-          <button id="openAccount" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-id-card mr-2 text-emerald-400"></i>Thông tin tài khoản</button>
-          <a id="openAdminBtn" href="admin.html" class="hidden w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-user-shield mr-2 text-amber-400"></i>Trang quản trị</a>
-          <button id="avatarChange" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-regular fa-image mr-2 text-rose-400"></i>Đổi ảnh đại diện</button>
-          <button id="avatarRemove" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-regular fa-trash-can mr-2 text-zinc-400"></i>Xoá ảnh</button>
+        <span data-brand>BR-34</span>
+      </a>
+      <nav id="navDesk" class="nav-glass hidden md:flex items-center gap-1 mx-auto text-sm font-medium shrink-0"></nav>
+      <div class="ml-auto flex items-center gap-2 shrink-0">
+        <div id="userBox" class="relative hidden flex items-center gap-2">
+          <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
+            <i class="fa-solid fa-wallet text-[11px]"></i>
+            <span id="headerBalanceVal">0đ</span>
+          </div>
+          <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
+            <span>
+              <img id="avatarImg" alt="" hidden>
+              <i id="avatarFallback" class="fa-solid fa-user text-sm"></i>
+            </span>
+          </button>
+          <div id="avatarMenu" class="hidden absolute right-0 top-12 w-56 rounded-2xl border border-white/10 p-2 shadow-2xl z-50">
+            <p id="menuName" class="px-3 py-2 mb-1 text-xs font-bold text-zinc-300 border-b border-white/10 truncate"></p>
+            <button id="openAccount" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-id-card mr-2 text-emerald-400"></i>Thông tin tài khoản</button>
+            <a id="openAdminBtn" href="admin.html" class="hidden w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-user-shield mr-2 text-amber-400"></i>Trang quản trị</a>
+            <button id="avatarChange" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-regular fa-image mr-2 text-rose-400"></i>Đổi ảnh đại diện</button>
+            <button id="avatarRemove" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-regular fa-trash-can mr-2 text-zinc-400"></i>Xoá ảnh</button>
+          </div>
+          <input id="avatarFile" type="file" accept="image/*" hidden>
         </div>
-        <input id="avatarFile" type="file" accept="image/*" hidden>
+        <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm">Đăng nhập</button>
+        <button id="menuBtn" type="button" aria-label="Mở menu" class="md:hidden w-10 h-10 rounded-xl btn-dark grid place-items-center"><i class="fa-solid fa-bars"></i></button>
       </div>
-      <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm">Đăng nhập</button>
-      <button id="menuBtn" type="button" aria-label="Mở menu" class="md:hidden w-10 h-10 rounded-xl btn-dark grid place-items-center"><i class="fa-solid fa-bars"></i></button>
     </div>
+    <nav id="navMob" class="hidden md:hidden mt-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 grid gap-1 text-sm font-medium"></nav>
   </div>
-  <nav id="navMob" class="hidden md:hidden border-t border-white/5 px-4 py-3 grid gap-1 text-sm font-medium"></nav>
 </header>
 
 <main class="relative overflow-x-hidden">
