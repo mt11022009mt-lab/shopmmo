@@ -85,25 +85,9 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 @keyframes spin{to{--a:360deg}}
 .orbit>div{border-radius:calc(1.1rem - 1.5px);background:#0f0f12}
 
-/* ===== NAV PILL — LIQUID GLASS ===== */
+/* ===== NAV PILL — nằm trong header-pill, không tạo viên thuốc lồng nhau nữa ===== */
 .nav-glass{
-  position:relative;border-radius:9999px;padding:.3rem;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -8px 16px -10px rgba(0,0,0,.5),0 10px 28px -14px rgba(0,0,0,.7);
-  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
-  overflow:hidden;isolation:isolate;
-}
-.nav-glass::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(115deg,rgba(255,255,255,.35) 0%,transparent 22%,transparent 78%,rgba(255,255,255,.16) 100%);
-  mix-blend-mode:overlay;opacity:.8;
-  transform:translateX(-8%);
-  animation:nav-sheen 7s ease-in-out infinite alternate;
-}
-.nav-glass::after{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+  position:relative;display:flex;align-items:center;gap:.25rem;
 }
 @keyframes nav-sheen{0%{transform:translateX(-10%) skewX(-6deg)}100%{transform:translateX(10%) skewX(-6deg)}}
 .nav-glass a{position:relative;z-index:1;border-radius:9999px}
@@ -268,16 +252,16 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <!-- ============ THANH ĐIỀU HƯỚNG ============ -->
 <header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
   <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
-    <div class="header-pill flex items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
-      <a href="#" class="flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+    <div class="header-pill grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
+      <a href="#" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
         <!-- LOGO HEADER — ẢNH MỚI CỦA BẠN -->
         <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
           <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
         </div>
         <span data-brand>BR-34</span>
       </a>
-      <nav id="navDesk" class="nav-glass hidden md:flex items-center gap-1 mx-auto text-sm font-medium shrink-0"></nav>
-      <div class="ml-auto flex items-center gap-2 shrink-0">
+      <nav id="navDesk" class="nav-glass justify-self-center hidden md:flex items-center gap-1 text-sm font-medium shrink-0"></nav>
+      <div class="justify-self-end flex items-center gap-2 shrink-0">
         <div id="userBox" class="relative hidden flex items-center gap-2">
           <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-emerald-400 whitespace-nowrap">
             <i class="fa-solid fa-wallet text-[11px]"></i>
