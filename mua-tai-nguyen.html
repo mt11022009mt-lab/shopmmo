@@ -41,6 +41,12 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
   -webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent);
   mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent)}
 
+/* HEADER */
+header.glass{background:rgba(9,9,11,.92);position:sticky;top:0;z-index:40;border-bottom:1px solid rgba(255,255,255,.05)}
+@media(hover:hover) and (pointer:fine){
+  header.glass{background:rgba(9,9,11,.72);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+}
+
 /* LIQUID GLASS */
 .glass-card{
   position:relative;border-radius:1.25rem;
@@ -69,7 +75,7 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 @keyframes liquid{to{transform:rotate(360deg)}}
 
 /* BUTTON */
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.8rem;cursor:pointer;overflow:hidden;
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.8rem;cursor:pointer;overflow:hidden;text-decoration:none;
   transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s,box-shadow .2s}
 .btn:active{transform:scale(.96)}
 .btn-red{color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);
@@ -82,9 +88,11 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
 .btn-shine:hover::after{left:100%}
 
-.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
-@keyframes rip{to{transform:scale(4);opacity:0}}
+/* RIPPLE — nhẹ, gọn */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.25);transform:scale(0);animation:rip .45s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(1.8);opacity:0}}
 
+/* TAB CHÍNH */
 .main-tab{padding:.65rem 1.25rem;border-radius:.8rem;font-size:.875rem;font-weight:700;
   border:1px solid transparent;transition:.25s;color:#a1a1aa;cursor:pointer;
   display:inline-flex;align-items:center;gap:.5rem;background:transparent}
@@ -94,6 +102,7 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
   box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 26px -10px rgba(244,63,94,.7);
 }
 
+/* TAB DANH MỤC */
 .tab-btn{white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:.5rem;
   padding:.75rem .5rem;border-radius:1rem;border:1px solid transparent;transition:.25s cubic-bezier(.2,.8,.2,1);
   color:#a1a1aa;background:transparent;cursor:pointer}
@@ -206,7 +215,6 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 }
 #toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 
-/* Loading skeleton */
 .skel{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));
   background-size:200% 100%;animation:skel 1.4s ease-in-out infinite;border-radius:1rem}
 @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -224,8 +232,29 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 </head>
 <body class="font-sans antialiased">
 
+<!-- AURORA + SPOTLIGHT -->
 <div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
 <div id="spotlight" class="spotlight"></div>
+
+<!-- ============ HEADER (giống web mẹ) ============ -->
+<header class="glass" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+    <a href="index.html" class="flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+      <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
+        <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
+      </div>
+      <span>BR-34</span>
+    </a>
+
+    <span class="hidden sm:inline text-sm font-bold text-zinc-400 ml-2">/ Mua tài nguyên</span>
+
+    <div class="ml-auto flex items-center gap-2">
+      <button type="button" id="goHomeBtn" class="btn btn-dark px-4 py-2 text-sm">
+        <i class="fa-solid fa-arrow-left"></i><span class="hidden sm:inline">Trang chủ</span>
+      </button>
+    </div>
+  </div>
+</header>
 
 <main class="relative max-w-[1400px] mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
   <div class="grid-bg"></div>
@@ -304,7 +333,7 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
         </button>
       </div>
 
-      <div id="historyLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="historyLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
         <div class="skel h-32"></div><div class="skel h-32"></div><div class="skel h-32"></div>
       </div>
     </div>
@@ -377,7 +406,7 @@ body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative;width:
 
 <script>
 /* ============================================================
-   SUPABASE — DÙNG CHUNG PROJECT VỚI WEB MẸ
+   SUPABASE
    ============================================================ */
 const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
@@ -387,6 +416,20 @@ const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABA
   }
 });
 const $ = id => document.getElementById(id);
+
+/* ============================================================
+   NÚT VỀ TRANG CHỦ
+   ============================================================ */
+function goHome(){
+  window.location.replace("/index.html");
+}
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#goHomeBtn");
+  if (!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  goHome();
+}, true);
 
 /* ============================================================
    LOGO SVG
@@ -455,14 +498,12 @@ const STATUS_MAP = {
 /* ============================================================
    STATE
    ============================================================ */
-let currentUser = null;   // Supabase user
-let currentBalance = 0;   // profiles.balance
-let myOrders = [];        // danh sách đơn của user hiện tại
+let currentUser = null;
+let currentBalance = 0;
+let myOrders = [];
 let pendingProduct = null;
 
-/* ============================================================
-   TAB CHÍNH
-   ============================================================ */
+/* TAB CHÍNH */
 const tabBuy = $("tabBuy");
 const tabHistory = $("tabHistory");
 const viewBuy = $("viewBuy");
@@ -479,9 +520,7 @@ function switchView(view){
 tabBuy.onclick = () => switchView("buy");
 tabHistory.onclick = () => switchView("history");
 
-/* ============================================================
-   RENDER TAB MUA
-   ============================================================ */
+/* RENDER TAB MUA */
 const tabsEl = $("categoryTabs");
 const gridEl = $("productGrid");
 const emptyEl = $("emptyState");
@@ -521,9 +560,7 @@ function renderGrid(){
   });
 }
 
-/* ============================================================
-   MUA — LUỒNG CHÍNH
-   ============================================================ */
+/* MUA */
 const buyModal = $("buyModal");
 const loginModal = $("loginModal");
 
@@ -534,7 +571,6 @@ async function handleBuyClick(productId){
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
 
-  // Lấy user mới nhất từ Supabase
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session){
     openModal(loginModal);
@@ -542,7 +578,6 @@ async function handleBuyClick(productId){
   }
   currentUser = session.user;
 
-  // Lấy số dư mới nhất từ profiles
   const { data: profile } = await supabaseClient
     .from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
   currentBalance = Number(profile?.balance || 0);
@@ -600,7 +635,6 @@ loginModal.addEventListener("click", e => { if (e.target === loginModal) closeMo
 
 $("buyGoTopUp").onclick = () => { location.href = "nap-tien.html"; };
 
-/* XÁC NHẬN MUA — TRỪ SỐ DƯ + TẠO ĐƠN SUPABASE */
 $("buyConfirm").onclick = async () => {
   if (!pendingProduct || !currentUser) return;
 
@@ -610,7 +644,6 @@ $("buyConfirm").onclick = async () => {
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>Đang xử lý...';
 
   try {
-    // 1. Lấy số dư mới nhất (tránh race condition)
     const { data: profile, error: pErr } = await supabaseClient
       .from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
     if (pErr) throw pErr;
@@ -624,12 +657,10 @@ $("buyConfirm").onclick = async () => {
     const note = $("buyNote").value.trim();
     const orderCode = "TN" + Date.now().toString().slice(-8);
 
-    // 2. Trừ số dư trong profiles
     const { error: uErr } = await supabaseClient
       .from("profiles").update({ balance: newBalance }).eq("id", currentUser.id);
     if (uErr) throw uErr;
 
-    // 3. Tạo đơn trong resource_orders
     const { error: oErr } = await supabaseClient.from("resource_orders").insert([{
       user_id: currentUser.id,
       order_code: orderCode,
@@ -642,7 +673,6 @@ $("buyConfirm").onclick = async () => {
       note: note || null,
     }]);
     if (oErr) {
-      // Rollback số dư nếu tạo đơn lỗi
       await supabaseClient.from("profiles").update({ balance }).eq("id", currentUser.id);
       throw oErr;
     }
@@ -651,7 +681,6 @@ $("buyConfirm").onclick = async () => {
     closeModal(buyModal);
     toast(`Đã đặt mua "${product.name}"! Đơn đang xử lý.`, true);
 
-    // 4. Load lại danh sách đơn
     await loadMyOrders();
     updateHistBadge();
     if (!viewHistory.classList.contains("hidden")) renderHistoryList();
@@ -666,9 +695,7 @@ $("buyConfirm").onclick = async () => {
   }
 };
 
-/* ============================================================
-   LOAD ĐƠN TỪ SUPABASE
-   ============================================================ */
+/* LOAD ĐƠN */
 async function loadMyOrders(){
   if (!currentUser){ myOrders = []; return; }
   const { data, error } = await supabaseClient
@@ -680,9 +707,7 @@ async function loadMyOrders(){
   myOrders = data || [];
 }
 
-/* ============================================================
-   RENDER LỊCH SỬ
-   ============================================================ */
+/* RENDER LỊCH SỬ */
 const histListEl = $("historyList");
 const histEmptyEl = $("historyEmpty");
 const histSearchEl = $("histSearch");
@@ -719,7 +744,6 @@ function fmtDate(iso){
 }
 
 async function renderHistoryView(){
-  // Lấy session mới
   const { data: { session } } = await supabaseClient.auth.getSession();
 
   if (!session){
@@ -735,7 +759,6 @@ async function renderHistoryView(){
   histLoginBanner.classList.add("hidden");
   histContent.classList.remove("hidden");
 
-  // Hiện skeleton
   histLoading.classList.remove("hidden");
   histListEl.innerHTML = "";
   histEmptyEl.classList.add("hidden");
@@ -844,9 +867,7 @@ $("histRefresh").onclick = async () => {
 $("histEmptyBuy").onclick = () => switchView("buy");
 $("histLoginBtn").onclick = () => { location.href = "index.html?login=1"; };
 
-/* ============================================================
-   TOAST
-   ============================================================ */
+/* TOAST */
 let toastTimer;
 function toast(msg, ok = true){
   const t = $("toast");
@@ -856,9 +877,7 @@ function toast(msg, ok = true){
   toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
 }
 
-/* ============================================================
-   HIỆU ỨNG
-   ============================================================ */
+/* HIỆU ỨNG */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const io = new IntersectionObserver(es => es.forEach(e => {
@@ -880,11 +899,12 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches && !reduce){
   }
 }
 
+/* RIPPLE — chỉ trên button, nhẹ nhàng */
 document.addEventListener("click", e => {
-  const el = e.target.closest(".btn, .glass-card, .hist-card, .tab-btn, .main-tab, .filter-pill");
+  const el = e.target.closest(".btn");
   if (!el || reduce) return;
   const r = el.getBoundingClientRect();
-  const s = Math.max(r.width, r.height);
+  const s = Math.max(r.width, r.height) * 0.7;
   const rip = document.createElement("span");
   rip.className = "ripple";
   rip.style.width = rip.style.height = s+"px";
@@ -892,12 +912,10 @@ document.addEventListener("click", e => {
   rip.style.top  = (e.clientY - r.top  - s/2)+"px";
   if (getComputedStyle(el).position === "static") el.style.position = "relative";
   el.appendChild(rip);
-  setTimeout(()=>rip.remove(), 650);
+  setTimeout(()=>rip.remove(), 500);
 });
 
-/* ============================================================
-   KHỞI TẠO
-   ============================================================ */
+/* KHỞI TẠO */
 renderTabs();
 renderGrid();
 
@@ -910,7 +928,6 @@ renderGrid();
   updateHistBadge();
 })();
 
-// Lắng nghe đăng nhập / đăng xuất
 supabaseClient.auth.onAuthStateChange(async (_ev, session) => {
   if (session){
     currentUser = session.user;
