@@ -645,20 +645,22 @@ $("buyConfirm").onclick = async () => {
 
   try {
     const { data: profile, error: pErr } = await supabaseClient
-      .from("profiles").select("balance").eq("id", currentUser.id).maybeSingle();
+      .from("profiles").select("balance,total_spent").eq("id", currentUser.id).maybeSingle();
     if (pErr) throw pErr;
     const balance = Number(profile?.balance || 0);
+    const totalSpent = Number(profile?.total_spent || 0);
 
     if (balance < product.price){
       throw new Error("Số dư không đủ, vui lòng nạp thêm.");
     }
 
     const newBalance = balance - product.price;
+    const newTotalSpent = totalSpent + product.price;
     const note = $("buyNote").value.trim();
     const orderCode = "TN" + Date.now().toString().slice(-8);
 
     const { error: uErr } = await supabaseClient
-      .from("profiles").update({ balance: newBalance }).eq("id", currentUser.id);
+      .from("profiles").update({ balance: newBalance, total_spent: newTotalSpent }).eq("id", currentUser.id);
     if (uErr) throw uErr;
 
     const { error: oErr } = await supabaseClient.from("resource_orders").insert([{
@@ -673,7 +675,7 @@ $("buyConfirm").onclick = async () => {
       note: note || null,
     }]);
     if (oErr) {
-      await supabaseClient.from("profiles").update({ balance }).eq("id", currentUser.id);
+      await supabaseClient.from("profiles").update({ balance, total_spent: totalSpent }).eq("id", currentUser.id);
       throw oErr;
     }
 
