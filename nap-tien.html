@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nạp tiền — BR-34</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+<style>
+:root{--red:#f43f5e;--red2:#e11d48}
+html{scroll-behavior:smooth}
+body{background:#09090b;color:#f4f4f5;overflow-x:hidden;position:relative}
+
+/* ===== AURORA NHẸ ===== */
+.aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;contain:strict}
+.aurora span{position:absolute;width:60vmax;height:60vmax;border-radius:50%;opacity:.28;mix-blend-mode:screen;
+  background:radial-gradient(circle,currentColor,transparent 68%);
+  will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.aurora .a1{color:#f43f5e;top:-15%;left:-15%;animation:float1 26s ease-in-out infinite}
+.aurora .a2{color:#8b5cf6;top:15%;right:-18%;animation:float2 30s ease-in-out infinite}
+.aurora .a3{color:#06b6d4;bottom:-20%;left:25%;animation:float3 34s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(6vw,4vh,0)}}
+@keyframes float2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,6vh,0)}}
+@keyframes float3{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4vw,-5vh,0)}}
+
+/* Spotlight — transform, không reflow */
+.spotlight{position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(244,63,94,.10),transparent 60%);
+  will-change:transform;transform:translate3d(0,0,0);opacity:0;transition:opacity .4s}
+@media(hover:hover) and (pointer:fine){.spotlight{opacity:1}}
+
+.spot{position:absolute;top:-10%;width:60%;height:70%;pointer-events:none;filter:blur(6px);z-index:-1}
+.spot.l{left:-12%;background:radial-gradient(ellipse at 20% 0%,rgba(244,63,94,.45),transparent 62%);transform:rotate(-12deg)}
+.spot.r{right:-12%;background:radial-gradient(ellipse at 80% 0%,rgba(244,63,94,.45),transparent 62%);transform:rotate(12deg)}
+.grid-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent);mask-image:radial-gradient(ellipse 70% 55% at 50% 15%,#000,transparent)}
+
+/* ===== CARD ===== */
+.card{
+  position:relative;border-radius:1.25rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 20px 40px -22px rgba(0,0,0,.7);
+  transition:border-color .3s,transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s;
+  overflow:hidden;contain:paint;
+}
+.card:hover{border-color:rgba(244,63,94,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 24px 48px -22px rgba(244,63,94,.45)}
+.lift{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.lift:hover{transform:translateY(-3px)}
+
+/* ===== BUTTONS ===== */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;border-radius:.8rem;cursor:pointer;overflow:hidden;
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s,box-shadow .2s}
+.btn:active{transform:scale(.96)}
+.btn-red{color:#fff;background:linear-gradient(180deg,#ff5c7a,#e11d48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 10px 30px -8px rgba(244,63,94,.85)}
+.btn-red:hover{filter:brightness(1.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 34px -8px rgba(244,63,94,1)}
+.btn-dark{color:#f4f4f5;background:rgba(24,24,27,.7);border:1px solid rgba(255,255,255,.12)}
+.btn-dark:hover{background:rgba(35,35,39,.85);border-color:rgba(244,63,94,.4)}
+.btn-shine::after{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
+.btn-shine:hover::after{left:100%}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+/* ===== TEXT ===== */
+.h-grad{background:linear-gradient(180deg,#fff 30%,#a1a1aa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.red-text{background:linear-gradient(90deg,#ff8fa3,#f43f5e);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ===== ORBIT ===== */
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+.orbit{position:relative;border-radius:1.1rem;padding:1.5px;
+  background:conic-gradient(from var(--a),transparent 0 55%,#f43f5e 75%,#8b5cf6 85%,transparent 100%);
+  animation:spin 6s linear infinite;box-shadow:0 0 40px -10px rgba(244,63,94,.5)}
+@keyframes spin{to{--a:360deg}}
+.orbit>div{border-radius:calc(1.1rem - 1.5px);background:#0f0f12}
+
+/* ===== FIELD ===== */
+.field{width:100%;background:#0c0c0f;color:#fff;font-size:16px;padding:.8rem 1rem;border-radius:.8rem;
+  border:1px solid rgba(255,255,255,.12);transition:border-color .2s,box-shadow .2s}
+.field::placeholder{color:#71717a}
+.field:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(244,63,94,.22)}
+select.field option{background:#0c0c0f}
+
+/* ===== DASHBOARD ===== */
+.dash-wrap{perspective:1400px}
+.dash{transform:rotateX(12deg);transform-origin:top center;
+  -webkit-mask-image:linear-gradient(#000 65%,transparent);mask-image:linear-gradient(#000 65%,transparent)}
+
+/* ===== MARQUEE ===== */
+.mq{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.mq-track{display:flex;gap:2.5rem;width:max-content;animation:mq 32s linear infinite;will-change:transform}
+.mq.rev .mq-track{animation-direction:reverse}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq:hover .mq-track{animation-play-state:paused}
+
+/* ===== REVEAL ===== */
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+
+/* ===== FAB ===== */
+@keyframes wiggle{0%,60%,100%{transform:rotate(0)}66%{transform:rotate(-14deg) scale(1.08)}72%{transform:rotate(12deg) scale(1.08)}78%{transform:rotate(-9deg)}84%{transform:rotate(6deg)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 var(--r)}70%,100%{box-shadow:0 0 0 18px transparent}}
+.fab{animation:wiggle 2.8s ease-in-out infinite,ring 2.8s ease-out infinite}
+
+/* ===== AVATAR ===== */
+.avatar-ring{position:relative;padding:2px;border-radius:9999px;
+  background:linear-gradient(135deg,#f43f5e,#8b5cf6,#f59e0b,#10b981);
+  box-shadow:0 6px 20px -6px rgba(244,63,94,.6);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.avatar-ring:hover{transform:scale(1.08);box-shadow:0 10px 28px -6px rgba(244,63,94,.95)}
+.avatar-ring>span{display:grid;place-items:center;width:100%;height:100%;border-radius:9999px;background:#0c0c0f;overflow:hidden}
+.avatar-ring img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-ring i{color:#f4f4f5}
+.avatar-big{position:relative;padding:2px;border-radius:1rem;
+  background:linear-gradient(135deg,#f43f5e,#8b5cf6,#f59e0b,#10b981);
+  box-shadow:0 8px 24px -8px rgba(244,63,94,.55);transition:transform .25s}
+.avatar-big:hover{transform:scale(1.06)}
+.avatar-big>span{display:grid;place-items:center;width:100%;height:100%;border-radius:calc(1rem - 2px);background:#0c0c0f;overflow:hidden}
+.avatar-big img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-loading{opacity:.55;filter:blur(1px);pointer-events:none}
+
+/* ===== HEADER / MODAL / MENU / TOAST ===== */
+header.glass{background:rgba(9,9,11,.72)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+#authModal{background:rgba(0,0,0,.75)}
+#authModal .card{background:rgba(18,18,23,.96)}
+#accountModal{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#accountModal .card{background:rgba(18,18,23,.96)}
+#pwModal{background:rgba(0,0,0,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#pwModal .card{background:rgba(18,18,23,.96)}
+#avatarMenu{background:rgba(18,18,23,.96)!important}
+#toast{background:rgba(18,18,23,.95)}
+
+/* ===== CONTENT-VISIBILITY ===== */
+main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
+
+/* ===== INFO ROW ===== */
+.info-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  padding:.75rem;border-radius:.75rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.info-row .lbl{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#71717a;font-weight:600}
+.info-row .val{font-size:.875rem;font-weight:700;color:#f4f4f5;margin-top:2px;word-break:break-all}
+.info-row .val.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem}
+.copy-btn{flex-shrink:0;width:36px;height:36px;border-radius:.6rem;display:grid;place-items:center;
+  background:rgba(24,24,27,.7);border:1px solid rgba(255,255,255,.12);color:#e4e4e7;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .2s}
+.copy-btn:hover{background:rgba(244,63,94,.15);border-color:rgba(244,63,94,.5);color:#fff}
+.copy-btn:active{transform:scale(.94)}
+
+/* ===== REDUCED MOTION ===== */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .orbit,.fab,.avatar-ring,.avatar-big,.aurora span,.mq-track{animation:none!important}
+  .js .rv{opacity:1;transform:none;transition:none}
+  .spotlight{display:none}
+}
+</style>
+</head>
+<body class="font-sans antialiased">
+
+<!-- AURORA -->
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+
+<!-- ============ THANH ĐIỀU HƯỚNG ============ -->
+<header class="glass sticky top-0 z-40 border-b border-white/5" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-4">
+    <a href="index.html" class="flex items-center gap-2.5 font-extrabold text-lg">
+      <div class="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/30 grid place-items-center text-rose-500 font-black">BR</div>
+      <span data-brand>BR-34</span>
+    </a>
+    <a href="index.html" class="ml-1 text-sm text-zinc-400 hover:text-white flex items-center gap-1.5"><i class="fa-solid fa-arrow-left text-xs"></i>Trang chủ</a>
+    <div class="ml-auto flex items-center gap-2">
+      <div id="userBox" class="relative hidden">
+        <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
+          <span>
+            <img id="avatarImg" alt="" hidden>
+            <i id="avatarFallback" class="fa-solid fa-user text-sm"></i>
+          </span>
+        </button>
+        <div id="avatarMenu" class="hidden absolute right-0 top-12 w-56 rounded-2xl border border-white/10 p-2 shadow-2xl z-50">
+          <p id="menuName" class="px-3 py-2 mb-1 text-xs font-bold text-zinc-300 border-b border-white/10 truncate"></p>
+          <a href="index.html" class="block w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-house mr-2 text-rose-400"></i>Về trang chủ</a>
+          <button id="avatarLogout" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5"><i class="fa-solid fa-right-from-bracket mr-2 text-zinc-400"></i>Đăng xuất</button>
+        </div>
+      </div>
+      <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm">Đăng nhập</button>
+    </div>
+  </div>
+</header>
+
+<main class="relative max-w-lg mx-auto px-4 py-10 sm:py-14">
+
+  <!-- Trạng thái chưa đăng nhập -->
+  <div id="needLogin" class="hidden card p-8 text-center">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 grid place-items-center text-2xl text-rose-400">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <h2 class="mt-4 text-lg font-extrabold">Bạn cần đăng nhập</h2>
+    <p class="mt-1.5 text-sm text-zinc-400">Vui lòng đăng nhập hoặc đăng ký tài khoản để nạp tiền.</p>
+    <a href="index.html?login=1" class="btn btn-red btn-shine w-full py-3 mt-6">ĐĂNG NHẬP / ĐĂNG KÝ</a>
+  </div>
+
+  <!-- Trang nạp tiền -->
+  <div id="depositPage" class="hidden">
+    <div class="text-center">
+      <h1 class="text-2xl sm:text-3xl font-black h-grad">Nạp tiền vào tài khoản</h1>
+      <p class="mt-1.5 text-sm text-zinc-400">Chuyển khoản theo QR bên dưới, số dư sẽ được cộng sau khi Admin xác nhận</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 mt-6">
+      <label class="block text-xs font-semibold text-zinc-400 mb-1.5">Chọn nhanh số tiền</label>
+      <div id="depQuickAmounts" class="grid grid-cols-4 gap-2 mb-3"></div>
+      <label class="block text-xs font-semibold text-zinc-400 mb-1">Số tiền muốn nạp (đ)</label>
+      <input id="depAmount" type="number" min="10000" step="1000" placeholder="vd: 100000" class="field" inputmode="numeric">
+
+      <div class="mt-5 flex flex-col items-center">
+        <div class="rounded-2xl bg-white p-3">
+          <img id="depQrImg" src="" alt="QR chuyển khoản" width="240" height="240" class="rounded-lg" style="width:240px;height:240px">
+        </div>
+        <p class="mt-3 text-sm font-bold">TRAN MINH TUAN</p>
+        <p class="text-xs text-zinc-400">Techcombank · VietQR / Napas 247</p>
+      </div>
+
+      <div class="mt-5 space-y-2.5">
+        <div class="info-row">
+          <div class="min-w-0">
+            <p class="lbl">Số tài khoản</p>
+            <p id="depAccNo" class="val mono">1907 6780 6580 18</p>
+          </div>
+          <button type="button" data-copy="depAccNo" class="copy-btn" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
+        </div>
+        <div class="info-row">
+          <div class="min-w-0">
+            <p class="lbl">Nội dung chuyển khoản (bắt buộc)</p>
+            <p id="depNote" class="val mono">—</p>
+          </div>
+          <button type="button" data-copy="depNote" class="copy-btn" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2.5 text-xs text-amber-200 leading-relaxed">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i><b>Lưu ý:</b> Nhập <b>đúng nội dung chuyển khoản</b> ở trên để hệ thống đối soát tự động, tránh chậm cộng tiền. Sau khi chuyển khoản xong, nhớ <b>chụp lại bill</b> để gửi cho Admin qua Zalo, rồi bấm nút bên dưới để báo Admin.
+      </div>
+
+      <p id="depErr" class="hidden mt-3 text-xs text-rose-400 font-semibold"></p>
+      <button id="depSubmitBtn" type="button" class="btn btn-red btn-shine w-full py-3 mt-4">TÔI ĐÃ CHUYỂN KHOẢN</button>
+      <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="mt-2.5 flex items-center justify-center gap-1.5 text-xs text-zinc-400 hover:text-white underline">
+        <i class="fa-solid fa-comment-dots text-blue-400"></i>Chưa được chuyển hướng? Bấm vào đây để gửi bill qua Zalo
+      </a>
+    </div>
+
+    <div class="card p-5 mt-4">
+      <p class="text-sm font-bold flex items-center gap-2"><i class="fa-regular fa-clock text-rose-400"></i>Lịch sử nạp gần đây</p>
+      <div id="depHistory" class="mt-3 space-y-2 text-sm text-zinc-400">Đang tải...</div>
+    </div>
+
+    <p class="text-center text-xs text-zinc-500 mt-6">Cần hỗ trợ? Nhắn Zalo <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="text-blue-400 underline">0976976627</a></p>
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-xl text-sm font-semibold card opacity-0 pointer-events-none transition-all duration-300 translate-y-4 text-center max-w-[90vw]" style="top:5rem"></div>
+
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+
+const SHOP_NAME = "BR-34";
+document.querySelectorAll("[data-brand]").forEach(el => el.textContent = SHOP_NAME);
+
+let currentUser = null;
+let tt;
+function toast(msg, ok = true) {
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok ? "fa-circle-check text-emerald-400" : "fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"), 3800);
+}
+
+/* Avatar mặc định (khớp cách index.html tạo avatar) */
+const defaultAvatar = email => `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(email||"U")}&backgroundType=gradientLinear`;
+
+function paintAvatar(){
+  const img = $("avatarImg"), fb = $("avatarFallback");
+  if (!currentUser) { img.hidden = true; fb.hidden = false; return; }
+  const url = (currentUser.user_metadata && currentUser.user_metadata.avatar) || defaultAvatar(currentUser.email);
+  img.src = url; img.hidden = false; fb.hidden = true;
+  img.onerror = () => { img.hidden = true; fb.hidden = false; };
+}
+
+const avatarMenu = $("avatarMenu");
+$("avatarBtn")?.addEventListener("click", e => { e.stopPropagation(); avatarMenu.classList.toggle("hidden"); });
+document.addEventListener("click", () => avatarMenu.classList.add("hidden"));
+
+$("authHeaderBtn").onclick = () => { location.href = "index.html?login=1"; };
+$("avatarLogout").onclick = async () => {
+  if (confirm("Bạn có chắc chắn muốn đăng xuất tài khoản?")) {
+    await supabaseClient.auth.signOut();
+    location.href = "index.html";
+  }
+};
+
+/* ============ TRẠNG THÁI TÀI KHOẢN ============ */
+function renderAuthState(){
+  if (currentUser) {
+    $("userBox").classList.remove("hidden");
+    $("authHeaderBtn").classList.add("hidden");
+    $("menuName").textContent = currentUser.email.split("@")[0];
+    paintAvatar();
+    $("needLogin").classList.add("hidden");
+    $("depositPage").classList.remove("hidden");
+    initDeposit();
+  } else {
+    $("userBox").classList.add("hidden");
+    $("authHeaderBtn").classList.remove("hidden");
+    $("needLogin").classList.remove("hidden");
+    $("depositPage").classList.add("hidden");
+  }
+}
+
+/* ============ NẠP TIỀN ============ */
+const BANK_BIN = "970407";           // Techcombank
+const BANK_ACC = "19076780658018";   // TRAN MINH TUAN
+const BANK_ACC_NAME = "TRAN MINH TUAN";
+const QUICK_AMOUNTS = [50000, 100000, 200000, 500000];
+const ZALO_NUMBER = "0976976627"; // Zalo Admin nhận bill chuyển khoản
+let depositReady = false;
+
+function depNoteFor(user){
+  const uname = (user.email || "").split("@")[0].toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+  return `NAP ${uname || user.id.slice(0,8).toUpperCase()}`;
+}
+
+function updateDepositQr(){
+  const amt = Math.max(0, parseInt($("depAmount").value || "0", 10) || 0);
+  const note = $("depNote").textContent;
+  let url = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACC}-compact2.png?accountName=${encodeURIComponent(BANK_ACC_NAME)}`;
+  if (amt >= 1000) url += `&amount=${amt}`;
+  if (note && note !== "—") url += `&addInfo=${encodeURIComponent(note)}`;
+  $("depQrImg").src = url;
+}
+
+function loadDepositHistory(){
+  const box = $("depHistory");
+  supabaseClient.from("deposits").select("amount,status,created_at")
+    .eq("user_id", currentUser.id).order("created_at", { ascending: false }).limit(5)
+    .then(({ data, error }) => {
+      if (error || !data || !data.length) { box.textContent = "Chưa có giao dịch nào."; return; }
+      const badge = st => st === "done" ? '<span class="text-emerald-400">Đã cộng tiền</span>'
+        : st === "rejected" ? '<span class="text-rose-400">Từ chối</span>'
+        : '<span class="text-amber-400">Đang chờ duyệt</span>';
+      box.innerHTML = data.map(d => `
+        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+          <span class="font-semibold text-white">${(d.amount||0).toLocaleString("vi-VN")}đ</span>
+          <span class="text-xs">${badge(d.status)}</span>
+        </div>`).join("");
+    })
+    .catch(() => { box.textContent = "Chưa có giao dịch nào."; });
+}
+
+function initDeposit(){
+  if (depositReady) { $("depNote").textContent = depNoteFor(currentUser); updateDepositQr(); loadDepositHistory(); return; }
+  depositReady = true;
+
+  $("depQuickAmounts").innerHTML = QUICK_AMOUNTS.map(a =>
+    `<button type="button" data-amt="${a}" class="btn btn-dark py-2 text-xs">${a/1000}k</button>`
+  ).join("");
+  $("depQuickAmounts").addEventListener("click", e => {
+    const btn = e.target.closest("[data-amt]");
+    if (!btn) return;
+    $("depAmount").value = btn.dataset.amt;
+    updateDepositQr();
+  });
+  $("depAmount").addEventListener("input", updateDepositQr);
+
+  $("depNote").textContent = depNoteFor(currentUser);
+  updateDepositQr();
+  loadDepositHistory();
+
+  $("depSubmitBtn").onclick = async () => {
+    const errEl = $("depErr");
+    errEl.classList.add("hidden");
+    const amt = Math.max(0, parseInt($("depAmount").value || "0", 10) || 0);
+    if (amt < 10000) { errEl.textContent = "Vui lòng nhập số tiền từ 10.000đ trở lên."; errEl.classList.remove("hidden"); return; }
+
+    const btn = $("depSubmitBtn");
+    btn.disabled = true;
+    btn.textContent = "ĐANG GỬI...";
+    try {
+      const { error } = await supabaseClient.from("deposits").insert([{
+        user_id: currentUser.id,
+        username: (currentUser.email || "").split("@")[0],
+        amount: amt,
+        note: $("depNote").textContent,
+        status: "pending"
+      }]);
+      if (error) throw error;
+      toast("Đã ghi nhận yêu cầu! Vui lòng gửi ảnh bill chuyển khoản qua Zalo để được cộng tiền nhanh hơn.");
+      $("depAmount").value = "";
+      updateDepositQr();
+      loadDepositHistory();
+      window.open(`https://zalo.me/${ZALO_NUMBER}`, "_blank", "noopener");
+    } catch (x) {
+      console.error(x);
+      errEl.textContent = "Lỗi gửi yêu cầu: " + (x.message || "Vui lòng liên hệ Admin qua Zalo.");
+      errEl.classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "TÔI ĐÃ CHUYỂN KHOẢN";
+    }
+  };
+}
+
+/* Copy nút */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".copy-btn");
+  if (!btn || !btn.dataset.copy) return;
+  const src = $(btn.dataset.copy);
+  if (!src) return;
+  const text = src.textContent.trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    const icon = btn.querySelector("i");
+    const old = icon.className;
+    icon.className = "fa-solid fa-check text-emerald-400";
+    setTimeout(() => icon.className = old, 1400);
+    toast("Đã copy: " + text);
+  } catch (x) {
+    toast("Không copy được, vui lòng copy thủ công.", false);
+  }
+});
+
+/* ============ KHỞI TẠO PHIÊN ============ */
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  currentUser = session ? session.user : null;
+  renderAuthState();
+});
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  currentUser = session ? session.user : null;
+  renderAuthState();
+});
+</script>
+</body>
+</html>
