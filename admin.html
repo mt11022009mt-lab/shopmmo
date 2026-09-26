@@ -46,7 +46,7 @@
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google Fonts: Plus Jakarta Sans & Be Vietnam Pro -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -63,6 +63,14 @@
     @media (min-width: 640px) { input, select, textarea { font-size: 14px !important; } }
     .modern-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     .modern-card:hover { transform: translateY(-2px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    }
+    .animate-pulse-ring { animation: pulse-ring 2s infinite; }
   </style>
 </head>
 
@@ -74,14 +82,12 @@
   <div id="authGate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
     <div class="w-full max-w-md bg-white dark:bg-surface-darkcard rounded-3xl p-7 text-center shadow-2xl border border-slate-200/80 dark:border-slate-800 space-y-4">
       
-      <!-- Loading State -->
       <div id="gateLoading" class="py-6 space-y-3">
         <i class="fa-solid fa-shield-halved text-4xl text-brand-500 animate-bounce"></i>
         <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Đang kiểm tra quyền Quản Trị Viên...</h3>
         <p class="text-xs text-slate-400">Vui lòng chờ trong giây lát</p>
       </div>
 
-      <!-- Denied State -->
       <div id="gateDenied" class="hidden py-4 space-y-4">
         <div class="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 grid place-items-center text-2xl mx-auto">
           <i class="fa-solid fa-lock"></i>
@@ -100,7 +106,6 @@
         </div>
       </div>
 
-      <!-- Login Required State -->
       <div id="gateLoginRequired" class="hidden py-4 space-y-4 text-left">
         <div class="text-center">
           <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 grid place-items-center text-2xl mx-auto mb-2">
@@ -130,16 +135,14 @@
   </div>
 
   <!-- ========================================================
-       MAIN ADMIN APP (2 COLUMNS: SIDEBAR + MAIN CONTENT)
+       MAIN ADMIN APP
        ======================================================== -->
   <div id="adminApp" class="hidden min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto">
 
-    <!-- SIDEBAR QUẢN TRỊ -->
     <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
 
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-surface-darkcard border-r border-slate-200/80 dark:border-slate-800 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none">
       
-      <!-- Logo Header -->
       <div class="h-20 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
         <a href="index.html" class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-rose-500/30 shadow-md shrink-0">
@@ -158,7 +161,6 @@
         </button>
       </div>
 
-      <!-- Navigation Tabs -->
       <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
         <div>
           <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">QUẢN TRỊ HỆ THỐNG</p>
@@ -176,9 +178,14 @@
               <i class="fa-solid fa-boxes-packing w-4 text-center text-slate-400"></i>
               <span>3. Quản lý đơn hàng & hoàn tiền</span>
             </button>
+            <button onclick="switchAdminTab('deposits')" id="tabNav-deposits" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-money-bill-transfer w-4 text-center text-slate-400"></i>
+              <span>4. Duyệt nạp tiền tự động</span>
+              <span id="pendingDepositBadge" class="ml-auto hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse-ring">0</span>
+            </button>
             <button onclick="switchAdminTab('api')" id="tabNav-api" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-network-wired w-4 text-center text-slate-400"></i>
-              <span>4. Cấu hình API smm1s.vn</span>
+              <span>5. Cấu hình API smm1s.vn</span>
             </button>
           </nav>
         </div>
@@ -194,7 +201,6 @@
         </div>
       </div>
 
-      <!-- Admin User Footer -->
       <div class="p-4 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between">
         <div class="min-w-0">
           <p class="text-xs font-bold text-slate-800 dark:text-white truncate" id="adminEmailText">admin@gmail.com</p>
@@ -207,9 +213,7 @@
 
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 min-w-0 flex flex-col">
-      <!-- HEADER -->
       <header class="sticky top-0 z-30 bg-white/80 dark:bg-surface-darkcard/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <button id="openSidebarBtn" class="lg:hidden w-10 h-10 rounded-xl grid place-items-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
@@ -231,15 +235,10 @@
         </div>
       </header>
 
-      <!-- CONTENT BODY -->
       <div class="p-4 sm:p-6 lg:p-8 space-y-6">
 
-        <!-- ====================================================
-             TAB 1: TỔNG QUAN (DASHBOARD)
-             ==================================================== -->
+        <!-- TAB 1: OVERVIEW -->
         <section id="panel-overview" class="space-y-6">
-          
-          <!-- 4 Stats Cards -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
               <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng Thành Viên</p>
@@ -266,7 +265,6 @@
             </div>
           </div>
 
-          <!-- Đơn phát sinh mới nhất -->
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
@@ -293,12 +291,9 @@
               </table>
             </div>
           </div>
-
         </section>
 
-        <!-- ====================================================
-             TAB 2: QUẢN LÝ THÀNH VIÊN & SỐ DƯ (USERS & BALANCE)
-             ==================================================== -->
+        <!-- TAB 2: USERS -->
         <section id="panel-users" class="hidden space-y-4">
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
             
@@ -310,14 +305,12 @@
                 <p class="text-xs text-slate-400">Cộng trừ tiền trực tiếp vào ví thành viên và phân quyền Quản trị</p>
               </div>
 
-              <!-- Search input -->
               <div class="relative w-full sm:w-72">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input id="userSearchInput" type="text" placeholder="Tìm theo Email hoặc UID..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               </div>
             </div>
 
-            <!-- Users Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-xs text-left min-w-[750px]">
                 <thead>
@@ -339,9 +332,7 @@
           </div>
         </section>
 
-        <!-- ====================================================
-             TAB 3: QUẢN LÝ ĐƠN HÀNG & HOÀN TIỀN (ORDERS & REFUND)
-             ==================================================== -->
+        <!-- TAB 3: ORDERS -->
         <section id="panel-orders" class="hidden space-y-4">
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
             
@@ -353,14 +344,12 @@
                 <p class="text-xs text-slate-400">Cập nhật trạng thái hoặc hoàn tiền về ví người dùng khi đơn lỗi</p>
               </div>
 
-              <!-- Search -->
               <div class="relative w-full md:w-72">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input id="orderAdminSearch" type="text" placeholder="Tìm theo link, mã, dịch vụ..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               </div>
             </div>
 
-            <!-- Filter Status -->
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
               <button onclick="filterAdminOrders('all')" id="aflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">Tất cả</button>
               <button onclick="filterAdminOrders('pending')" id="aflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Chờ xử lý</button>
@@ -369,7 +358,6 @@
               <button onclick="filterAdminOrders('canceled')" id="aflt-canceled" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã hủy</button>
             </div>
 
-            <!-- Orders Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-xs text-left min-w-[850px]">
                 <thead>
@@ -391,9 +379,99 @@
           </div>
         </section>
 
-        <!-- ====================================================
-             TAB 4: CẤU HÌNH API WEB MẸ SMM1S.VN
-             ==================================================== -->
+        <!-- TAB 4: DEPOSITS APPROVAL -->
+        <section id="panel-deposits" class="hidden space-y-6">
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/80 dark:border-amber-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">Chờ Duyệt</p>
+                <div class="w-8 h-8 rounded-xl bg-amber-500/20 grid place-items-center">
+                  <i class="fa-solid fa-hourglass-half text-amber-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 mt-2" id="statPendingDeposits">0</h3>
+              <p class="text-[11px] text-amber-600/70 dark:text-amber-400/70 mt-1">Đang chờ xử lý</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200/80 dark:border-emerald-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Đã Duyệt</p>
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 grid place-items-center">
+                  <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-2" id="statApprovedDeposits">0</h3>
+              <p class="text-[11px] text-emerald-600/70 dark:text-emerald-400/70 mt-1">Tổng số lệnh đã duyệt</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border border-blue-200/80 dark:border-blue-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">Tổng Tiền Vào</p>
+                <div class="w-8 h-8 rounded-xl bg-blue-500/20 grid place-items-center">
+                  <i class="fa-solid fa-vault text-blue-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400 mt-2" id="statTotalDepositAmount">0đ</h3>
+              <p class="text-[11px] text-blue-600/70 dark:text-blue-400/70 mt-1">Tiền đã duyệt thành công</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/20 border border-rose-200/80 dark:border-rose-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">Đã Từ Chối</p>
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 grid place-items-center">
+                  <i class="fa-solid fa-circle-xmark text-rose-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 mt-2" id="statRejectedDeposits">0</h3>
+              <p class="text-[11px] text-rose-600/70 dark:text-rose-400/70 mt-1">Lệnh bị từ chối</p>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-money-bill-transfer text-brand-500"></i> Danh Sách Lệnh Nạp Tiền
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Bấm "Duyệt" để tự động cộng tiền vào ví khách hàng</p>
+              </div>
+
+              <div class="relative w-full md:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="depositSearchInput" type="text" placeholder="Tìm theo mã GD, email, nội dung..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              <button onclick="filterDeposits('pending')" id="dflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-glow-sm">Chờ duyệt</button>
+              <button onclick="filterDeposits('approved')" id="dflt-approved" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã duyệt</button>
+              <button onclick="filterDeposits('rejected')" id="dflt-rejected" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã từ chối</button>
+              <button onclick="filterDeposits('all')" id="dflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Tất cả</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[900px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Mã GD / Thời gian</th>
+                    <th class="py-3 px-3">Khách hàng</th>
+                    <th class="py-3 px-3 text-right">Số Tiền</th>
+                    <th class="py-3 px-3">Phương Thức</th>
+                    <th class="py-3 px-3">Nội dung CK</th>
+                    <th class="py-3 px-3 text-center">Trạng thái</th>
+                    <th class="py-3 px-3 text-right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="depositsTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="7" class="py-8 text-center text-slate-400">Đang tải danh sách lệnh nạp...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: API CONFIG -->
         <section id="panel-api" class="hidden space-y-6">
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
             <div>
@@ -405,14 +483,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               
-              <!-- API Endpoint info -->
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
                 <p class="font-bold text-slate-700 dark:text-slate-300">API Endpoint Web Mẹ:</p>
                 <input type="text" readonly value="https://smm1s.vn/api/v2" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs font-bold text-brand-600">
                 <p class="text-[11px] text-slate-400">Phương thức gửi: POST | Tham số: key, action</p>
               </div>
 
-              <!-- API Key input -->
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
                 <p class="font-bold text-slate-700 dark:text-slate-300">Khóa API Bí Mật (smm1s.vn API Key):</p>
                 <input id="smm1sApiKeyInput" type="password" placeholder="Nhập API Key cấp từ smm1s.vn..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
@@ -428,7 +504,6 @@
 
             </div>
 
-            <!-- Kết quả kiểm tra số dư web mẹ -->
             <div id="smm1sBalanceResult" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200 flex items-center justify-between">
               <div>
                 <p class="font-bold">Kết nối API smm1s.vn thành công!</p>
@@ -437,7 +512,6 @@
               <span id="smm1sBalanceValue" class="text-xl font-black text-emerald-600 dark:text-emerald-400">0đ</span>
             </div>
 
-            <!-- Bảng Quy Tắc Tính Lợi Nhuận -->
             <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 text-xs space-y-2">
               <h5 class="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-calculator text-indigo-500"></i> Quy tắc định giá tự động BR-34
@@ -452,7 +526,6 @@
 
       </div>
 
-      <!-- FOOTER -->
       <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
         <p class="font-semibold text-slate-700 dark:text-slate-300">BR-34 Admin Portal · Quyền hạn Quản trị viên cấp cao</p>
       </footer>
@@ -476,10 +549,12 @@
     let currentAdmin = null;
     let allUsers = [];
     let allOrders = [];
+    let allDeposits = [];
     let currentOrderFilter = "all";
+    let currentDepositFilter = "pending";
 
     /* ========================================================
-       1. KIỂM TRA PHÂN QUYỀN ADMIN (SECURITY CHECK)
+       1. KIỂM TRA PHÂN QUYỀN ADMIN
        ======================================================== */
     async function checkAdminAuth() {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -505,7 +580,6 @@
           return;
         }
 
-        // Đã xác thực quyền admin thành công!
         $("authGate").classList.add("hidden");
         $("adminApp").classList.remove("hidden");
         loadAllAdminData();
@@ -548,7 +622,7 @@
        2. TABS QUẢN TRỊ
        ======================================================== */
     function switchAdminTab(t) {
-      ['overview', 'users', 'orders', 'api'].forEach(name => {
+      ['overview', 'users', 'orders', 'deposits', 'api'].forEach(name => {
         const navBtn = $(`tabNav-${name}`);
         const panel = $(`panel-${name}`);
         if (navBtn) {
@@ -563,18 +637,18 @@
     }
 
     /* ========================================================
-       3. LOAD DỮ LIỆU TỔNG QUAN, USERS & ĐƠN HÀNG
+       3. LOAD DỮ LIỆU
        ======================================================== */
     async function loadAllAdminData() {
       loadOverviewStats();
       loadUsers();
       loadAdminOrders();
+      loadDeposits();
       loadSmm1sConfig();
     }
 
     async function loadOverviewStats() {
       try {
-        // Users & Balances
         const { data: profiles } = await supabaseClient.from("profiles").select("id, balance");
         const userCount = profiles ? profiles.length : 0;
         const totalBal = (profiles || []).reduce((acc, p) => acc + Number(p.balance || 0), 0);
@@ -582,14 +656,12 @@
         $("statUsersCount").textContent = userCount;
         $("statTotalBalances").textContent = fmtVnd(totalBal);
 
-        // Orders
         const { data: orders } = await supabaseClient.from("orders").select("id, status, service, contact, created_at").order("created_at", { ascending: false });
         allOrders = orders || [];
 
         $("statTotalOrders").textContent = allOrders.length;
         $("statPendingOrders").textContent = allOrders.filter(o => o.status === "pending" || !o.status).length;
 
-        // Bảng đơn phát sinh mới nhất
         const recent = allOrders.slice(0, 5);
         const tbody = $("overviewRecentOrders");
         if (!recent.length) {
@@ -840,7 +912,6 @@
       const amt = Number(refundAmt);
 
       try {
-        // Cộng tiền vào ví user
         const { data: p } = await supabaseClient.from("profiles").select("balance, total_spent").eq("id", userId).single();
         const nextBal = Number(p?.balance || 0) + amt;
         const nextSpent = Math.max(0, Number(p?.total_spent || 0) - amt);
@@ -858,7 +929,229 @@
     }
 
     /* ========================================================
-       6. CẤU HÌNH API WEB MẸ SMM1S.VN
+       6. DUYỆT NẠP TIỀN TỰ ĐỘNG (DEPOSITS)
+       ======================================================== */
+    async function loadDeposits() {
+      const tbody = $("depositsTbody");
+      try {
+        const { data, error } = await supabaseClient
+          .from("deposits")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        allDeposits = data || [];
+        renderDeposits();
+        updateDepositStats();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-rose-500">Lỗi tải lệnh nạp: ${err.message}</td></tr>`;
+      }
+    }
+
+    function updateDepositStats() {
+      const pending = allDeposits.filter(d => (d.status || "pending") === "pending").length;
+      const approved = allDeposits.filter(d => d.status === "approved");
+      const rejected = allDeposits.filter(d => d.status === "rejected").length;
+      const totalApproved = approved.reduce((sum, d) => sum + Number(d.amount || 0), 0);
+
+      $("statPendingDeposits").textContent = pending;
+      $("statApprovedDeposits").textContent = approved.length;
+      $("statRejectedDeposits").textContent = rejected;
+      $("statTotalDepositAmount").textContent = fmtVnd(totalApproved);
+
+      const badge = $("pendingDepositBadge");
+      if (badge) {
+        if (pending > 0) {
+          badge.textContent = pending;
+          badge.classList.remove("hidden");
+        } else {
+          badge.classList.add("hidden");
+        }
+      }
+    }
+
+    function renderDeposits() {
+      const tbody = $("depositsTbody");
+      let list = allDeposits;
+
+      if (currentDepositFilter !== "all") {
+        list = list.filter(d => (d.status || "pending") === currentDepositFilter);
+      }
+
+      const q = $("depositSearchInput").value.toLowerCase().trim();
+      if (q) {
+        list = list.filter(d =>
+          String(d.id).includes(q) ||
+          (d.user_email || "").toLowerCase().includes(q) ||
+          (d.content || "").toLowerCase().includes(q) ||
+          (d.method || "").toLowerCase().includes(q)
+        );
+      }
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Không có lệnh nạp nào theo bộ lọc.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(d => {
+        const dt = d.created_at ? new Date(d.created_at).toLocaleString("vi-VN") : "—";
+        const st = d.status || "pending";
+        const amount = Number(d.amount || 0);
+
+        const statusBadge = st === "approved"
+          ? '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 inline-flex items-center gap-1"><i class="fa-solid fa-check"></i> Đã duyệt</span>'
+          : st === "rejected"
+          ? '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 inline-flex items-center gap-1"><i class="fa-solid fa-xmark"></i> Từ chối</span>'
+          : '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 inline-flex items-center gap-1"><i class="fa-solid fa-clock"></i> Chờ duyệt</span>';
+
+        const methodBadge = (() => {
+          const m = (d.method || "").toUpperCase();
+          if (m.includes("MOMO")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-pink-100 text-pink-700">MOMO</span>';
+          if (m.includes("MB")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-100 text-blue-700">MB BANK</span>';
+          if (m.includes("TECH")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-red-100 text-red-700">TECHCOM</span>';
+          return `<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-slate-100 text-slate-600">${m || 'N/A'}</span>`;
+        })();
+
+        const actions = st === "pending"
+          ? `
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="approveDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
+                <i class="fa-solid fa-check"></i> Duyệt
+              </button>
+              <button onclick="rejectDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
+                <i class="fa-solid fa-xmark"></i> Từ chối
+              </button>
+            </div>
+          `
+          : `<span class="text-slate-400 text-[11px] italic">Đã xử lý</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition" id="dep-row-${d.id}">
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="font-mono font-bold text-slate-900 dark:text-white">DEP#${String(d.id).slice(0, 8)}</span>
+              <p class="text-[10px] text-slate-400 mt-0.5">${dt}</p>
+            </td>
+            <td class="py-3 px-3">
+              <p class="font-bold text-slate-800 dark:text-white truncate max-w-[180px]">${d.user_email || d.contact || 'Khách'}</p>
+              <p class="text-[10px] text-slate-400 font-mono">${(d.user_id || '').slice(0, 13)}...</p>
+            </td>
+            <td class="py-3 px-3 text-right">
+              <span class="font-black text-emerald-600 dark:text-emerald-400 text-sm">+${fmtVnd(amount)}</span>
+            </td>
+            <td class="py-3 px-3">${methodBadge}</td>
+            <td class="py-3 px-3 max-w-[200px]">
+              <p class="font-mono text-[11px] text-slate-600 dark:text-slate-300 truncate" title="${d.content || ''}">${d.content || '—'}</p>
+            </td>
+            <td class="py-3 px-3 text-center">${statusBadge}</td>
+            <td class="py-3 px-3 text-right">${actions}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterDeposits(st) {
+      currentDepositFilter = st;
+      ['pending', 'approved', 'rejected', 'all'].forEach(name => {
+        const el = $(`dflt-${name}`);
+        if (el) {
+          el.className = name === st
+            ? (st === 'pending' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-glow-sm' 
+               : st === 'approved' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-white shadow-glow-sm'
+               : st === 'rejected' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500 text-white shadow-glow-sm'
+               : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm')
+            : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+        }
+      });
+      renderDeposits();
+    }
+
+    $("depositSearchInput").addEventListener("input", renderDeposits);
+
+    async function approveDeposit(depositId) {
+      const dep = allDeposits.find(d => String(d.id) === String(depositId));
+      if (!dep) return toast("Không tìm thấy lệnh nạp!", false);
+
+      if ((dep.status || "pending") !== "pending") {
+        return toast("Lệnh này đã được xử lý rồi!", false);
+      }
+
+      const amount = Number(dep.amount || 0);
+      if (amount <= 0) return toast("Số tiền không hợp lệ!", false);
+
+      if (!confirm(`Xác nhận DUYỆT lệnh nạp ${fmtVnd(amount)} cho khách hàng?\n\nTiền sẽ được cộng TỰ ĐỘNG vào ví.`)) return;
+
+      try {
+        const { data: p, error: pErr } = await supabaseClient
+          .from("profiles")
+          .select("balance, total_deposit")
+          .eq("id", dep.user_id)
+          .single();
+
+        if (pErr) throw new Error("Không tìm thấy user: " + pErr.message);
+
+        const newBalance = Number(p?.balance || 0) + amount;
+        const newTotalDeposit = Number(p?.total_deposit || 0) + amount;
+
+        const { error: uErr } = await supabaseClient
+          .from("profiles")
+          .update({ balance: newBalance, total_deposit: newTotalDeposit })
+          .eq("id", dep.user_id);
+        if (uErr) throw uErr;
+
+        const { error: dErr } = await supabaseClient
+          .from("deposits")
+          .update({
+            status: "approved",
+            approved_at: new Date().toISOString(),
+            approved_by: currentAdmin?.email || "admin"
+          })
+          .eq("id", depositId);
+        if (dErr) throw dErr;
+
+        toast(`✅ Đã duyệt & cộng ${fmtVnd(amount)} vào ví khách!`);
+        loadDeposits();
+        loadOverviewStats();
+        loadUsers();
+      } catch (err) {
+        console.error(err);
+        toast("Lỗi duyệt nạp tiền: " + err.message, false);
+      }
+    }
+
+    async function rejectDeposit(depositId) {
+      const dep = allDeposits.find(d => String(d.id) === String(depositId));
+      if (!dep) return;
+
+      if ((dep.status || "pending") !== "pending") {
+        return toast("Lệnh này đã được xử lý rồi!", false);
+      }
+
+      const reason = prompt("Nhập lý do từ chối (không bắt buộc):", "Không tìm thấy giao dịch");
+      if (reason === null) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from("deposits")
+          .update({
+            status: "rejected",
+            rejected_reason: reason || "Không có lý do",
+            rejected_at: new Date().toISOString(),
+            rejected_by: currentAdmin?.email || "admin"
+          })
+          .eq("id", depositId);
+
+        if (error) throw error;
+
+        toast("Đã từ chối lệnh nạp tiền!", true);
+        loadDeposits();
+        updateDepositStats();
+      } catch (err) {
+        toast("Lỗi từ chối: " + err.message, false);
+      }
+    }
+
+    /* ========================================================
+       7. CẤU HÌNH API WEB MẸ SMM1S.VN
        ======================================================== */
     function loadSmm1sConfig() {
       const saved = localStorage.getItem("br34_smm1s_api_key") || "";
@@ -883,7 +1176,6 @@
         const box = $("smm1sBalanceResult");
         const val = $("smm1sBalanceValue");
         
-        // Mô phỏng / fetch API balance
         box.classList.remove("hidden");
         val.textContent = "1.850.000đ";
         toast("Đã lấy số dư web mẹ thành công!");
@@ -893,7 +1185,7 @@
     }
 
     /* ========================================================
-       7. THEME & SIDEBAR
+       8. THEME & SIDEBAR
        ======================================================== */
     function initTheme() {
       const saved = localStorage.getItem("br34_theme");
