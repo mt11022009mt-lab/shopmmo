@@ -316,6 +316,49 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 .copy-btn:hover{background:rgba(244,63,94,.15);border-color:rgba(244,63,94,.5);color:#fff}
 .copy-btn:active{transform:scale(.94)}
 
+/* ===== SIDEBAR ===== */
+#sidebarOverlay{position:fixed;inset:0;z-index:59;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .3s}
+#sidebarOverlay.show{opacity:1;pointer-events:auto}
+#sidebar{position:fixed;top:0;left:0;bottom:0;z-index:60;width:280px;max-width:82vw;
+  background:#0c0c0f;border-right:1px solid rgba(255,255,255,.09);
+  transform:translateX(-100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  overflow-y:auto;padding:1rem;padding-top:max(1rem,env(safe-area-inset-top));padding-bottom:max(1rem,env(safe-area-inset-bottom))}
+#sidebar.show{transform:translateX(0)}
+.sb-title{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#71717a;font-weight:800;margin:1.1rem .5rem .4rem}
+.sb-link{display:flex;align-items:center;gap:.7rem;padding:.65rem .6rem;border-radius:.7rem;font-size:.875rem;font-weight:600;color:#d4d4d8;transition:background .2s,color .2s}
+.sb-link:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-link.active{background:linear-gradient(180deg,rgba(244,63,94,.22),rgba(244,63,94,.08));color:#fff;border:1px solid rgba(244,63,94,.35)}
+.sb-link i{width:20px;text-align:center;color:#fb7185}
+.sb-platform{display:flex;align-items:center;gap:.6rem;padding:.5rem .6rem;border-radius:.6rem;font-size:.8rem;font-weight:600;color:#a1a1aa}
+.sb-platform:hover{background:rgba(255,255,255,.05);color:#fff}
+
+/* ===== SẢN PHẨM NỔI BẬT ===== */
+.prod-card{position:relative;border-radius:1.1rem;overflow:hidden;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09)}
+.prod-badge{position:absolute;top:.6rem;left:.6rem;z-index:2;font-size:10px;font-weight:800;padding:.2rem .55rem;border-radius:9999px;background:linear-gradient(180deg,#fbbf24,#d97706);color:#1c1300;box-shadow:0 4px 10px -3px rgba(251,191,36,.6)}
+.prod-off{position:absolute;top:.6rem;right:.6rem;z-index:2;font-size:10px;font-weight:800;padding:.2rem .55rem;border-radius:9999px;background:rgba(244,63,94,.9);color:#fff}
+.prod-img{aspect-ratio:16/10;width:100%;object-fit:cover;display:block}
+
+/* ===== VÍ SỐ DƯ ===== */
+.wallet-card{border-radius:1.25rem;background:linear-gradient(135deg,rgba(244,63,94,.16),rgba(139,92,246,.10) 55%,rgba(255,255,255,.03));
+  border:1px solid rgba(244,63,94,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 18px 40px -24px rgba(244,63,94,.6)}
+.wallet-stat b{display:block;font-size:1.15rem;font-weight:900;color:#fff}
+.wallet-stat span{font-size:11px;color:#a1a1aa;font-weight:600}
+
+/* ===== PLATFORM CHIP (chọn nền tảng) ===== */
+.pf-chip{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:.7rem .4rem;border-radius:1rem;
+  border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);cursor:pointer;transition:border-color .2s,background .2s,transform .2s;text-align:center}
+.pf-chip:hover{transform:translateY(-2px);border-color:rgba(244,63,94,.4)}
+.pf-chip.active{border-color:#f43f5e;background:linear-gradient(180deg,rgba(244,63,94,.22),rgba(244,63,94,.06));box-shadow:0 8px 20px -10px rgba(244,63,94,.7)}
+.pf-chip i{font-size:1.15rem}
+.pf-chip span{font-size:10.5px;font-weight:700;color:#d4d4d8;line-height:1.1}
+
+/* ===== ORDER SUMMARY ===== */
+.sum-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;font-size:.8rem;padding:.35rem 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+.sum-row:last-child{border-bottom:none}
+.sum-row .lbl{color:#a1a1aa;font-weight:600}
+.sum-row .val{font-weight:800;color:#fff}
+
 /* ===== REDUCED MOTION ===== */
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -331,16 +374,49 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
 <div id="spotlight" class="spotlight"></div>
 
+<!-- ============ SIDEBAR ============ -->
+<div id="sidebarOverlay"></div>
+<aside id="sidebar">
+  <a href="#" class="flex items-center gap-2.5 font-extrabold text-base px-1">
+    <div class="w-9 h-9 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0">
+      <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="Logo" class="w-full h-full object-cover object-top">
+    </div>
+    <span data-brand>BR-34</span>
+  </a>
+
+  <p class="sb-title">Bảng điều khiển</p>
+  <a href="#" class="sb-link active"><i class="fa-solid fa-house"></i>Trang chủ</a>
+  <a href="#lich-su" class="sb-link"><i class="fa-solid fa-clock-rotate-left"></i>Lịch sử giao dịch</a>
+  <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="sb-link"><i class="fa-solid fa-headset"></i>Hỗ trợ</a>
+  <a href="#" class="sb-link"><i class="fa-solid fa-plug"></i>API &amp; Đối tác</a>
+
+  <p class="sb-title">Tài chính</p>
+  <a href="nap-tien.html" class="sb-link"><i class="fa-solid fa-wallet"></i>Nạp tiền</a>
+
+  <p class="sb-title">Sản phẩm</p>
+  <a href="#dat-don" class="sb-link"><i class="fa-solid fa-store"></i>Mua sản phẩm</a>
+  <a href="#lich-su" class="sb-link"><i class="fa-solid fa-box"></i>Đơn hàng của tôi</a>
+
+  <p class="sb-title">Nền tảng</p>
+  <div id="sbPlatforms" class="grid gap-0.5"></div>
+
+  <p class="sb-title">Sự kiện</p>
+  <a href="#" class="sb-link"><i class="fa-solid fa-calendar-check"></i>Điểm danh hàng ngày</a>
+</aside>
+
 <!-- ============ THANH ĐIỀU HƯỚNG ============ -->
 <header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
   <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
     <div class="header-pill grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
-      <a href="#" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+      <div class="justify-self-start flex items-center gap-2 sm:gap-2.5 min-w-0">
+      <button id="sidebarToggle" type="button" aria-label="Menu hệ thống" class="w-10 h-10 rounded-xl btn-dark grid place-items-center shrink-0"><i class="fa-solid fa-bars"></i></button>
+      <a href="#" class="flex items-center gap-2.5 font-extrabold text-lg shrink-0 min-w-0">
         <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
           <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
         </div>
         <span data-brand>BR-34</span>
       </a>
+      </div>
       <nav id="navDesk" class="nav-glass justify-self-center hidden md:flex items-center gap-1 text-sm font-medium shrink-0"></nav>
       <div class="justify-self-end flex items-center gap-2 shrink-0">
         <div id="userBox" class="relative hidden flex items-center gap-2">
@@ -374,46 +450,128 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 <main class="relative overflow-x-hidden">
   <div class="spot l"></div><div class="spot r"></div><div class="grid-bg"></div>
 
-  <!-- HERO -->
-  <section class="max-w-4xl mx-auto px-4 pt-12 sm:pt-20 text-center">
-    <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="rv inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-white/10 bg-white/5">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>Hỗ trợ 24/7 — phản hồi nhanh qua Zalo <i class="fa-solid fa-chevron-right text-[10px] text-zinc-400"></i>
-    </a>
-    <h1 class="rv mt-6 font-black tracking-tight leading-[1.08] text-[2.5rem] sm:text-6xl h-grad">Chào Mừng Bạn Đã Đến<br><span class="red-text">BR-34</span></h1>
-    <p class="rv mt-5 text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">Hệ thống tăng tương tác nhanh chóng, hỗ trợ đẩy mạnh doanh thu vượt trội.</p>
-    <div class="rv mt-8 flex items-center justify-center gap-3">
-      <a href="#dat-don" class="btn btn-red btn-shine px-7 py-3.5">Bắt đầu ngay</a>
-      <a href="#dich-vu" class="btn btn-dark px-6 py-3.5">Dịch vụ <i class="fa-solid fa-arrow-right text-xs"></i></a>
-    </div>
-
-    <div class="rv mt-10 flex items-center gap-3 text-xs text-zinc-400">
-      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-rose-500/60"></span>
-      <span class="shrink-0">Hỗ trợ đa nền tảng</span>
-      <span class="flex gap-2 shrink-0">
-        <span class="w-8 h-8 rounded-lg grid place-items-center text-white text-sm" style="background:#1877f2"><i class="fa-brands fa-facebook-f"></i></span>
-        <span class="w-8 h-8 rounded-lg grid place-items-center text-white text-sm bg-black border border-white/20"><i class="fa-brands fa-tiktok"></i></span>
-        <span class="w-8 h-8 rounded-lg grid place-items-center text-white text-sm" style="background:linear-gradient(45deg,#f9a03f,#e1306c,#833ab4)"><i class="fa-brands fa-instagram"></i></span>
-      </span>
-      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-rose-500/60"></span>
+  <!-- CHÀO MỪNG -->
+  <section class="max-w-5xl mx-auto px-4 pt-8 sm:pt-12">
+    <div class="rv flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="font-black tracking-tight leading-tight text-2xl sm:text-4xl h-grad">Chào mừng bạn đến <span class="red-text">BR-34</span></h1>
+        <p class="mt-1.5 text-zinc-400 text-sm sm:text-base">Nạp tiền — chọn dịch vụ — lên đơn tự động, xử lý nhanh chóng 24/7.</p>
+      </div>
+      <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-white/10 bg-white/5 shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>Hỗ trợ 24/7 qua Zalo <i class="fa-solid fa-chevron-right text-[10px] text-zinc-400"></i>
+      </a>
     </div>
   </section>
 
-  <!-- ĐẶT ĐƠN NHANH -->
-  <section id="dat-don" class="max-w-2xl mx-auto px-4 mt-8 scroll-mt-24 rv">
-    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 mb-4 flex gap-3 items-start text-sm text-zinc-300">
-      <i class="fa-solid fa-circle-info text-amber-400 mt-0.5"></i>
-      <p><b>Lưu ý:</b> Mục này dành cho khách muốn order thêm dịch vụ (tăng like, follow, view, sub...). Vui lòng chọn dịch vụ và điền <b>số Zalo / điện thoại</b> (bắt buộc) để shop liên hệ báo giá và xử lý đơn.</p>
+  <!-- SẢN PHẨM NỔI BẬT -->
+  <section class="max-w-5xl mx-auto px-4 mt-8 rv">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-lg sm:text-xl font-extrabold flex items-center gap-2"><i class="fa-solid fa-fire text-rose-400"></i>Sản phẩm nổi bật</h2>
+      <span class="text-xs text-zinc-500">Được mua nhiều nhất</span>
     </div>
-    <div class="orbit"><div class="p-4 sm:p-5">
-      <form id="orderForm" class="grid gap-3" novalidate>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <select id="service" class="field"><option value="">— Chọn dịch vụ —</option></select>
-          <input id="contact" type="tel" inputmode="numeric" autocomplete="tel" required class="field" placeholder="Số Zalo / điện thoại (bắt buộc)">
+    <div id="featuredProducts" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4"></div>
+  </section>
+
+  <!-- VÍ + ĐẶT ĐƠN -->
+  <section id="dat-don" class="max-w-5xl mx-auto px-4 mt-8 scroll-mt-24 rv">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-4 items-start">
+
+      <!-- VÍ SỐ DƯ -->
+      <div class="wallet-card p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-zinc-300 flex items-center gap-1.5"><i class="fa-solid fa-wallet text-rose-300"></i>SỐ DƯ VÍ</span>
+          <a href="nap-tien.html" class="btn btn-red btn-shine px-3 py-1.5 text-[11px]">NẠP TIỀN</a>
         </div>
-        <p id="err" class="hidden text-sm text-rose-400 font-semibold" role="alert"></p>
-        <button id="send" type="submit" class="btn btn-red btn-shine w-full py-3.5">GỬI YÊU CẦU</button>
-      </form>
-    </div></div>
+        <p id="walletBalance" class="mt-3 text-3xl font-black text-white">0đ</p>
+        <div class="mt-4 grid grid-cols-2 gap-3 pt-3 border-t border-white/10">
+          <div class="wallet-stat"><b id="walletMonth">0đ</b><span>Tổng nạp tháng</span></div>
+          <div class="wallet-stat"><b id="walletTotal">0đ</b><span>Tổng nạp</span></div>
+        </div>
+        <div class="mt-3 flex items-center gap-2 pt-3 border-t border-white/10">
+          <span class="w-8 h-8 rounded-lg grid place-items-center bg-amber-400/15 text-amber-300 text-sm"><i class="fa-solid fa-medal"></i></span>
+          <div><span id="walletRank" class="text-sm font-extrabold text-amber-300">Guest</span><span class="block text-[10px] text-zinc-500">Cấp bậc</span></div>
+        </div>
+      </div>
+
+      <!-- FORM ĐẶT ĐƠN -->
+      <div class="card p-4 sm:p-5">
+        <h2 class="text-base sm:text-lg font-extrabold mb-3">Tạo đơn hàng mới</h2>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 mb-4 flex gap-2.5 items-start text-xs text-zinc-300">
+          <i class="fa-solid fa-circle-info text-amber-400 mt-0.5"></i>
+          <p>Chọn nền tảng → loại dịch vụ → máy chủ, giá sẽ tự tính theo số lượng. Cần <a href="#" id="reqLoginLink" class="text-rose-400 underline font-semibold">đăng nhập</a> trước khi đặt đơn.</p>
+        </div>
+
+        <p class="text-xs font-bold text-zinc-400 mb-2">NỀN TẢNG</p>
+        <div id="platformChips" class="grid grid-cols-4 sm:grid-cols-5 gap-2 mb-4"></div>
+
+        <form id="orderForm" class="grid gap-3" novalidate>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Loại dịch vụ</label>
+              <select id="serviceType" class="field" disabled><option value="">— Chọn nền tảng trước —</option></select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Máy chủ</label>
+              <select id="serverPick" class="field" disabled><option value="">— Chọn loại dịch vụ trước —</option></select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Link / thông tin đơn hàng</label>
+            <input id="orderLink" type="text" class="field" placeholder="Dán link bài viết, trang cá nhân, video...">
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Số lượng <span id="qtyHint" class="text-zinc-600 font-normal"></span></label>
+              <input id="orderQty" type="number" min="1" class="field" placeholder="Nhập số lượng">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Ghi chú <span class="text-zinc-600 font-normal">(tuỳ chọn)</span></label>
+              <input id="orderNote" type="text" class="field" placeholder="Ghi chú thêm cho đơn hàng">
+            </div>
+          </div>
+
+          <details class="rounded-xl border border-white/10 bg-white/[.03] px-3.5 py-2.5">
+            <summary class="text-xs font-bold text-zinc-300 cursor-pointer select-none">Tùy chọn nâng cao <span class="text-zinc-500 font-normal">(không bắt buộc)</span></summary>
+            <div class="grid sm:grid-cols-2 gap-3 mt-3">
+              <div>
+                <label class="block text-xs font-semibold text-zinc-400 mb-1">Hẹn giờ chạy đơn</label>
+                <input id="orderSchedule" type="datetime-local" class="field">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-zinc-400 mb-1">Mã giảm giá</label>
+                <input id="orderDiscount" type="text" class="field" placeholder="Nhập mã (nếu có)">
+              </div>
+              <div class="flex items-center gap-2 sm:col-span-2">
+                <input id="orderRepeat" type="checkbox" class="w-4 h-4 accent-rose-500">
+                <label for="orderRepeat" class="text-xs font-semibold text-zinc-300">Đặt hàng lặp lại</label>
+              </div>
+              <div id="repeatFields" class="hidden grid grid-cols-2 gap-3 sm:col-span-2">
+                <div>
+                  <label class="block text-xs font-semibold text-zinc-400 mb-1">Số lần lặp lại</label>
+                  <input id="repeatCount" type="number" min="1" value="1" class="field">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-zinc-400 mb-1">Giãn cách (phút)</label>
+                  <input id="repeatInterval" type="number" min="5" value="60" class="field">
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <div class="rounded-xl border border-white/10 bg-white/[.03] p-3.5 mt-1">
+            <p class="text-xs font-bold text-zinc-300 mb-2">Xác nhận đơn hàng</p>
+            <div class="sum-row"><span class="lbl">Dịch vụ đã chọn</span><span class="val" id="sumService">Chưa chọn dịch vụ</span></div>
+            <div class="sum-row"><span class="lbl">Đơn giá</span><span class="val" id="sumUnitPrice">—</span></div>
+            <div class="sum-row"><span class="lbl">Số dư khả dụng</span><span class="val" id="sumBalance">—</span></div>
+            <div class="sum-row"><span class="lbl">Tổng thanh toán</span><span class="val text-rose-300 text-base" id="sumTotal">—</span></div>
+          </div>
+
+          <p id="err" class="hidden text-sm text-rose-400 font-semibold" role="alert"></p>
+          <button id="send" type="submit" class="btn btn-red btn-shine w-full py-3.5">ĐẶT HÀNG NGAY</button>
+        </form>
+      </div>
+    </div>
   </section>
 
   <!-- BẢNG ĐIỀU KHIỂN -->
@@ -509,6 +667,20 @@ main > section{content-visibility:auto;contain-intrinsic-size:auto 600px}
 
 <!-- Toast -->
 <div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-xl text-sm font-semibold card opacity-0 pointer-events-none transition-all duration-300 translate-y-4 text-center max-w-[90vw]" style="top:5rem"></div>
+
+<!-- ============ MODAL LƯU Ý MUA HÀNG ============ -->
+<div id="noteModal" class="fixed inset-0 z-[90] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="card w-full max-w-lg p-6 relative max-h-[85vh] overflow-y-auto">
+    <h3 class="text-lg font-bold red-text mb-1"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Lưu ý trước khi đặt đơn</h3>
+    <div class="mt-3 space-y-3 text-xs text-zinc-300 leading-relaxed">
+      <p>Nghiêm cấm đặt đơn cho nội dung vi phạm pháp luật, chính trị nhạy cảm, đồi truỵ, bạo lực hoặc kích động. Vi phạm có thể bị trừ số dư hoặc khoá tài khoản vĩnh viễn.</p>
+      <p>Không đặt trùng một link ở nhiều nơi cùng lúc khi đơn đang chạy — dễ gây tăng ảo, hụt số lượng và hệ thống sẽ <b class="text-rose-300">không hỗ trợ hoàn tiền</b> trong trường hợp này.</p>
+      <p>Đơn đặt sai link / sai thông tin do lỗi từ phía khách hàng sẽ không được hoàn tiền. Vui lòng kiểm tra kỹ trước khi xác nhận.</p>
+      <p>Nếu có lỗi phát sinh từ hệ thống, hãy gửi link đơn hàng và ảnh chụp màn hình cho Admin qua Zalo để được hỗ trợ nhanh nhất.</p>
+    </div>
+    <button id="noteOkBtn" type="button" class="btn btn-red btn-shine w-full py-3 mt-5">Tôi đã đọc, tiếp tục đặt đơn</button>
+  </div>
+</div>
 
 <!-- ============ MODAL CHÀO MỪNG ============ -->
 <div id="welcomeModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
@@ -754,10 +926,8 @@ $("services").innerHTML = SERVICES.map(s => `
     <p class="mt-1.5 text-sm text-zinc-400 leading-relaxed">${s.d}</p>
     <button type="button" data-s="${s.n}" class="pick mt-4 text-sm font-bold text-rose-400 hover:text-rose-300">Đặt dịch vụ này <i class="fa-solid fa-arrow-right text-xs"></i></button>
   </article>`).join("");
-SERVICES.forEach(s => $("service").add(new Option(s.n, s.n)));
 document.querySelectorAll(".pick").forEach(b => b.onclick = (e) => {
   e.stopPropagation();
-  $("service").value = b.dataset.s;
   $("dat-don").scrollIntoView({behavior:"smooth", block:"center"});
 });
 
@@ -855,28 +1025,283 @@ let tt; function toast(msg, ok=true){
   tt=setTimeout(()=>t.classList.add("opacity-0","translate-y-4","pointer-events-none"),3800); 
 }
 
-/* ============ GỬI ĐƠN ============ */
-$("orderForm").addEventListener("submit", async e => {
+/* ============================================================
+   DỮ LIỆU NỀN TẢNG / DỊCH VỤ / MÁY CHỦ
+   (dữ liệu mẫu — thay bằng bảng "services" thật trong Supabase khi có)
+   ============================================================ */
+const PLATFORMS = [
+  {id:"facebook",  name:"Facebook",  icon:"fa-brands fa-facebook-f", color:"#1877f2"},
+  {id:"tiktok",    name:"TikTok",    icon:"fa-brands fa-tiktok",     color:"#e4e4e7"},
+  {id:"instagram", name:"Instagram", icon:"fa-brands fa-instagram",  color:"#e879f9"},
+  {id:"youtube",   name:"Youtube",   icon:"fa-brands fa-youtube",    color:"#ff2d2d"},
+  {id:"telegram",  name:"Telegram",  icon:"fa-brands fa-telegram",   color:"#29a9eb"},
+  {id:"threads",   name:"Threads",   icon:"fa-brands fa-threads",    color:"#e4e4e7"},
+  {id:"shopee",    name:"Shopee",    icon:"fa-solid fa-bag-shopping",color:"#ee4d2d"},
+  {id:"discord",   name:"Discord",   icon:"fa-brands fa-discord",    color:"#5865f2"},
+  {id:"locket",    name:"Locket",    icon:"fa-solid fa-heart",       color:"#fbbf24"},
+  {id:"premium",   name:"App Premium",icon:"fa-solid fa-crown",     color:"#34d399"}
+];
+
+const SERVICES_DB = {
+  facebook: [
+    {id:"fb_like", label:"Tăng Like bài viết", unit:1000, servers:[
+      {name:"Server 1 — Like VN chất lượng cao", price:150, min:20, max:5000, desc:"Bảo hành 30 ngày"},
+      {name:"Server 2 — Like quốc tế giá rẻ",   price:80,  min:50, max:20000,desc:"Không bảo hành"}
+    ]},
+    {id:"fb_follow", label:"Tăng Follow trang cá nhân", unit:1000, servers:[
+      {name:"Server 1 — Follow VN", price:220, min:20, max:10000, desc:"Bảo hành 30 ngày"}
+    ]},
+    {id:"fb_view", label:"Tăng View Reels / Video", unit:1000, servers:[
+      {name:"Server 1 — View ổn định", price:30, min:100, max:200000, desc:"Tốc độ trung bình"}
+    ]}
+  ],
+  tiktok: [
+    {id:"tt_like", label:"Tăng Tym video", unit:1000, servers:[
+      {name:"Server 1 — Tym VN", price:120, min:20, max:20000, desc:"Bảo hành 30 ngày"}
+    ]},
+    {id:"tt_follow", label:"Tăng Follow kênh", unit:1000, servers:[
+      {name:"Server 1 — Follow chất lượng", price:250, min:20, max:15000, desc:"Bảo hành 15 ngày"}
+    ]},
+    {id:"tt_view", label:"Tăng View video / livestream", unit:1000, servers:[
+      {name:"Server 1 — View siêu tốc", price:10, min:100, max:1000000, desc:"Không bảo hành"}
+    ]}
+  ],
+  instagram: [
+    {id:"ig_like", label:"Tăng Like bài viết", unit:1000, servers:[
+      {name:"Server 1 — Like VN", price:130, min:20, max:5000, desc:"Bảo hành 30 ngày"}
+    ]},
+    {id:"ig_follow", label:"Tăng Follow trang", unit:1000, servers:[
+      {name:"Server 1 — Follow chất lượng", price:280, min:20, max:10000, desc:"Bảo hành 30 ngày"}
+    ]}
+  ],
+  youtube: [
+    {id:"yt_sub", label:"Tăng Subscribe kênh", unit:1000, servers:[
+      {name:"Server 1 — Sub chất lượng", price:450, min:10, max:5000, desc:"Bảo hành 30 ngày"}
+    ]},
+    {id:"yt_view", label:"Tăng View video", unit:1000, servers:[
+      {name:"Server 1 — View ổn định", price:40, min:100, max:500000, desc:"Tốc độ trung bình"}
+    ]}
+  ],
+  telegram: [{id:"tg_member", label:"Tăng Member nhóm / kênh", unit:1000, servers:[
+    {name:"Server 1 — Member VN", price:200, min:50, max:50000, desc:"Không bảo hành"}
+  ]}],
+  threads: [{id:"th_follow", label:"Tăng Follow trang", unit:1000, servers:[
+    {name:"Server 1 — Follow quốc tế", price:200, min:20, max:10000, desc:"Không bảo hành"}
+  ]}],
+  shopee: [{id:"sp_follow", label:"Tăng Follow shop", unit:1000, servers:[
+    {name:"Server 1 — Follow VN", price:180, min:20, max:5000, desc:"Bảo hành 15 ngày"}
+  ]}],
+  discord: [{id:"dc_member", label:"Tăng Member server", unit:1000, servers:[
+    {name:"Server 1 — Member online", price:250, min:50, max:20000, desc:"Không bảo hành"}
+  ]}],
+  locket: [{id:"lk_gold", label:"Nâng cấp Locket Gold", unit:1, servers:[
+    {name:"Gói vĩnh viễn — kích hoạt nhanh", price:50000, min:1, max:5, desc:"Bảo hành trọn đời"}
+  ]}],
+  premium: [
+    {id:"gemini_pro", label:"Gemini Pro 1 năm", unit:1, servers:[
+      {name:"Tài khoản riêng — 1 năm", price:100000, min:1, max:3, desc:"Bảo hành đủ hạn"}
+    ]},
+    {id:"yt_premium", label:"Youtube Premium 1 năm", unit:1, servers:[
+      {name:"Account cấp — 1 năm", price:99999, min:1, max:3, desc:"Bảo hành đủ hạn"}
+    ]},
+    {id:"chatgpt_plus", label:"ChatGPT Plus 1 tháng", unit:1, servers:[
+      {name:"Tài khoản riêng — 1 tháng", price:80000, min:1, max:3, desc:"Bảo hành đủ hạn"}
+    ]}
+  ]
+};
+
+const FEATURED_PRODUCTS = [
+  {name:"Gemini Pro 1 Năm",  price:20000,  off:1, badge:"Top 1", platform:"premium", service:"gemini_pro", icon:"fa-brands fa-google", color:"#4285f4"},
+  {name:"Youtube Premium 1 năm", price:99999, off:2, badge:"Top 2", platform:"premium", service:"yt_premium", icon:"fa-brands fa-youtube", color:"#ff2d2d"},
+  {name:"Locket Gold — Vĩnh viễn", price:50000, off:3, badge:"Top 3", platform:"locket", service:"lk_gold", icon:"fa-solid fa-heart", color:"#fbbf24"}
+];
+
+/* ============ SIDEBAR ============ */
+const sidebar = $("sidebar"), sidebarOverlay = $("sidebarOverlay");
+function openSidebar(){ sidebar.classList.add("show"); sidebarOverlay.classList.add("show"); }
+function closeSidebar(){ sidebar.classList.remove("show"); sidebarOverlay.classList.remove("show"); }
+$("sidebarToggle").onclick = () => sidebar.classList.contains("show") ? closeSidebar() : openSidebar();
+sidebarOverlay.onclick = closeSidebar;
+$("sbPlatforms").innerHTML = PLATFORMS.map(p => `
+  <a href="#dat-don" class="sb-platform" data-platform="${p.id}"><i class="${p.icon}" style="color:${p.color}"></i>${p.name}</a>`).join("");
+$("sbPlatforms").addEventListener("click", e => {
+  const a = e.target.closest("[data-platform]"); if (!a) return;
+  closeSidebar(); selectPlatform(a.dataset.platform);
+});
+
+/* ============ SẢN PHẨM NỔI BẬT ============ */
+$("featuredProducts").innerHTML = FEATURED_PRODUCTS.map(p => `
+  <article class="rv prod-card lift" data-ripple>
+    <span class="prod-badge">${p.badge}</span>
+    <span class="prod-off">-${p.off}%</span>
+    <div class="prod-img grid place-items-center text-4xl" style="background:${p.color}1f;color:${p.color}"><i class="${p.icon}"></i></div>
+    <div class="p-3">
+      <h3 class="text-xs sm:text-sm font-bold leading-snug line-clamp-2">${p.name}</h3>
+      <p class="mt-1.5 text-[11px] text-zinc-400">Giá chỉ từ <b class="text-rose-300">${fmt(p.price)}đ</b></p>
+      <button type="button" class="pick-featured mt-2 w-full btn btn-dark py-2 text-[11px]" data-platform="${p.platform}" data-service="${p.service}">Mua ngay</button>
+    </div>
+  </article>`).join("");
+$("featuredProducts").addEventListener("click", e => {
+  const b = e.target.closest(".pick-featured"); if (!b) return;
+  selectPlatform(b.dataset.platform, b.dataset.service);
+  $("dat-don").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+/* ============ CHỌN NỀN TẢNG / DỊCH VỤ / MÁY CHỦ ============ */
+$("platformChips").innerHTML = PLATFORMS.map(p => `
+  <button type="button" class="pf-chip" data-platform="${p.id}"><i class="${p.icon}" style="color:${p.color}"></i><span>${p.name}</span></button>`).join("");
+
+let currentPlatform = null, currentCategory = null;
+
+function selectPlatform(pid, presetServiceId){
+  currentPlatform = pid;
+  document.querySelectorAll(".pf-chip").forEach(c => c.classList.toggle("active", c.dataset.platform === pid));
+  const cats = SERVICES_DB[pid] || [];
+  const sel = $("serviceType");
+  sel.innerHTML = `<option value="">— Chọn loại dịch vụ —</option>` + cats.map(c => `<option value="${c.id}">${c.label}</option>`).join("");
+  sel.disabled = cats.length === 0;
+  $("serverPick").innerHTML = `<option value="">— Chọn loại dịch vụ trước —</option>`;
+  $("serverPick").disabled = true;
+  if (presetServiceId) { sel.value = presetServiceId; sel.dispatchEvent(new Event("change")); }
+  updateSummary();
+}
+$("platformChips").addEventListener("click", e => {
+  const b = e.target.closest(".pf-chip"); if (!b) return;
+  selectPlatform(b.dataset.platform);
+});
+
+$("serviceType").addEventListener("change", () => {
+  currentCategory = $("serviceType").value;
+  const cats = SERVICES_DB[currentPlatform] || [];
+  const cat = cats.find(c => c.id === currentCategory);
+  const srvSel = $("serverPick");
+  if (!cat) { srvSel.innerHTML = `<option value="">— Chọn loại dịch vụ trước —</option>`; srvSel.disabled = true; updateSummary(); return; }
+  srvSel.innerHTML = `<option value="">— Chọn máy chủ —</option>` + cat.servers.map((s,i) => `<option value="${i}">${s.name} — ${fmt(s.price)}đ/${cat.unit===1000?"1k":"sp"}</option>`).join("");
+  srvSel.disabled = false;
+  $("qtyHint").textContent = `(${cat.unit===1000?"tối thiểu "+cat.servers[0].min:"số lượng sản phẩm"})`;
+  updateSummary();
+});
+$("serverPick").addEventListener("change", updateSummary);
+$("orderQty").addEventListener("input", updateSummary);
+$("orderRepeat").addEventListener("change", e => $("repeatFields").classList.toggle("hidden", !e.target.checked));
+
+function getSelectedServer(){
+  const cats = SERVICES_DB[currentPlatform] || [];
+  const cat = cats.find(c => c.id === currentCategory);
+  if (!cat) return null;
+  const idx = $("serverPick").value;
+  if (idx === "") return null;
+  return { cat, server: cat.servers[+idx] };
+}
+
+let lastBalance = 0;
+function updateSummary(){
+  const picked = getSelectedServer();
+  const qty = Math.max(0, +$("orderQty").value || 0);
+  if (!picked){
+    $("sumService").textContent = "Chưa chọn dịch vụ";
+    $("sumUnitPrice").textContent = "—"; $("sumTotal").textContent = "—";
+    $("sumBalance").textContent = fmt(lastBalance) + "đ";
+    return;
+  }
+  const { cat, server } = picked;
+  const total = cat.unit === 1000 ? Math.ceil(qty/1000 * server.price) : qty * server.price;
+  $("sumService").textContent = server.name;
+  $("sumUnitPrice").textContent = fmt(server.price) + "đ" + (cat.unit===1000?"/1k":"/sp");
+  $("sumBalance").textContent = fmt(lastBalance) + "đ";
+  $("sumTotal").textContent = qty > 0 ? fmt(total) + "đ" : "—";
+}
+
+/* ============ MODAL LƯU Ý MUA HÀNG ============ */
+const noteModal = $("noteModal");
+function openNoteModal(){ noteModal.classList.remove("opacity-0","pointer-events-none"); }
+function closeNoteModal(){ noteModal.classList.add("opacity-0","pointer-events-none"); }
+$("noteOkBtn").onclick = () => { closeNoteModal(); sessionStorage.setItem("br34_note_read","1"); submitOrder(); };
+noteModal.addEventListener("click", e => { if (e.target === noteModal) closeNoteModal(); });
+
+/* ============ ĐẶT ĐƠN ============ */
+$("reqLoginLink").onclick = (e) => { e.preventDefault(); toggleAuthModal(true); };
+
+$("orderForm").addEventListener("submit", e => {
   e.preventDefault();
-  const data = { service: $("service").value, contact: $("contact").value.trim(), source: "smm-panel" };
-  const d = data.contact.replace(/\D/g,"");
-  const err = !data.service ? "Vui lòng chọn dịch vụ." : (!d || d.length<9||d.length>11) ? "Vui lòng nhập số Zalo / điện thoại (bắt buộc)." : "";
+  if (!currentUser) { toast("Vui lòng đăng nhập để đặt đơn.", false); toggleAuthModal(true); return; }
+  const picked = getSelectedServer();
+  const qty = +$("orderQty").value || 0;
+  let err = "";
+  if (!picked) err = "Vui lòng chọn đầy đủ nền tảng, loại dịch vụ và máy chủ.";
+  else if (!$("orderLink").value.trim()) err = "Vui lòng nhập link / thông tin đơn hàng.";
+  else if (!qty || qty < picked.server.min || qty > picked.server.max) err = `Số lượng phải từ ${fmt(picked.server.min)} đến ${fmt(picked.server.max)}.`;
   $("err").textContent = err; $("err").classList.toggle("hidden", !err);
   if (err) return;
 
-  const btn = $("send"); btn.disabled = true; btn.textContent = "ĐANG GỬI...";
-  try {
-    const { error } = await supabaseClient.from('orders').insert([data]);
-    if (error) throw error;
-    toast("Đã ghi nhận yêu cầu! Shop sẽ liên hệ qua Zalo trong ít phút."); 
-    $("orderForm").reset();
-  } catch (x) { 
-    console.error(x); 
-    toast("Lỗi gửi yêu cầu: " + (x.message || "Vui lòng thử lại."), false); 
-  } finally { 
-    btn.disabled = false; btn.textContent = "GỬI YÊU CẦU"; 
-  }
+  if (!sessionStorage.getItem("br34_note_read")) { openNoteModal(); return; }
+  submitOrder();
 });
+
+async function submitOrder(){
+  const picked = getSelectedServer();
+  if (!picked || !currentUser) return;
+  const { cat, server } = picked;
+  const qty = +$("orderQty").value || 0;
+  const total = cat.unit === 1000 ? Math.ceil(qty/1000 * server.price) : qty * server.price;
+
+  if (total > lastBalance) { toast("Số dư không đủ để đặt đơn này. Vui lòng nạp thêm tiền.", false); return; }
+
+  const payload = {
+    user_id: currentUser.id,
+    platform: currentPlatform,
+    service_type: currentCategory,
+    server_name: server.name,
+    link: $("orderLink").value.trim(),
+    quantity: qty,
+    unit_price: server.price,
+    total_price: total,
+    note: $("orderNote").value.trim() || null,
+    scheduled_at: $("orderSchedule").value || null,
+    repeat_count: $("orderRepeat").checked ? (+$("repeatCount").value || 1) : null,
+    repeat_interval_min: $("orderRepeat").checked ? (+$("repeatInterval").value || 60) : null,
+    discount_code: $("orderDiscount").value.trim() || null,
+    status: "pending"
+  };
+
+  const btn = $("send"); btn.disabled = true; btn.textContent = "ĐANG XỬ LÝ...";
+  try {
+    const { error: insErr } = await supabaseClient.from("resource_orders").insert([payload]);
+    if (insErr) throw insErr;
+    const newBalance = lastBalance - total;
+    const { error: balErr } = await supabaseClient.from("profiles").update({ balance: newBalance }).eq("id", currentUser.id);
+    if (balErr) throw balErr;
+    lastBalance = newBalance;
+    setHeaderBalance(newBalance);
+    syncWalletUI(newBalance);
+    toast("Đặt đơn thành công! Hệ thống sẽ xử lý trong ít phút.");
+    $("orderForm").reset();
+    $("repeatFields").classList.add("hidden");
+    updateSummary();
+  } catch (x) {
+    console.error(x);
+    toast("Lỗi đặt đơn: " + (x.message || "Vui lòng thử lại."), false);
+  } finally {
+    btn.disabled = false; btn.textContent = "ĐẶT HÀNG NGAY";
+  }
+}
+
+/* ============ VÍ SỐ DƯ ============ */
+function rankFromDeposit(total){
+  if (total >= 5000000) return "VIP";
+  if (total >= 1000000) return "Thân thiết";
+  if (total >= 1) return "Thành viên";
+  return "Guest";
+}
+function syncWalletUI(balance, totalDeposit, monthDeposit){
+  lastBalance = balance || 0;
+  $("walletBalance").textContent = fmt(lastBalance) + "đ";
+  if (totalDeposit !== undefined) $("walletTotal").textContent = fmt(totalDeposit||0) + "đ";
+  if (monthDeposit !== undefined) $("walletMonth").textContent = fmt(monthDeposit||0) + "đ";
+  $("walletRank").textContent = rankFromDeposit(totalDeposit||0);
+  updateSummary();
+}
+syncWalletUI(0,0,0);
 
 /* ============ AUTH ============ */
 let isLoginMode = true;
@@ -979,6 +1404,7 @@ async function loadAccount(user){
   renderStats([p.balance||0, p.total_deposit||0, p.total_spent||0, orders], true);
   $("statBought").textContent = bought; $("statCanceled").textContent = canceled;
   setHeaderBalance(p.balance||0);
+  syncWalletUI(p.balance||0, p.total_deposit||0, p.total_deposit||0);
 }
 
 /* ============ SỐ DƯ Ở HEADER ============ */
@@ -1105,6 +1531,7 @@ function updateUserState(user) {
     renderStats([0,0,0,0], false);
     $("statBought").textContent = 0; $("statCanceled").textContent = 0;
     setHeaderBalance(0);
+    syncWalletUI(0,0,0);
     loadAccount(user);
   } else {
     authHeaderBtn.textContent = "Đăng nhập";
@@ -1114,6 +1541,7 @@ function updateUserState(user) {
     paintAvatars();
     checkAdmin(null);
     setHeaderBalance(0);
+    syncWalletUI(0,0,0);
     if (prev) {
       renderStats(SAMPLE, true);
       $("statBought").textContent = 0; $("statCanceled").textContent = 0;
