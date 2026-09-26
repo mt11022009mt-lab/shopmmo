@@ -1342,7 +1342,7 @@
     /* ========================================================
        8. KẾT NỐI API WEB MẸ SMM1S.VN (qua Edge Function smm1s-proxy)
        ======================================================== */
-    const SERVICE_MARKUP_PER_1K = 3000; // Cộng lãi cố định 3.000đ / 1.000
+    const SERVICE_MARKUP_PER_1K = 3000; // Cộng lãi cố định 3.000đ / 1.000 đơn vị
 
     async function callSmm1sProxy(action, params = {}) {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -1423,21 +1423,40 @@
         if (!Array.isArray(data)) throw new Error(data.error || "Phản hồi không đúng định dạng");
 
         log(`✅ Nhận được ${data.length} dịch vụ. Đang chuẩn hoá & ghi vào database...`);
+        log(`💡 Công thức: rate_final = rate_original + (${SERVICE_MARKUP_PER_1K} / 1000) = rate_original + ${SERVICE_MARKUP_PER_1K / 1000}đ`);
 
-        const rows = data.map(s => ({
-          provider_service_id: String(s.service),
-          category: (s.category || "Khác").trim(),
-          name: s.name,
-          rate_original: Number(s.rate) || 0,
-          markup: SERVICE_MARKUP_PER_1K,
-          min: Number(s.min) || 1,
-          max: Number(s.max) || 1000000,
-          type: s.type || null,
-          refill: !!s.refill,
-          cancel: !!s.cancel,
-          is_active: true,
-          updated_at: new Date().toISOString()
-        }));
+        // ✅ FIX: Tính đúng rate_final với đơn vị chính xác
+        const markupPerUnit = SERVICE_MARKUP_PER_1K / 1000; // 3.000đ/1k -> 3đ/đơn vị
+
+        const rows = data.map(s => {
+          const rateOriginal = Number(s.rate) || 0;
+          const rateFinal = rateOriginal + markupPerUnit;
+
+          return {
+            provider_service_id: String(s.service),
+            category: (s.category || "Khác").trim(),
+            name: s.name,
+            rate_original: rateOriginal,
+            markup: SERVICE_MARKUP_PER_1K,
+            rate_final: rateFinal,   // ✅ BỔ SUNG CỘT NÀY
+            min: Number(s.min) || 1,
+            max: Number(s.max) || 1000000,
+            type: s.type || null,
+            refill: !!s.refill,
+            cancel: !!s.cancel,
+            is_active: true,
+            updated_at: new Date().toISOString()
+          };
+        });
+
+        // Log 3 dịch vụ mẫu để dễ kiểm tra
+        if (rows.length > 0) {
+          log("\n📊 Kiểm tra 3 dịch vụ mẫu:");
+          rows.slice(0, 3).forEach((r, i) => {
+            log(`  ${i + 1}. ${r.name}`);
+            log(`     rate_original = ${r.rate_original} | rate_final = ${r.rate_final} (đ/1k)`);
+          });
+        }
 
         const CHUNK = 200;
         let done = 0;
