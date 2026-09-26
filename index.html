@@ -7,7 +7,6 @@
   <meta name="description" content="Hệ thống tăng tương tác thật Facebook, TikTok, Instagram, YouTube, Telegram tự động 24/7 uy tín, giá rẻ nhất thị trường. Hotline/Zalo: 0976976627.">
   <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -15,15 +14,10 @@
       theme: {
         extend: {
           colors: {
-            background: '#09090b',
-            foreground: '#fafafa',
-            card: '#121216',
-            'card-foreground': '#fafafa',
-            secondary: '#18181f',
-            'secondary-foreground': '#f4f4f5',
-            muted: '#272732',
-            'muted-foreground': '#a1a1aa',
-            border: '#27272a',
+            background: '#09090b', foreground: '#fafafa', card: '#121216',
+            'card-foreground': '#fafafa', secondary: '#18181f',
+            'secondary-foreground': '#f4f4f5', muted: '#272732',
+            'muted-foreground': '#a1a1aa', border: '#27272a',
             brand: {
               50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
               400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
@@ -41,25 +35,18 @@
             'glow-sm': '0 0 15px -2px rgba(244, 63, 94, 0.3)',
             'card-dark': '0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)',
           },
-          borderRadius: {
-            '2xl': '1rem',
-            '3xl': '1.5rem',
-            '4xl': '2rem',
-          }
+          borderRadius: { '2xl': '1rem', '3xl': '1.5rem', '4xl': '2rem' }
         }
       }
     }
   </script>
 
-  <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google Fonts: Be Vietnam Pro & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -68,90 +55,46 @@
     ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(244, 63, 94, 0.5); }
     * { -webkit-tap-highlight-color: transparent; }
-
-    /* iOS Safari zoom prevention */
     input, select, textarea { font-size: 15px !important; }
     @media (min-width: 640px) { input, select, textarea { font-size: 14px !important; } }
-
-    /* Ambient Spotlight Glow */
-    .spotlight-left {
-      position: absolute;
-      top: -160px;
-      left: 10%;
-      width: 580px;
-      height: 580px;
+    .spotlight-left, .spotlight-right {
+      position: absolute; top: -160px; width: 580px; height: 580px;
       background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, rgba(225, 29, 72, 0.05) 50%, transparent 75%);
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 1;
+      filter: blur(90px); pointer-events: none; z-index: 1;
     }
-    .spotlight-right {
-      position: absolute;
-      top: -160px;
-      right: 10%;
-      width: 580px;
-      height: 580px;
-      background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, rgba(225, 29, 72, 0.05) 50%, transparent 75%);
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* 3D Dashboard Perspective Tilt */
-    .perspective-container {
-      perspective: 2000px;
-    }
+    .spotlight-left { left: 10%; }
+    .spotlight-right { right: 10%; }
+    .perspective-container { perspective: 2000px; }
     .tilt-card {
       transform-style: preserve-3d;
       transform: rotateX(4deg) rotateY(6deg);
       transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
     }
-    @media (max-width: 768px) {
-      .tilt-card { transform: none !important; }
-    }
-    .tilt-card:hover {
-      transform: rotateX(0deg) rotateY(0deg);
-    }
-
-    /* Marquee Infinite Scrolling */
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes marquee-reverse {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0); }
-    }
+    @media (max-width: 768px) { .tilt-card { transform: none !important; } }
+    .tilt-card:hover { transform: rotateX(0deg) rotateY(0deg); }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
     .animate-marquee-fast { animation: marquee 24s linear infinite; }
     .animate-marquee-slow { animation: marquee-reverse 30s linear infinite; }
     .animate-marquee-fast:hover, .animate-marquee-slow:hover { animation-play-state: paused; }
-
-    /* URL Box Conic Gradient Border */
-    @keyframes spin-slow {
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    .animate-conic-spin {
-      animation: spin-slow 5s linear infinite;
-    }
-
-    /* Subtle Glass Card */
+    @keyframes spin-slow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    .animate-conic-spin { animation: spin-slow 5s linear infinite; }
     .glass-card {
       background: rgba(18, 18, 24, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .glass-card:hover {
-      border-color: rgba(244, 63, 94, 0.3);
-    }
+    .glass-card:hover { border-color: rgba(244, 63, 94, 0.3); }
+    .av-style-tab { transition: all .2s ease; }
+    .av-style-tab.active { background: linear-gradient(to right, #f43f5e, #e11d48); color: white; box-shadow: 0 0 15px -2px rgba(244, 63, 94, 0.5); }
+    .av-color-dot { transition: all .15s ease; }
+    .av-color-dot.active { transform: scale(1.2); box-shadow: 0 0 0 2px #f43f5e, 0 0 0 4px #09090b; }
+    .avatar-choice.active-pick { border-color: #f43f5e !important; box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.5); transform: scale(1.05); }
   </style>
 </head>
 
 <body class="bg-background text-foreground font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200 overflow-x-hidden">
 
-  <!-- ========================================================
-       TOP GLOBAL SPOTLIGHT GLOWS
-       ======================================================== -->
   <div class="spotlight-left"></div>
   <div class="spotlight-right"></div>
   <div class="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(244,63,94,0.12),rgba(255,255,255,0))]"></div>
@@ -161,12 +104,10 @@
        ======================================================== -->
   <div id="landingView" class="relative z-10 min-h-screen flex flex-col transition-opacity duration-300">
     
-    <!-- FLOATING FROSTED HEADER -->
     <header class="fixed inset-x-0 top-3 w-full z-50 px-4">
       <div class="mx-auto max-w-6xl w-full">
         <nav class="flex items-center justify-between rounded-full px-5 py-2.5 bg-neutral-950/80 backdrop-blur-xl border border-white/10 shadow-2xl">
           
-          <!-- Logo Brand -->
           <a href="index.html" class="flex items-center gap-2.5 group">
             <div class="w-10 h-10 rounded-2xl overflow-hidden ring-2 ring-brand-500/40 shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
               <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
@@ -180,39 +121,25 @@
             </div>
           </a>
 
-          <!-- Center Navigation Links (Desktop) -->
           <div class="hidden md:flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/5">
-            <a href="index.html" class="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-white/10 text-white shadow-sm">
-              Trang Chủ
-            </a>
-            <a href="nap-tien.html" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">
-              Nạp Tiền
-            </a>
+            <a href="index.html" class="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-white/10 text-white shadow-sm">Trang Chủ</a>
+            <a href="nap-tien.html" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">Nạp Tiền</a>
             <a href="bang-gia.html" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition inline-flex items-center gap-1.5">
               <span>Bảng giá</span>
               <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-gradient-to-r from-rose-500 to-red-600 text-white leading-none shadow-glow-sm animate-pulse">Hot/New</span>
             </a>
-            <a href="api-docs.html" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">
-              Tài liệu
-            </a>
-            <a href="#faq" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">
-              Hỏi đáp
-            </a>
+            <a href="api-docs.html" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">Tài liệu</a>
+            <a href="#faq" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-full transition">Hỏi đáp</a>
           </div>
 
-          <!-- Right Action Controls -->
           <div class="flex items-center gap-2">
-            <!-- Theme Toggle -->
             <button id="themeToggleBtn" type="button" aria-label="Đổi giao diện" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 grid place-items-center transition">
               <i class="fa-solid fa-moon text-xs"></i>
             </button>
-
-            <!-- Language Switcher -->
-            <button onclick="toggleLanguageMenu()" type="button" aria-label="Đổi ngôn ngữ" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 grid place-items-center transition hidden sm:grid">
+            <button onclick="toggleLanguageMenu()" type="button" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 grid place-items-center transition hidden sm:grid">
               <i class="fa-solid fa-globe text-xs"></i>
             </button>
 
-            <!-- Guest State: Login Button -->
             <div id="landingGuestActions">
               <button onclick="openAuthModal('login')" class="px-4 py-2 rounded-full text-xs font-extrabold text-white bg-gradient-to-b from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-glow-sm hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-right-to-bracket text-xs"></i>
@@ -220,10 +147,10 @@
               </button>
             </div>
 
-            <!-- Logged-in State: User info + Go to Dashboard -->
             <div id="landingUserActions" class="hidden flex items-center gap-2">
               <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <img id="landingUserAvatar" src="" class="w-6 h-6 rounded-full object-cover hidden">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse hidden"></span>
                 <span id="landingUserEmail" class="text-slate-300 font-bold truncate max-w-[120px]">User</span>
                 <span class="text-brand-400 font-black" id="landingUserBalance">0đ</span>
               </div>
@@ -237,7 +164,6 @@
               </button>
             </div>
 
-            <!-- Mobile Menu Toggle Button -->
             <button onclick="toggleMobileNav()" class="md:hidden w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 grid place-items-center">
               <i class="fa-solid fa-bars text-sm"></i>
             </button>
@@ -245,7 +171,6 @@
         </nav>
       </div>
 
-      <!-- Mobile Dropdown Nav Menu -->
       <div id="mobileNavMenu" class="hidden md:hidden mt-2 mx-auto max-w-6xl p-4 rounded-3xl bg-neutral-950/95 backdrop-blur-2xl border border-white/10 shadow-2xl space-y-2">
         <a href="index.html" class="block px-4 py-2.5 rounded-xl font-bold text-xs bg-white/10 text-white">Trang Chủ</a>
         <a href="nap-tien.html" class="block px-4 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5">Nạp Tiền Tự Động</a>
@@ -260,12 +185,8 @@
       </div>
     </header>
 
-    <!-- ======================================================
-         HERO SECTION (TRUNG TÂM)
-         ====================================================== -->
     <section id="hero-section" class="pt-32 sm:pt-36 md:pt-40 pb-16 px-4 max-w-6xl mx-auto text-center relative z-10 select-none">
       
-      <!-- Top Pill Badge -->
       <div class="inline-flex items-center justify-center mb-6">
         <a href="bang-gia.html" class="group relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-900/90 border border-white/10 text-xs font-semibold text-slate-300 hover:text-white hover:border-brand-500/40 shadow-xl transition-all duration-300">
           <span class="flex h-2 w-2 rounded-full bg-rose-500 animate-ping"></span>
@@ -274,7 +195,6 @@
         </a>
       </div>
 
-      <!-- Main Headline -->
       <div class="max-w-4xl mx-auto">
         <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 drop-shadow-sm">
           Chào Mừng Bạn Đã Đến
@@ -284,74 +204,51 @@
         </h1>
       </div>
 
-      <!-- Subheadline -->
       <p class="mt-6 text-base sm:text-lg md:text-xl text-slate-400 font-normal max-w-2xl mx-auto leading-relaxed">
         Hệ thống tăng tương tác thật - Đẩy mạnh hỗ trợ tăng Doanh Thu vượt trội
       </p>
 
-      <!-- CTA Buttons -->
       <div class="mt-8 flex flex-wrap justify-center items-center gap-3.5">
         <button onclick="handleCtaStart()" class="px-6 py-3 rounded-xl text-sm font-black text-white bg-gradient-to-b from-rose-500 via-rose-600 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-glow hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 cursor-pointer">
           <i class="fa-solid fa-bolt text-amber-300"></i>
           <span>Bắt đầu ngay</span>
         </button>
-
         <a href="#dashboard-preview" class="px-6 py-3 rounded-xl text-sm font-bold text-slate-200 bg-secondary/90 hover:bg-secondary border border-white/10 hover:border-brand-500/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
           <span>Dịch Vụ</span>
           <i class="fa-solid fa-arrow-right text-xs text-brand-400"></i>
         </a>
       </div>
 
-      <!-- Social Connections Line with Animated Icons -->
       <div class="mt-9 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-400">
         <span class="font-medium text-slate-400">Hỗ trợ kết nối chuẩn tiêu chuẩn:</span>
         <div class="flex items-center gap-2">
-          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Facebook">
-            <img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-5 h-5 object-contain">
-          </span>
-          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="TikTok">
-            <img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-5 h-5 object-contain">
-          </span>
-          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Instagram">
-            <img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-5 h-5 object-contain">
-          </span>
-          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="YouTube">
-            <img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-5 h-5 object-contain">
-          </span>
-          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Telegram">
-            <img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-5 h-5 object-contain">
-          </span>
+          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Facebook"><img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-5 h-5 object-contain"></span>
+          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="TikTok"><img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-5 h-5 object-contain"></span>
+          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Instagram"><img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-5 h-5 object-contain"></span>
+          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="YouTube"><img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-5 h-5 object-contain"></span>
+          <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 grid place-items-center hover:scale-110 transition shadow-sm" title="Telegram"><img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-5 h-5 object-contain"></span>
         </div>
       </div>
 
-      <!-- Simulated URL Link Box with Copy Button -->
       <div class="relative mt-8 max-w-md mx-auto rounded-full bg-gradient-to-r from-neutral-900/90 via-neutral-950 to-neutral-900/90 border border-white/10 p-1.5 pl-4 pr-1.5 shadow-2xl flex items-center justify-between gap-3 overflow-hidden group">
-        <!-- Conic Border Glow Effect -->
         <div class="absolute inset-0 overflow-hidden rounded-full pointer-events-none opacity-40">
           <div class="absolute top-1/2 left-1/2 w-[400px] h-[400px] -translate-x-1/2 -translate-y-1/2 animate-conic-spin" style="background: conic-gradient(transparent 0deg, transparent 150deg, rgba(244, 63, 94, 0.7) 180deg, transparent 185deg, transparent 330deg, rgba(244, 63, 94, 0.7) 360deg);"></div>
         </div>
-
         <div class="relative z-10 flex items-center gap-2 truncate">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span id="simulatedUrl" class="font-mono text-xs text-slate-300 font-semibold truncate">https://br34.shop/v1/services/add</span>
         </div>
-
         <button onclick="copySimulatedUrl()" type="button" class="relative z-10 w-8 h-8 rounded-full bg-brand-500/20 hover:bg-brand-500 text-brand-400 hover:text-white border border-brand-500/40 grid place-items-center transition active:scale-95 shrink-0" title="Sao chép URL hệ thống">
           <i class="fa-regular fa-copy text-xs"></i>
         </button>
       </div>
 
-      <!-- ======================================================
-           3D PERSPECTIVE DASHBOARD PREVIEW MOCKUP
-           ====================================================== -->
       <div id="dashboard-preview" class="mt-14 perspective-container max-w-5xl mx-auto">
         <div class="tilt-card rounded-3xl bg-neutral-950/90 border border-white/15 p-4 sm:p-7 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_40px_rgba(244,63,94,0.2)] text-left relative overflow-hidden group">
           
-          <!-- Subtle Accent Background Lights -->
           <div class="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-rose-600/10 blur-3xl pointer-events-none"></div>
           <div class="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-rose-500/15 blur-3xl pointer-events-none"></div>
 
-          <!-- Mockup Header Bar -->
           <div class="flex items-center justify-between pb-4 border-b border-white/10 gap-2">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
@@ -369,67 +266,44 @@
             </div>
           </div>
 
-          <!-- 4 KPI Thống Kê Mẫu -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-5">
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
                 <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Số Dư Hiện Tại</p>
                 <h4 id="previewCardBal" class="text-base sm:text-xl font-black text-brand-400 mt-0.5">0đ</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-sm shrink-0">
-                <i class="fa-solid fa-wallet"></i>
-              </div>
+              <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-wallet"></i></div>
             </div>
-
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
                 <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Tổng Đã Nạp</p>
                 <h4 id="previewCardDep" class="text-base sm:text-xl font-black text-emerald-400 mt-0.5">0đ</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-sm shrink-0">
-                <i class="fa-solid fa-circle-arrow-up"></i>
-              </div>
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-circle-arrow-up"></i></div>
             </div>
-
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
                 <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Đã Sử Dụng</p>
                 <h4 id="previewCardSpent" class="text-base sm:text-xl font-black text-amber-400 mt-0.5">0đ</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-sm shrink-0">
-                <i class="fa-solid fa-receipt"></i>
-              </div>
+              <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-receipt"></i></div>
             </div>
-
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
                 <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Tổng Đơn Hàng</p>
                 <h4 id="previewCardOrders" class="text-base sm:text-xl font-black text-cyan-400 mt-0.5">0</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 grid place-items-center text-sm shrink-0">
-                <i class="fa-solid fa-boxes-stacked"></i>
-              </div>
+              <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-boxes-stacked"></i></div>
             </div>
           </div>
 
-          <!-- Mockup Service Ordering Interface -->
           <div class="mt-5 p-4 sm:p-5 rounded-2xl bg-neutral-900/80 border border-white/5 space-y-4">
             <div class="flex items-center gap-2 overflow-x-auto pb-1">
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shrink-0 shadow-glow-sm">
-                <i class="fa-brands fa-facebook mr-1"></i> Facebook
-              </span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0">
-                <i class="fa-brands fa-tiktok mr-1"></i> TikTok
-              </span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0">
-                <i class="fa-brands fa-instagram mr-1"></i> Instagram
-              </span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0">
-                <i class="fa-brands fa-youtube mr-1"></i> YouTube
-              </span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0">
-                <i class="fa-brands fa-telegram mr-1"></i> Telegram
-              </span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shrink-0 shadow-glow-sm"><i class="fa-brands fa-facebook mr-1"></i> Facebook</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-instagram mr-1"></i> Instagram</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-youtube mr-1"></i> YouTube</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-telegram mr-1"></i> Telegram</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
@@ -462,169 +336,66 @@
 
     </section>
 
-    <!-- ======================================================
-         MARQUEE BANNER
-         ====================================================== -->
     <section class="py-12 border-y border-white/10 bg-neutral-950/60 overflow-hidden relative select-none">
       <div class="max-w-4xl mx-auto text-center px-4 mb-8">
-        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">
-          Chính Sách Đại Lý
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 tracking-tight">
-          Chiết Khấu Ưu Đãi Cho Đại Lý — Website Provider
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1.5">
-          Tích hợp API chuẩn SMM v2, bảo hành đa dạng, giá sỉ tốt nhất thị trường
-        </p>
+        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">Chính Sách Đại Lý</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 tracking-tight">Chiết Khấu Ưu Đãi Cho Đại Lý — Website Provider</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1.5">Tích hợp API chuẩn SMM v2, bảo hành đa dạng, giá sỉ tốt nhất thị trường</p>
       </div>
 
       <div class="flex w-max animate-marquee-fast gap-6 py-2">
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Facebook</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">TikTok</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Instagram</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Telegram</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/Threads.gif" alt="Threads" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Threads</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">YouTube</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/Discord.png" alt="Discord" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Discord</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/x.gif" alt="Twitter/X" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Twitter/X</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/spotify.gif" alt="Spotify" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Spotify</span>
-        </div>
-
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Facebook</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">TikTok</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Instagram</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">Telegram</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">YouTube</span>
-        </div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Facebook</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">TikTok</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Instagram</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Telegram</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/Threads.gif" alt="Threads" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Threads</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">YouTube</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/Discord.png" alt="Discord" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Discord</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/x.gif" alt="Twitter/X" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Twitter/X</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/spotify.gif" alt="Spotify" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Spotify</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/facebook.gif" alt="Facebook" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Facebook</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/tiktok.gif" alt="TikTok" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">TikTok</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/instagram.gif" alt="Instagram" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Instagram</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/tele.gif" alt="Telegram" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">Telegram</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/youtube.gif" alt="YouTube" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">YouTube</span></div>
       </div>
 
       <div class="flex w-max animate-marquee-slow gap-6 py-2 mt-2">
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/LinkedIn.png" alt="LinkedIn" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">LinkedIn</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-brands fa-google text-red-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Google Map & Reviews</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-crown text-amber-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">App Premium</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-coins text-yellow-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Nạp Xu & Coin</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-network-wired text-cyan-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Proxy IPv4/IPv6</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-chart-line text-emerald-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Traffic Web SEO</span>
-        </div>
-
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <img src="https://hacksub.vn/img/LinkedIn.png" alt="LinkedIn" class="w-6 h-6 object-contain">
-          <span class="text-xs font-bold text-white">LinkedIn</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-brands fa-google text-red-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Google Map & Reviews</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-crown text-amber-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">App Premium</span>
-        </div>
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0">
-          <i class="fa-solid fa-coins text-yellow-400 text-lg"></i>
-          <span class="text-xs font-bold text-white">Nạp Xu & Coin</span>
-        </div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/LinkedIn.png" alt="LinkedIn" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">LinkedIn</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-brands fa-google text-red-400 text-lg"></i><span class="text-xs font-bold text-white">Google Map & Reviews</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-crown text-amber-400 text-lg"></i><span class="text-xs font-bold text-white">App Premium</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-coins text-yellow-400 text-lg"></i><span class="text-xs font-bold text-white">Nạp Xu & Coin</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-network-wired text-cyan-400 text-lg"></i><span class="text-xs font-bold text-white">Proxy IPv4/IPv6</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-chart-line text-emerald-400 text-lg"></i><span class="text-xs font-bold text-white">Traffic Web SEO</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><img src="https://hacksub.vn/img/LinkedIn.png" alt="LinkedIn" class="w-6 h-6 object-contain"><span class="text-xs font-bold text-white">LinkedIn</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-brands fa-google text-red-400 text-lg"></i><span class="text-xs font-bold text-white">Google Map & Reviews</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-crown text-amber-400 text-lg"></i><span class="text-xs font-bold text-white">App Premium</span></div>
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 shrink-0"><i class="fa-solid fa-coins text-yellow-400 text-lg"></i><span class="text-xs font-bold text-white">Nạp Xu & Coin</span></div>
       </div>
     </section>
 
-    <!-- ======================================================
-         FEATURES SECTION
-         ====================================================== -->
     <section class="py-20 px-4 max-w-6xl mx-auto relative select-none">
       <div class="text-center mb-14">
-        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">
-          Đặc Quyền BR-34
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">
-          Tính Năng Nổi Bật Hệ Thống
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl mx-auto">
-          Được tối ưu hóa tối đa cho các đại lý, người làm Marketing và chủ shop online
-        </p>
+        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">Đặc Quyền BR-34</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">Tính Năng Nổi Bật Hệ Thống</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl mx-auto">Được tối ưu hóa tối đa cho các đại lý, người làm Marketing và chủ shop online</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="glass-card p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between group">
           <div>
-            <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-crop-simple"></i>
-            </div>
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-crop-simple"></i></div>
             <h3 class="text-lg font-extrabold text-white">Giao diện chuẩn chỉnh từng Pixel</h3>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Hệ thống tăng like, sub, follow, view, mắt live Facebook, TikTok, YouTube, Instagram tự động giá rẻ. Lên ngay sau vài phút, bảo hành đầy đủ, an toàn tuyệt đối.
-            </p>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">Hệ thống tăng like, sub, follow, view, mắt live Facebook, TikTok, YouTube, Instagram tự động giá rẻ. Lên ngay sau vài phút, bảo hành đầy đủ, an toàn tuyệt đối.</p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-bold text-brand-400">
-            <span>Tối ưu mượt mà iOS & Android</span>
-            <i class="fa-solid fa-check text-emerald-400"></i>
-          </div>
+          <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-bold text-brand-400"><span>Tối ưu mượt mà iOS & Android</span><i class="fa-solid fa-check text-emerald-400"></i></div>
         </div>
 
         <div class="glass-card p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between group">
           <div>
-            <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-layer-group"></i>
-            </div>
+            <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-layer-group"></i></div>
             <h3 class="text-lg font-extrabold text-white">Nền Tảng MXH & Premium Đa Dạng</h3>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Hơn 200+ dịch vụ mạng xã hội phong phú cùng kho tài nguyên số: Tài khoản ChatGPT Plus, Gemini Advanced, YouTube Premium, Locket Gold, Via Facebook kháng 2FA.
-            </p>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">Hơn 200+ dịch vụ mạng xã hội phong phú cùng kho tài nguyên số: Tài khoản ChatGPT Plus, Gemini Advanced, YouTube Premium, Locket Gold, Via Facebook kháng 2FA.</p>
           </div>
           <div class="mt-5 grid grid-cols-3 gap-2">
             <span class="p-2 rounded-xl bg-white/5 border border-white/5 grid place-items-center"><img src="https://hacksub.vn/img/facebook.gif" class="w-4 h-4 object-contain"></span>
@@ -635,13 +406,9 @@
 
         <div class="glass-card p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between group">
           <div>
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-server"></i>
-            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 grid place-items-center text-xl mb-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-server"></i></div>
             <h3 class="text-lg font-extrabold text-white">Cơ Sở Hạ Tầng Máy Chủ Châu Á</h3>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Đặt tại cụm Server Châu Á với độ trễ siêu thấp, tự động điều hướng thông minh giúp kết nối API của bạn luôn mượt mà và duy trì tỉ lệ uptime 99.99%.
-            </p>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">Đặt tại cụm Server Châu Á với độ trễ siêu thấp, tự động điều hướng thông minh giúp kết nối API của bạn luôn mượt mà và duy trì tỉ lệ uptime 99.99%.</p>
           </div>
           <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
             <span>Độ trễ API: <strong class="text-emerald-400 font-mono">15ms</strong></span>
@@ -651,132 +418,68 @@
       </div>
     </section>
 
-    <!-- ======================================================
-         FAQ SECTION
-         ====================================================== -->
     <section id="faq" class="py-16 px-4 max-w-4xl mx-auto select-none">
       <div class="text-center mb-12">
-        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">
-          FAQ
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">
-          Câu Hỏi Thường Gặp
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-2">
-          Giải đáp tất cả những thắc mắc của bạn về nền tảng và dịch vụ tại BR-34
-        </p>
+        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">FAQ</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">Câu Hỏi Thường Gặp</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2">Giải đáp tất cả những thắc mắc của bạn về nền tảng và dịch vụ tại BR-34</p>
       </div>
 
       <div class="space-y-3.5">
         <div class="faq-item rounded-2xl bg-neutral-950/80 border border-white/10 p-5 cursor-pointer transition" onclick="toggleFaq(this)">
-          <div class="flex items-center justify-between gap-4">
-            <h4 class="font-bold text-sm sm:text-base text-white">SMM Panel BR-34 là gì?</h4>
-            <i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i>
-          </div>
-          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">
-            BR-34 là hệ thống cung cấp giải pháp tăng tương tác mạng xã hội (lượt thích, theo dõi, bình luận, mắt livestream, lượt xem video...) hoàn toàn tự động với giá sỉ rẻ nhất thị trường. Bạn chỉ cần nạp tiền và tạo đơn, hệ thống sẽ tự động xử lý 24/7.
-          </div>
+          <div class="flex items-center justify-between gap-4"><h4 class="font-bold text-sm sm:text-base text-white">SMM Panel BR-34 là gì?</h4><i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i></div>
+          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">BR-34 là hệ thống cung cấp giải pháp tăng tương tác mạng xã hội (lượt thích, theo dõi, bình luận, mắt livestream, lượt xem video...) hoàn toàn tự động với giá sỉ rẻ nhất thị trường. Bạn chỉ cần nạp tiền và tạo đơn, hệ thống sẽ tự động xử lý 24/7.</div>
         </div>
 
         <div class="faq-item rounded-2xl bg-neutral-950/80 border border-white/10 p-5 cursor-pointer transition" onclick="toggleFaq(this)">
-          <div class="flex items-center justify-between gap-4">
-            <h4 class="font-bold text-sm sm:text-base text-white">Dịch vụ có an toàn cho tài khoản mạng xã hội của tôi không?</h4>
-            <i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i>
-          </div>
-          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Hệ thống BR-34 cam kết an toàn 100%. Bạn <strong>không bao giờ phải cung cấp mật khẩu</strong> hay quyền quản trị tài khoản, chỉ cần nhập đường dẫn (link) công khai của bài viết, trang cá nhân hoặc kênh cần tăng tương tác.
-          </div>
+          <div class="flex items-center justify-between gap-4"><h4 class="font-bold text-sm sm:text-base text-white">Dịch vụ có an toàn cho tài khoản mạng xã hội của tôi không?</h4><i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i></div>
+          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">Hệ thống BR-34 cam kết an toàn 100%. Bạn <strong>không bao giờ phải cung cấp mật khẩu</strong> hay quyền quản trị tài khoản, chỉ cần nhập đường dẫn (link) công khai của bài viết, trang cá nhân hoặc kênh cần tăng tương tác.</div>
         </div>
 
         <div class="faq-item rounded-2xl bg-neutral-950/80 border border-white/10 p-5 cursor-pointer transition" onclick="toggleFaq(this)">
-          <div class="flex items-center justify-between gap-4">
-            <h4 class="font-bold text-sm sm:text-base text-white">Có chính sách bảo hành hoặc refill tụt số lượng không?</h4>
-            <i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i>
-          </div>
-          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Các máy chủ có ký hiệu [Bảo hành 30 ngày] hoặc [Bảo hành 60 ngày] đều được hỗ trợ kiểm tra và bù tụt (Refill) tự động. Nếu hệ thống nhà cung cấp quá tải không thể chạy tiếp, bạn sẽ được hoàn lại số tiền tương ứng vào số dư ví.
-          </div>
+          <div class="flex items-center justify-between gap-4"><h4 class="font-bold text-sm sm:text-base text-white">Có chính sách bảo hành hoặc refill tụt số lượng không?</h4><i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i></div>
+          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">Các máy chủ có ký hiệu [Bảo hành 30 ngày] hoặc [Bảo hành 60 ngày] đều được hỗ trợ kiểm tra và bù tụt (Refill) tự động. Nếu hệ thống nhà cung cấp quá tải không thể chạy tiếp, bạn sẽ được hoàn lại số tiền tương ứng vào số dư ví.</div>
         </div>
 
         <div class="faq-item rounded-2xl bg-neutral-950/80 border border-white/10 p-5 cursor-pointer transition" onclick="toggleFaq(this)">
-          <div class="flex items-center justify-between gap-4">
-            <h4 class="font-bold text-sm sm:text-base text-white">Có API chuẩn SMM v2 dành cho Đại Lý và Website Con không?</h4>
-            <i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i>
-          </div>
-          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Có! BR-34 cung cấp API chuẩn quốc tế SMM v2 đầy đủ các endpoint: danh sách dịch vụ (services), tạo đơn (add), kiểm tra trạng thái đơn (status) và kiểm tra số dư ví (balance). Xem chi tiết tại trang <a href="api-docs.html" class="text-brand-400 underline font-bold">Tài liệu API</a>.
-          </div>
+          <div class="flex items-center justify-between gap-4"><h4 class="font-bold text-sm sm:text-base text-white">Có API chuẩn SMM v2 dành cho Đại Lý và Website Con không?</h4><i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i></div>
+          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">Có! BR-34 cung cấp API chuẩn quốc tế SMM v2 đầy đủ các endpoint: danh sách dịch vụ (services), tạo đơn (add), kiểm tra trạng thái đơn (status) và kiểm tra số dư ví (balance). Xem chi tiết tại trang <a href="api-docs.html" class="text-brand-400 underline font-bold">Tài liệu API</a>.</div>
         </div>
 
         <div class="faq-item rounded-2xl bg-neutral-950/80 border border-white/10 p-5 cursor-pointer transition" onclick="toggleFaq(this)">
-          <div class="flex items-center justify-between gap-4">
-            <h4 class="font-bold text-sm sm:text-base text-white">Phương thức nạp tiền và quy đổi số dư như thế nào?</h4>
-            <i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i>
-          </div>
-          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Hệ thống hỗ trợ nạp tiền quét mã VietQR tự động qua Techcombank 24/7. Tỷ lệ quy đổi: 1 VNĐ = 1 Point (Xu). Tiền sẽ vào tài khoản chỉ sau 30 giây đến 1 phút sau khi chuyển khoản thành công.
-          </div>
+          <div class="flex items-center justify-between gap-4"><h4 class="font-bold text-sm sm:text-base text-white">Phương thức nạp tiền và quy đổi số dư như thế nào?</h4><i class="fa-solid fa-plus text-brand-400 text-sm transition-transform duration-300 faq-icon"></i></div>
+          <div class="faq-content hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-slate-400 leading-relaxed">Hệ thống hỗ trợ nạp tiền quét mã VietQR tự động qua Techcombank 24/7. Tỷ lệ quy đổi: 1 VNĐ = 1 Point (Xu). Tiền sẽ vào tài khoản chỉ sau 30 giây đến 1 phút sau khi chuyển khoản thành công.</div>
         </div>
       </div>
     </section>
 
-    <!-- ======================================================
-         MODERN FOOTER
-         ====================================================== -->
     <footer class="mt-auto border-t border-white/10 bg-neutral-950/90 pt-14 pb-8 px-4 select-none">
       <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
-        
         <div class="col-span-2 space-y-3">
           <div class="flex items-center gap-2.5">
             <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" class="w-9 h-9 rounded-xl object-cover ring-1 ring-brand-500/40">
             <span class="text-xl font-black text-white">BR-34</span>
           </div>
-          <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
-            Nền tảng SMM Panel và Shop Tài Nguyên Số tự động hàng đầu Việt Nam. Tăng trưởng doanh thu kinh doanh trực tuyến hiệu quả.
-          </p>
-          <div class="pt-2 text-xs text-slate-300">
-            Hotline / Zalo hỗ trợ: <a href="https://zalo.me/0976976627" target="_blank" class="text-brand-400 font-extrabold underline">0976976627</a> (24/7)
-          </div>
+          <p class="text-xs text-slate-400 leading-relaxed max-w-sm">Nền tảng SMM Panel và Shop Tài Nguyên Số tự động hàng đầu Việt Nam. Tăng trưởng doanh thu kinh doanh trực tuyến hiệu quả.</p>
+          <div class="pt-2 text-xs text-slate-300">Hotline / Zalo hỗ trợ: <a href="https://zalo.me/0976976627" target="_blank" class="text-brand-400 font-extrabold underline">0976976627</a> (24/7)</div>
         </div>
-
         <div class="col-span-1 space-y-2.5 text-xs">
           <h5 class="font-bold text-white uppercase text-[11px] tracking-wider">Sản Phẩm</h5>
-          <ul class="space-y-2 text-slate-400">
-            <li><a href="index.html" class="hover:text-white transition">Dịch Vụ SMM</a></li>
-            <li><a href="bang-gia.html" class="hover:text-white transition">Bảng Giá VIP</a></li>
-            <li><a href="api-docs.html" class="hover:text-white transition">Tài liệu API</a></li>
-          </ul>
+          <ul class="space-y-2 text-slate-400"><li><a href="index.html" class="hover:text-white transition">Dịch Vụ SMM</a></li><li><a href="bang-gia.html" class="hover:text-white transition">Bảng Giá VIP</a></li><li><a href="api-docs.html" class="hover:text-white transition">Tài liệu API</a></li></ul>
         </div>
-
         <div class="col-span-1 space-y-2.5 text-xs">
           <h5 class="font-bold text-white uppercase text-[11px] tracking-wider">Tài Nguyên</h5>
-          <ul class="space-y-2 text-slate-400">
-            <li><a href="tai-nguyen.html" class="hover:text-white transition">Gemini & ChatGPT</a></li>
-            <li><a href="tai-nguyen.html" class="hover:text-white transition">YouTube Premium</a></li>
-            <li><a href="tai-nguyen.html" class="hover:text-white transition">Via & Clone FB</a></li>
-          </ul>
+          <ul class="space-y-2 text-slate-400"><li><a href="tai-nguyen.html" class="hover:text-white transition">Gemini & ChatGPT</a></li><li><a href="tai-nguyen.html" class="hover:text-white transition">YouTube Premium</a></li><li><a href="tai-nguyen.html" class="hover:text-white transition">Via & Clone FB</a></li></ul>
         </div>
-
         <div class="col-span-1 space-y-2.5 text-xs">
           <h5 class="font-bold text-white uppercase text-[11px] tracking-wider">Tài Chính</h5>
-          <ul class="space-y-2 text-slate-400">
-            <li><a href="nap-tien.html" class="hover:text-white transition">Nạp Tiền VietQR</a></li>
-            <li><a href="nap-tien.html" class="hover:text-white transition">Nạp Tiền Techcombank</a></li>
-            <li><a href="lich-su.html" class="hover:text-white transition">Lịch Sử Giao Dịch</a></li>
-          </ul>
+          <ul class="space-y-2 text-slate-400"><li><a href="nap-tien.html" class="hover:text-white transition">Nạp Tiền VietQR</a></li><li><a href="nap-tien.html" class="hover:text-white transition">Nạp Tiền Techcombank</a></li><li><a href="lich-su.html" class="hover:text-white transition">Lịch Sử Giao Dịch</a></li></ul>
         </div>
-
         <div class="col-span-1 space-y-2.5 text-xs">
           <h5 class="font-bold text-white uppercase text-[11px] tracking-wider">Hỗ Trợ</h5>
-          <ul class="space-y-2 text-slate-400">
-            <li><a href="ho-tro.html" class="hover:text-white transition">Gửi Ticket Khiếu Nại</a></li>
-            <li><a href="admin.html" class="hover:text-white transition font-bold text-rose-400">Quản Trị Viên</a></li>
-            <li><a href="https://zalo.me/0976976627" target="_blank" class="hover:text-white transition">Zalo CSKH</a></li>
-          </ul>
+          <ul class="space-y-2 text-slate-400"><li><a href="ho-tro.html" class="hover:text-white transition">Gửi Ticket Khiếu Nại</a></li><li><a href="admin.html" class="hover:text-white transition font-bold text-rose-400">Quản Trị Viên</a></li><li><a href="https://zalo.me/0976976627" target="_blank" class="hover:text-white transition">Zalo CSKH</a></li></ul>
         </div>
-
       </div>
-
       <div class="max-w-6xl mx-auto pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
         <p>© 2026 <strong class="text-slate-300">BR-34</strong> SMM Panel. All rights reserved.</p>
         <p>Phát triển trên nền tảng Supabase & Tailwind CSS tốc độ cao.</p>
@@ -812,10 +515,17 @@
         </button>
       </div>
 
+      <!-- USER MINI PROFILE WITH AVATAR -->
       <div class="p-4 border-b border-white/10 bg-neutral-900/40">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-rose-600 text-white font-extrabold text-sm grid place-items-center shadow-glow-sm shrink-0">
-            <span id="sideUserAvatarText">U</span>
+          <div class="relative shrink-0">
+            <div id="sideUserAvatarWrap" class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-brand-500/40 bg-gradient-to-tr from-brand-500 to-rose-600 grid place-items-center text-white font-extrabold text-sm shadow-glow-sm">
+              <img id="sideUserAvatarImg" src="" alt="avatar" class="w-full h-full object-cover hidden">
+              <span id="sideUserAvatarText">U</span>
+            </div>
+            <button onclick="openAvatarModal()" title="Đổi avatar" class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-brand-500 hover:bg-brand-600 text-white grid place-items-center text-[9px] shadow-glow-sm border-2 border-neutral-950 transition">
+              <i class="fa-solid fa-camera"></i>
+            </button>
           </div>
           <div class="min-w-0 flex-1">
             <h4 id="sideUserName" class="text-xs font-bold text-white truncate">Khách hàng</h4>
@@ -831,26 +541,11 @@
         <div>
           <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Bảng điều khiển</p>
           <nav class="space-y-1">
-            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-brand-500/20 to-rose-500/10 text-brand-400 border border-brand-500/30">
-              <i class="fa-solid fa-house w-4 text-center"></i>
-              <span>Trang chủ</span>
-            </a>
-            <a href="lich-su.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-receipt w-4 text-center text-slate-400"></i>
-              <span>Lịch sử giao dịch</span>
-            </a>
-            <a href="ho-tro.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-comments w-4 text-center text-slate-400"></i>
-              <span>Hỗ trợ ticket</span>
-            </a>
-            <a href="api-docs.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-code w-4 text-center text-slate-400"></i>
-              <span>Tài liệu API</span>
-            </a>
-            <a href="bang-gia.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-crown w-4 text-center text-amber-500"></i>
-              <span>Cấp bậc & bảng giá</span>
-            </a>
+            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-brand-500/20 to-rose-500/10 text-brand-400 border border-brand-500/30"><i class="fa-solid fa-house w-4 text-center"></i><span>Trang chủ</span></a>
+            <a href="lich-su.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition"><i class="fa-solid fa-receipt w-4 text-center text-slate-400"></i><span>Lịch sử giao dịch</span></a>
+            <a href="ho-tro.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition"><i class="fa-solid fa-comments w-4 text-center text-slate-400"></i><span>Hỗ trợ ticket</span></a>
+            <a href="api-docs.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition"><i class="fa-solid fa-code w-4 text-center text-slate-400"></i><span>Tài liệu API</span></a>
+            <a href="bang-gia.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition"><i class="fa-solid fa-crown w-4 text-center text-amber-500"></i><span>Cấp bậc & bảng giá</span></a>
           </nav>
         </div>
 
@@ -858,31 +553,23 @@
           <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Tài chính & Dịch vụ</p>
           <nav class="space-y-1">
             <a href="nap-tien.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-wallet w-4 text-center text-emerald-500"></i>
-              <span>Nạp tiền tự động</span>
+              <i class="fa-solid fa-wallet w-4 text-center text-emerald-500"></i><span>Nạp tiền tự động</span>
               <span class="ml-auto text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-rose-500 text-white animate-pulse">QR</span>
             </a>
-            <a href="tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition">
-              <i class="fa-solid fa-box-open w-4 text-center text-indigo-400"></i>
-              <span>Mua tài nguyên số</span>
-            </a>
+            <a href="tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:bg-white/5 hover:text-white transition"><i class="fa-solid fa-box-open w-4 text-center text-indigo-400"></i><span>Mua tài nguyên số</span></a>
           </nav>
         </div>
 
         <div id="sideAdminSection" class="hidden">
           <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Quản trị</p>
           <nav class="space-y-1">
-            <a href="admin.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs bg-rose-950/40 text-rose-400 border border-rose-900/60">
-              <i class="fa-solid fa-shield-halved w-4 text-center"></i>
-              <span>Quản trị viên</span>
-            </a>
+            <a href="admin.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs bg-rose-950/40 text-rose-400 border border-rose-900/60"><i class="fa-solid fa-shield-halved w-4 text-center"></i><span>Quản trị viên</span></a>
           </nav>
         </div>
 
         <div class="pt-4 border-t border-white/10">
           <button onclick="switchView('landing')" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 transition">
-            <i class="fa-solid fa-globe"></i>
-            <span>Xem Trang Giới Thiệu</span>
+            <i class="fa-solid fa-globe"></i><span>Xem Trang Giới Thiệu</span>
           </button>
         </div>
       </div>
@@ -893,65 +580,48 @@
       
       <div class="h-16 px-4 sm:px-6 bg-neutral-950/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between gap-4 sticky top-0 z-30">
         <div class="flex items-center gap-3">
-          <button id="openSidebarBtn" class="lg:hidden w-9 h-9 rounded-xl bg-white/5 border border-white/10 grid place-items-center text-slate-300">
-            <i class="fa-solid fa-bars text-sm"></i>
-          </button>
+          <button id="openSidebarBtn" class="lg:hidden w-9 h-9 rounded-xl bg-white/5 border border-white/10 grid place-items-center text-slate-300"><i class="fa-solid fa-bars text-sm"></i></button>
           <span class="text-sm font-extrabold text-white hidden sm:inline">Bảng Điều Khiển SMM BR-34</span>
         </div>
-
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-neutral-900 border border-white/10 text-xs">
             <span class="text-slate-400">Số dư ví:</span>
             <span id="dashHeaderBalance" class="font-black text-brand-400">0đ</span>
           </div>
-          <a href="nap-tien.html" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm transition">
-            + Nạp Tiền
-          </a>
+          <a href="nap-tien.html" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm transition">+ Nạp Tiền</a>
         </div>
       </div>
 
       <div class="p-4 sm:p-6 lg:p-8 space-y-6">
         
-        <!-- 4 KPI Cards Dashboard -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           <div class="p-4 rounded-2xl bg-neutral-900 border border-white/10 flex items-center justify-between">
             <div>
               <p class="text-[10px] uppercase font-bold text-slate-400">Số Dư Hiện Tại</p>
               <h3 id="dashStatBal" class="text-lg sm:text-2xl font-black text-brand-400 mt-1">0đ</h3>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-base">
-              <i class="fa-solid fa-wallet"></i>
-            </div>
+            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-base"><i class="fa-solid fa-wallet"></i></div>
           </div>
-
           <div class="p-4 rounded-2xl bg-neutral-900 border border-white/10 flex items-center justify-between">
             <div>
               <p class="text-[10px] uppercase font-bold text-slate-400">Tổng Đã Nạp</p>
               <h3 id="dashStatDep" class="text-lg sm:text-2xl font-black text-emerald-400 mt-1">0đ</h3>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-base">
-              <i class="fa-solid fa-arrow-trend-up"></i>
-            </div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-base"><i class="fa-solid fa-arrow-trend-up"></i></div>
           </div>
-
           <div class="p-4 rounded-2xl bg-neutral-900 border border-white/10 flex items-center justify-between">
             <div>
               <p class="text-[10px] uppercase font-bold text-slate-400">Đã Sử Dụng</p>
               <h3 id="dashStatSpent" class="text-lg sm:text-2xl font-black text-amber-400 mt-1">0đ</h3>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-base">
-              <i class="fa-solid fa-receipt"></i>
-            </div>
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-base"><i class="fa-solid fa-receipt"></i></div>
           </div>
-
           <div class="p-4 rounded-2xl bg-neutral-900 border border-white/10 flex items-center justify-between">
             <div>
               <p class="text-[10px] uppercase font-bold text-slate-400">Cấp Bậc</p>
               <h3 id="dashStatTier" class="text-lg sm:text-2xl font-black text-slate-400 mt-1">Thành Viên</h3>
             </div>
-            <div id="dashTierIconBox" class="w-10 h-10 rounded-xl bg-slate-500/20 text-slate-400 grid place-items-center text-base">
-              <i class="fa-solid fa-user"></i>
-            </div>
+            <div id="dashTierIconBox" class="w-10 h-10 rounded-xl bg-slate-500/20 text-slate-400 grid place-items-center text-base"><i class="fa-solid fa-user"></i></div>
           </div>
         </div>
 
@@ -959,9 +629,7 @@
         <div class="p-5 rounded-2xl bg-neutral-900 border border-white/10 space-y-3">
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-2.5">
-              <div id="tierIconBox" class="w-10 h-10 rounded-xl bg-slate-500/20 text-slate-400 grid place-items-center text-base">
-                <i class="fa-solid fa-user"></i>
-              </div>
+              <div id="tierIconBox" class="w-10 h-10 rounded-xl bg-slate-500/20 text-slate-400 grid place-items-center text-base"><i class="fa-solid fa-user"></i></div>
               <div>
                 <p class="text-[11px] uppercase font-bold text-slate-400">Cấp bậc hiện tại</p>
                 <h3 id="tierNameText" class="text-base font-black text-slate-400">Thành Viên</h3>
@@ -982,44 +650,21 @@
             </div>
           </div>
 
-          <!-- Bảng danh sách cấp bậc -->
           <div class="pt-3 border-t border-white/5 grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px]">
-            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="member">
-              <i class="fa-solid fa-user text-slate-400"></i>
-              <p class="font-bold text-slate-300 mt-1">Thành Viên</p>
-              <p class="text-slate-500">0đ+</p>
-            </div>
-            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="silver">
-              <i class="fa-solid fa-medal text-slate-300"></i>
-              <p class="font-bold text-slate-300 mt-1">Bạc</p>
-              <p class="text-slate-500">500K+</p>
-            </div>
-            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="gold">
-              <i class="fa-solid fa-crown text-amber-400"></i>
-              <p class="font-bold text-slate-300 mt-1">Vàng</p>
-              <p class="text-slate-500">2M+</p>
-            </div>
-            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="diamond">
-              <i class="fa-solid fa-gem text-cyan-400"></i>
-              <p class="font-bold text-slate-300 mt-1">Kim Cương</p>
-              <p class="text-slate-500">5M+</p>
-            </div>
-            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="vip">
-              <i class="fa-solid fa-star text-rose-400"></i>
-              <p class="font-bold text-slate-300 mt-1">VIP</p>
-              <p class="text-slate-500">20M+</p>
-            </div>
+            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="member"><i class="fa-solid fa-user text-slate-400"></i><p class="font-bold text-slate-300 mt-1">Thành Viên</p><p class="text-slate-500">0đ+</p></div>
+            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="silver"><i class="fa-solid fa-medal text-slate-300"></i><p class="font-bold text-slate-300 mt-1">Bạc</p><p class="text-slate-500">500K+</p></div>
+            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="gold"><i class="fa-solid fa-crown text-amber-400"></i><p class="font-bold text-slate-300 mt-1">Vàng</p><p class="text-slate-500">2M+</p></div>
+            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="diamond"><i class="fa-solid fa-gem text-cyan-400"></i><p class="font-bold text-slate-300 mt-1">Kim Cương</p><p class="text-slate-500">5M+</p></div>
+            <div class="tier-mini p-2 rounded-xl bg-white/5 border border-white/5 text-center" data-tier="vip"><i class="fa-solid fa-star text-rose-400"></i><p class="font-bold text-slate-300 mt-1">VIP</p><p class="text-slate-500">20M+</p></div>
           </div>
         </div>
 
-        <!-- FORM TẠO ĐƠN HÀNG SMM -->
+        <!-- FORM TẠO ĐƠN HÀNG -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           <div class="lg:col-span-2 p-5 sm:p-6 rounded-3xl bg-neutral-900 border border-white/10 space-y-5">
             <div class="flex items-center justify-between border-b border-white/10 pb-4">
-              <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-                <i class="fa-solid fa-cart-plus text-brand-400"></i> Tạo Tiến Trình Dịch Vụ Mới
-              </h3>
+              <h3 class="text-base font-extrabold text-white flex items-center gap-2"><i class="fa-solid fa-cart-plus text-brand-400"></i> Tạo Tiến Trình Dịch Vụ Mới</h3>
               <span class="text-xs text-slate-400 font-semibold">Tự động 24/7</span>
             </div>
 
@@ -1041,9 +686,7 @@
             <div>
               <div class="flex items-center justify-between mb-2">
                 <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">4. Liên Kết Cần Chạy (Link / ID)</label>
-                <button onclick="pasteClipboardToDashLink()" type="button" class="text-[11px] font-bold text-brand-400 hover:underline">
-                  <i class="fa-regular fa-clipboard"></i> Dán từ bộ nhớ tạm
-                </button>
+                <button onclick="pasteClipboardToDashLink()" type="button" class="text-[11px] font-bold text-brand-400 hover:underline"><i class="fa-regular fa-clipboard"></i> Dán từ bộ nhớ tạm</button>
               </div>
               <input id="dashOrderLink" type="text" placeholder="https://www.facebook.com/... hoặc ID bài viết" class="w-full px-4 py-3 rounded-2xl bg-neutral-950 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
             </div>
@@ -1072,26 +715,11 @@
               <h4 class="text-sm font-extrabold text-white pb-3 border-b border-white/10">Chi Tiết Đơn Hàng</h4>
 
               <div class="space-y-2.5 text-xs">
-                <div class="flex items-center justify-between text-slate-400">
-                  <span>Dịch vụ:</span>
-                  <span id="billService" class="font-bold text-white truncate max-w-[170px]">-</span>
-                </div>
-                <div class="flex items-center justify-between text-slate-400">
-                  <span>Máy chủ:</span>
-                  <span id="billServer" class="font-bold text-brand-400 truncate max-w-[170px]">-</span>
-                </div>
-                <div class="flex items-center justify-between text-slate-400">
-                  <span>Đơn giá:</span>
-                  <span id="billRate" class="font-bold text-white">-</span>
-                </div>
-                <div class="flex items-center justify-between text-slate-400">
-                  <span>Số lượng:</span>
-                  <span id="billQty" class="font-bold text-white">100</span>
-                </div>
-                <div id="billDiscountRow" class="hidden items-center justify-between text-emerald-400">
-                  <span>Ưu đãi cấp bậc:</span>
-                  <span id="billDiscount" class="font-bold">-0đ (0%)</span>
-                </div>
+                <div class="flex items-center justify-between text-slate-400"><span>Dịch vụ:</span><span id="billService" class="font-bold text-white truncate max-w-[170px]">-</span></div>
+                <div class="flex items-center justify-between text-slate-400"><span>Máy chủ:</span><span id="billServer" class="font-bold text-brand-400 truncate max-w-[170px]">-</span></div>
+                <div class="flex items-center justify-between text-slate-400"><span>Đơn giá:</span><span id="billRate" class="font-bold text-white">-</span></div>
+                <div class="flex items-center justify-between text-slate-400"><span>Số lượng:</span><span id="billQty" class="font-bold text-white">100</span></div>
+                <div id="billDiscountRow" class="hidden items-center justify-between text-emerald-400"><span>Ưu đãi cấp bậc:</span><span id="billDiscount" class="font-bold">-0đ (0%)</span></div>
                 <div class="pt-3 border-t border-white/10 flex items-center justify-between">
                   <span class="font-bold text-white">Tổng thanh toán:</span>
                   <span id="billTotal" class="text-lg font-black text-brand-400">0đ</span>
@@ -1100,9 +728,7 @@
 
               <div id="dashLackAlert" class="hidden p-3 rounded-2xl bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300 space-y-2">
                 <p><i class="fa-solid fa-triangle-exclamation mr-1"></i> Số dư ví không đủ để thanh toán!</p>
-                <a href="nap-tien.html" class="block w-full py-2 text-center rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-glow-sm">
-                  Nạp thêm tiền ngay
-                </a>
+                <a href="nap-tien.html" class="block w-full py-2 text-center rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-glow-sm">Nạp thêm tiền ngay</a>
               </div>
 
               <button id="dashSubmitBtn" onclick="handleExecuteDashOrder()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-brand-500 via-rose-600 to-rose-700 hover:from-brand-600 hover:to-rose-800 text-white font-extrabold text-sm shadow-glow hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2">
@@ -1112,9 +738,7 @@
             </div>
 
             <div class="p-4 rounded-3xl bg-neutral-900/60 border border-white/5 text-xs text-slate-400 space-y-2 leading-relaxed">
-              <h5 class="font-bold text-white flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info text-cyan-400"></i> Lưu ý máy chủ:
-              </h5>
+              <h5 class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-cyan-400"></i> Lưu ý máy chủ:</h5>
               <p id="billNote" class="text-[11px] text-slate-400">Vui lòng kiểm tra kỹ đường link trước khi ấn tạo đơn.</p>
             </div>
 
@@ -1133,25 +757,17 @@
        ======================================================== -->
   <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
     <div class="w-full max-w-md bg-neutral-950 rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/10 relative">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full grid place-items-center text-slate-400 hover:text-white hover:bg-white/10 transition">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full grid place-items-center text-slate-400 hover:text-white hover:bg-white/10 transition"><i class="fa-solid fa-xmark"></i></button>
 
       <div class="text-center mb-5">
-        <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 border border-brand-500/30 grid place-items-center text-xl mx-auto mb-2.5">
-          <i class="fa-solid fa-user-lock"></i>
-        </div>
+        <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 border border-brand-500/30 grid place-items-center text-xl mx-auto mb-2.5"><i class="fa-solid fa-user-lock"></i></div>
         <h3 class="text-lg font-black text-white">BR-34 Member Portal</h3>
         <p class="text-xs text-slate-400 mt-0.5">Đăng nhập để đặt đơn và quản lý tài khoản</p>
       </div>
 
       <div class="flex gap-2 p-1 rounded-2xl bg-white/5 mb-5 border border-white/5">
-        <button id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-xl text-xs font-bold transition bg-brand-500 text-white shadow-glow-sm">
-          Đăng nhập
-        </button>
-        <button id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
-          Đăng ký mới
-        </button>
+        <button id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-xl text-xs font-bold transition bg-brand-500 text-white shadow-glow-sm">Đăng nhập</button>
+        <button id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Đăng ký mới</button>
       </div>
 
       <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
@@ -1163,29 +779,113 @@
           <label class="block text-xs font-bold text-slate-300 mb-1">Mật khẩu</label>
           <input id="authInputPass" type="password" placeholder="••••••••" required class="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
         </div>
-
         <p id="authErrorMsg" class="hidden text-xs text-rose-400 font-semibold p-2.5 rounded-xl bg-rose-950/40 border border-rose-900/60"></p>
-
-        <button id="authSubmitBtn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow transition cursor-pointer">
-          Đăng nhập ngay
-        </button>
+        <button id="authSubmitBtn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow transition cursor-pointer">Đăng nhập ngay</button>
       </form>
     </div>
   </div>
 
   <!-- ========================================================
-       TOAST THÔNG BÁO
+       MODAL: CHỌN & TÙY CHỈNH AVATAR VUI NHỘN
        ======================================================== -->
+  <div id="avatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="w-full max-w-2xl bg-neutral-950 rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/10 relative max-h-[92vh] overflow-y-auto">
+      <button onclick="closeAvatarModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full grid place-items-center text-slate-400 hover:text-white hover:bg-white/10 transition z-10"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="text-center mb-5">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-400 grid place-items-center text-xl mx-auto mb-2.5"><i class="fa-solid fa-face-grin-stars text-white"></i></div>
+        <h3 class="text-lg font-black text-white">Tùy Chỉnh Avatar Của Bạn</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Chọn kiểu, màu nền và ngẫu nhiên hóa avatar của riêng bạn</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-5">
+        
+        <!-- LEFT: PREVIEW + CONTROLS -->
+        <div class="md:col-span-2 space-y-4">
+          
+          <!-- PREVIEW -->
+          <div class="p-4 rounded-3xl bg-neutral-900 border border-white/10 text-center">
+            <p class="text-[10px] uppercase font-bold text-slate-400 mb-3">Xem trước</p>
+            <div class="w-32 h-32 mx-auto rounded-3xl overflow-hidden ring-4 ring-brand-500/30 bg-white/5 grid place-items-center">
+              <img id="avatarPreviewImg" src="" alt="preview" class="w-full h-full object-cover">
+            </div>
+            <button onclick="randomizeAvatarSeed()" class="mt-4 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-[11px] font-bold transition inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-dice"></i> Đổi ngẫu nhiên
+            </button>
+          </div>
+
+          <!-- STYLE TABS -->
+          <div class="p-4 rounded-3xl bg-neutral-900 border border-white/10 space-y-2.5">
+            <p class="text-[10px] uppercase font-bold text-slate-400">Chọn kiểu avatar</p>
+            <div class="flex flex-wrap gap-1.5" id="avStyleTabs">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- BG COLORS -->
+          <div class="p-4 rounded-3xl bg-neutral-900 border border-white/10 space-y-2.5">
+            <p class="text-[10px] uppercase font-bold text-slate-400">Màu nền</p>
+            <div class="flex flex-wrap gap-2" id="avBgColors">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: PRESET GRID -->
+        <div class="md:col-span-3 space-y-4">
+          
+          <div class="p-4 rounded-3xl bg-neutral-900 border border-white/10 space-y-3">
+            <div class="flex items-center justify-between">
+              <p class="text-[10px] uppercase font-bold text-slate-400">20 Avatar gợi ý sẵn</p>
+              <span class="text-[10px] text-slate-500">Nhấn để chọn nhanh</span>
+            </div>
+            <div id="avatarGrid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- SEED INPUT -->
+          <div class="p-4 rounded-3xl bg-neutral-900 border border-white/10 space-y-2">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Hoặc nhập chữ ký riêng của bạn (seed)</label>
+            <div class="flex gap-2">
+              <input id="avSeedInput" type="text" placeholder="vd: tên-của-bạn" maxlength="30" class="flex-1 px-3 py-2 rounded-xl bg-neutral-950 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
+              <button onclick="applyCustomSeed()" class="px-3 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold transition whitespace-nowrap">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Tạo
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap">
+        <button onclick="resetAvatarCustomize()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> Đặt lại
+        </button>
+        <div class="flex gap-2">
+          <button onclick="closeAvatarModal()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs transition">
+            Hủy
+          </button>
+          <button id="avatarSaveBtn" onclick="saveAvatar()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow-sm transition flex items-center gap-2">
+            <i class="fa-solid fa-check"></i> Lưu Avatar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="fixed bottom-6 right-6 z-50 max-w-sm px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white bg-neutral-900 border border-white/10 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex items-center gap-2.5">
     <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
     <span id="toastMsg">Thông báo</span>
   </div>
 
-  <!-- ========================================================
-       JAVASCRIPT TOÀN BỘ LOGIC & SUPABASE V2
-       ======================================================== -->
   <script>
-    /* 1. SUPABASE CLIENT */
+    /* =========================================================
+       1. SUPABASE + HELPERS
+       ========================================================= */
     const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
     const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY, {
@@ -1200,13 +900,15 @@
     let currentBalance = 0;
     let authMode = "login";
 
-    /* 2. HỆ THỐNG CẤP BẬC (TIER) DỰA TRÊN TỔNG NẠP */
+    /* =========================================================
+       2. TIER SYSTEM
+       ========================================================= */
     const TIER_CONFIG = [
-      { key: "member",  name: "Thành Viên", icon: "fa-user",   color: "text-slate-400",  bg: "bg-slate-500/20",  minDeposit: 0,        discount: 0  },
-      { key: "silver",  name: "Bạc",        icon: "fa-medal",  color: "text-slate-300",  bg: "bg-slate-400/20",  minDeposit: 500000,   discount: 2  },
-      { key: "gold",    name: "Vàng",       icon: "fa-crown",  color: "text-amber-400",  bg: "bg-amber-500/20",  minDeposit: 2000000,  discount: 5  },
-      { key: "diamond", name: "Kim Cương",  icon: "fa-gem",    color: "text-cyan-400",   bg: "bg-cyan-500/20",   minDeposit: 5000000,  discount: 8  },
-      { key: "vip",     name: "VIP",        icon: "fa-star",   color: "text-rose-400",   bg: "bg-rose-500/20",   minDeposit: 20000000, discount: 12 }
+      { key: "member",  name: "Thành Viên", icon: "fa-user",   color: "text-slate-400", bg: "bg-slate-500/20", minDeposit: 0,        discount: 0  },
+      { key: "silver",  name: "Bạc",        icon: "fa-medal",  color: "text-slate-300", bg: "bg-slate-400/20", minDeposit: 500000,   discount: 2  },
+      { key: "gold",    name: "Vàng",       icon: "fa-crown",  color: "text-amber-400", bg: "bg-amber-500/20", minDeposit: 2000000,  discount: 5  },
+      { key: "diamond", name: "Kim Cương",  icon: "fa-gem",    color: "text-cyan-400",  bg: "bg-cyan-500/20",  minDeposit: 5000000,  discount: 8  },
+      { key: "vip",     name: "VIP",        icon: "fa-star",   color: "text-rose-400",  bg: "bg-rose-500/20",  minDeposit: 20000000, discount: 12 }
     ];
 
     function getTierByDeposit(totalDeposit) {
@@ -1216,19 +918,16 @@
       }
       return tier;
     }
-
     function getNextTier(totalDeposit) {
       const cur = getTierByDeposit(totalDeposit);
       const idx = TIER_CONFIG.findIndex(t => t.key === cur.key);
       return TIER_CONFIG[idx + 1] || null;
     }
 
-    /* Hiển thị cấp bậc + tiến độ lên cấp */
     function renderTierBadge(totalDeposit) {
       const cur = getTierByDeposit(totalDeposit);
       const next = getNextTier(totalDeposit);
 
-      // Cập nhật KPI card
       const tierEl = $("dashStatTier");
       if (tierEl) {
         tierEl.textContent = cur.name;
@@ -1239,8 +938,6 @@
         kpiIcon.className = `w-10 h-10 rounded-xl ${cur.bg} ${cur.color} grid place-items-center text-base`;
         kpiIcon.innerHTML = `<i class="fa-solid ${cur.icon}"></i>`;
       }
-
-      // Ô tier progress
       const iconBox = $("tierIconBox");
       if (iconBox) {
         iconBox.className = `w-10 h-10 rounded-xl ${cur.bg} ${cur.color} grid place-items-center text-base`;
@@ -1251,7 +948,6 @@
         nameEl.textContent = cur.name;
         nameEl.className = `text-base font-black ${cur.color}`;
       }
-
       const discBadge = $("tierDiscountBadge");
       if (discBadge) {
         if (cur.discount > 0) {
@@ -1265,7 +961,6 @@
       const bar = $("tierProgressBar");
       const progText = $("tierProgressText");
       const nextLabel = $("tierNextLabel");
-
       if (next) {
         const pct = Math.min(100, Math.round((totalDeposit / next.minDeposit) * 100));
         const remain = next.minDeposit - totalDeposit;
@@ -1278,124 +973,334 @@
         if (nextLabel) nextLabel.innerHTML = `🎉 Bạn đã đạt cấp <strong class="text-rose-400">VIP</strong> cao nhất!`;
       }
 
-      // Highlight tier đang ở trong bảng mini
       document.querySelectorAll(".tier-mini").forEach(el => {
         const tk = el.dataset.tier;
         el.classList.remove("ring-2", "ring-brand-500", "bg-brand-500/10");
-        if (tk === cur.key) {
-          el.classList.add("ring-2", "ring-brand-500", "bg-brand-500/10");
+        if (tk === cur.key) el.classList.add("ring-2", "ring-brand-500", "bg-brand-500/10");
+      });
+    }
+
+    /* =========================================================
+       3. AVATAR SYSTEM
+       ========================================================= */
+    const AVATAR_STYLES = [
+      { key: "fun-emoji",   label: "Mặt cười" },
+      { key: "adventurer",  label: "Phiêu lưu" },
+      { key: "bottts",      label: "Robot" },
+      { key: "micah",       label: "Người" },
+      { key: "avataaars",   label: "Hoạt hình" },
+      { key: "big-smile",   label: "Cười to" },
+      { key: "croodles",    label: "Vẽ tay" },
+      { key: "lorelei",     label: "Nghệ thuật" },
+      { key: "thumbs",      label: "Ngón tay" },
+      { key: "miniavs",     label: "Mini" }
+    ];
+
+    const AVATAR_BG_COLORS = [
+      { hex: "b6e3f4", label: "Xanh biển" },
+      { hex: "ffd5dc", label: "Hồng" },
+      { hex: "d1d4f9", label: "Tím nhạt" },
+      { hex: "c0aede", label: "Tím" },
+      { hex: "ffdfbf", label: "Cam" },
+      { hex: "d4f4dd", label: "Xanh lá" },
+      { hex: "fff5ba", label: "Vàng" },
+      { hex: "ffb3ba", label: "Hồng đào" },
+      { hex: "bae1ff", label: "Xanh da trời" },
+      { hex: "e2c6ff", label: "Hồng nhạt" }
+    ];
+
+    const AVATAR_PRESETS = [
+      { seed: "happy-cat",    style: "fun-emoji",  bg: "b6e3f4" },
+      { seed: "cool-dog",     style: "fun-emoji",  bg: "ffd5dc" },
+      { seed: "funny-panda",  style: "fun-emoji",  bg: "d1d4f9" },
+      { seed: "ninja-frog",   style: "adventurer", bg: "c0aede" },
+      { seed: "space-bunny",  style: "adventurer", bg: "ffdfbf" },
+      { seed: "king-lion",    style: "adventurer", bg: "b6e3f4" },
+      { seed: "chef-bear",    style: "avataaars",  bg: "ffd5dc" },
+      { seed: "wizard-owl",   style: "avataaars",  bg: "d1d4f9" },
+      { seed: "pirate-fox",   style: "big-smile",  bg: "c0aede" },
+      { seed: "astronaut",    style: "bottts",     bg: "ffdfbf" },
+      { seed: "robot-boy",    style: "bottts",     bg: "b6e3f4" },
+      { seed: "unicorn",      style: "lorelei",    bg: "ffd5dc" },
+      { seed: "dragon",       style: "lorelei",    bg: "d1d4f9" },
+      { seed: "penguin",      style: "fun-emoji",  bg: "c0aede" },
+      { seed: "monkey",       style: "fun-emoji",  bg: "ffdfbf" },
+      { seed: "koala",        style: "fun-emoji",  bg: "b6e3f4" },
+      { seed: "tiger",        style: "adventurer", bg: "ffd5dc" },
+      { seed: "hamster",      style: "miniavs",    bg: "d1d4f9" },
+      { seed: "sloth",        style: "miniavs",    bg: "c0aede" },
+      { seed: "dino",         style: "big-smile",  bg: "ffdfbf" }
+    ];
+
+    // Customize state
+    let avCustomize = {
+      style: "fun-emoji",
+      bg: "b6e3f4",
+      seed: "br34-user"
+    };
+    let selectedAvatarUrl = null;
+
+    function buildAvatarUrl(style, seed, bg) {
+      return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}&backgroundColor=${bg}&radius=20`;
+    }
+
+    function openAvatarModal() {
+      if (!currentUser) {
+        toast("Vui lòng đăng nhập để đổi avatar!", false);
+        return;
+      }
+      // Nếu đã có avatar_url, thử parse để khôi phục state
+      const existing = currentProfile?.avatar_url;
+      if (existing) {
+        try {
+          const u = new URL(existing);
+          const parts = u.pathname.split("/");
+          const style = parts[2] || "fun-emoji";
+          const seed = u.searchParams.get("seed") || "br34-user";
+          const bg = u.searchParams.get("backgroundColor") || "b6e3f4";
+          avCustomize = { style, bg, seed };
+        } catch (e) {}
+      }
+      selectedAvatarUrl = existing || buildAvatarUrl(avCustomize.style, avCustomize.seed, avCustomize.bg);
+
+      renderAvatarStyleTabs();
+      renderAvatarBgColors();
+      renderAvatarGrid();
+      renderAvatarPreview();
+      $("avSeedInput").value = avCustomize.seed;
+
+      $("avatarModal").classList.remove("opacity-0", "pointer-events-none");
+    }
+
+    function closeAvatarModal() {
+      $("avatarModal").classList.add("opacity-0", "pointer-events-none");
+    }
+
+    function renderAvatarPreview() {
+      const url = buildAvatarUrl(avCustomize.style, avCustomize.seed, avCustomize.bg);
+      selectedAvatarUrl = url;
+      $("avatarPreviewImg").src = url;
+      highlightSelectedAvatar();
+    }
+
+    function renderAvatarStyleTabs() {
+      const wrap = $("avStyleTabs");
+      wrap.innerHTML = AVATAR_STYLES.map(s => `
+        <button type="button" onclick="pickAvatarStyle('${s.key}')" class="av-style-tab px-2.5 py-1 rounded-lg bg-white/5 text-slate-300 text-[10px] font-bold ${avCustomize.style === s.key ? 'active' : ''}">
+          ${s.label}
+        </button>
+      `).join("");
+    }
+
+    function pickAvatarStyle(k) {
+      avCustomize.style = k;
+      renderAvatarStyleTabs();
+      renderAvatarPreview();
+    }
+
+    function renderAvatarBgColors() {
+      const wrap = $("avBgColors");
+      wrap.innerHTML = AVATAR_BG_COLORS.map(c => `
+        <button type="button" onclick="pickAvatarBg('${c.hex}')" title="${c.label}" class="av-color-dot w-8 h-8 rounded-full border-2 border-white/10 ${avCustomize.bg === c.hex ? 'active' : ''}" style="background: #${c.hex}"></button>
+      `).join("");
+    }
+
+    function pickAvatarBg(hex) {
+      avCustomize.bg = hex;
+      renderAvatarBgColors();
+      renderAvatarPreview();
+    }
+
+    function renderAvatarGrid() {
+      const grid = $("avatarGrid");
+      grid.innerHTML = AVATAR_PRESETS.map((a, i) => {
+        const url = buildAvatarUrl(a.style, a.seed, a.bg);
+        return `
+          <button onclick="pickPresetAvatar('${a.style}','${a.seed}','${a.bg}')" data-avatar-url="${url}" class="avatar-choice aspect-square rounded-2xl overflow-hidden border-2 border-white/10 hover:border-brand-500 hover:scale-105 transition-all p-1 bg-white/5">
+            <img src="${url}" alt="avatar ${i+1}" class="w-full h-full object-cover rounded-xl" loading="lazy">
+          </button>
+        `;
+      }).join("");
+      highlightSelectedAvatar();
+    }
+
+    function pickPresetAvatar(style, seed, bg) {
+      avCustomize = { style, seed, bg };
+      $("avSeedInput").value = seed;
+      renderAvatarStyleTabs();
+      renderAvatarBgColors();
+      renderAvatarPreview();
+    }
+
+    function randomizeAvatarSeed() {
+      const randomSeed = "user-" + Math.random().toString(36).slice(2, 8);
+      avCustomize.seed = randomSeed;
+      $("avSeedInput").value = randomSeed;
+      renderAvatarPreview();
+    }
+
+    function applyCustomSeed() {
+      const s = $("avSeedInput").value.trim();
+      if (!s) { toast("Vui lòng nhập chữ ký!", false); return; }
+      avCustomize.seed = s;
+      renderAvatarPreview();
+      toast("✨ Đã áp dụng chữ ký riêng!");
+    }
+
+    function resetAvatarCustomize() {
+      avCustomize = { style: "fun-emoji", bg: "b6e3f4", seed: "br34-user" };
+      $("avSeedInput").value = avCustomize.seed;
+      renderAvatarStyleTabs();
+      renderAvatarBgColors();
+      renderAvatarPreview();
+      toast("Đã đặt lại avatar về mặc định");
+    }
+
+    function highlightSelectedAvatar() {
+      document.querySelectorAll(".avatar-choice").forEach(el => {
+        if (el.dataset.avatarUrl === selectedAvatarUrl) {
+          el.classList.add("active-pick");
+        } else {
+          el.classList.remove("active-pick");
         }
       });
     }
 
-    /* 3. SMM DATABASE SERVICES (SV1 - SV16) */
+    async function saveAvatar() {
+      if (!currentUser || !selectedAvatarUrl) {
+        toast("Vui lòng chọn một avatar!", false);
+        return;
+      }
+
+      const btn = $("avatarSaveBtn");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...`;
+
+      try {
+        const { error } = await supabaseClient
+          .from("profiles")
+          .update({ avatar_url: selectedAvatarUrl })
+          .eq("id", currentUser.id);
+
+        if (error) throw error;
+
+        currentProfile = { ...currentProfile, avatar_url: selectedAvatarUrl };
+        applyAvatarToUI(selectedAvatarUrl);
+        closeAvatarModal();
+        toast("🎉 Đã cập nhật avatar thành công!");
+      } catch (err) {
+        toast("Lỗi lưu avatar: " + (err.message || "Thử lại sau"), false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Lưu Avatar`;
+      }
+    }
+
+    function applyAvatarToUI(url) {
+      const img = $("sideUserAvatarImg");
+      const txt = $("sideUserAvatarText");
+      const navImg = $("landingUserAvatar");
+      const navDot = document.querySelector("#landingUserActions .w-2.h-2");
+
+      if (url) {
+        if (img && txt) {
+          img.src = url;
+          img.classList.remove("hidden");
+          txt.classList.add("hidden");
+        }
+        if (navImg) {
+          navImg.src = url;
+          navImg.classList.remove("hidden");
+        }
+        if (navDot) navDot.classList.add("hidden");
+      } else {
+        if (img && txt) {
+          img.classList.add("hidden");
+          txt.classList.remove("hidden");
+        }
+        if (navImg) navImg.classList.add("hidden");
+        if (navDot) navDot.classList.remove("hidden");
+      }
+    }
+
+    /* =========================================================
+       4. SMM SERVICES
+       ========================================================= */
     const SMM_DATA = {
-      facebook: {
-        name: "Facebook",
-        icon: "fa-brands fa-facebook",
+      facebook: { name: "Facebook", icon: "fa-brands fa-facebook",
         categories: [
-          {
-            id: "fb_like",
-            name: "Facebook | Like Bài Viết",
+          { id: "fb_like", name: "Facebook | Like Bài Viết",
             servers: [
               { id: "sv1", code: "SV1", name: "Like Bài Viết [Tốc độ cao - Không tụt]", rate: 12, min: 50, max: 50000, note: "Tốc độ: 1k - 5k/ngày. Bảo hành 30 ngày. Bài viết phải để công khai." },
               { id: "sv2", code: "SV2", name: "Like Bài Viết [Việt Nam thật - Siêu rẻ]", rate: 8, min: 50, max: 20000, note: "Like người dùng thật. Không bảo hành khi bài bị ẩn hoặc xóa." },
               { id: "sv3", code: "SV3", name: "Cảm Xúc Bài Viết (Love, Haha, Wow)", rate: 16, min: 50, max: 20000, note: "Đầy đủ cảm xúc tùy chọn. Tốc độ mượt mà ổn định." }
             ]
           },
-          {
-            id: "fb_follow",
-            name: "Facebook | Follow Cá Nhân & Fanpage",
+          { id: "fb_follow", name: "Facebook | Follow Cá Nhân & Fanpage",
             servers: [
               { id: "sv4", code: "SV4", name: "Follow Trang Cá Nhân [Sub Việt]", rate: 28, min: 100, max: 100000, note: "Sub thật Việt Nam, hỗ trợ bật nút Follow trước khi chạy." },
               { id: "sv5", code: "SV5", name: "Like & Follow Fanpage [Chất lượng cao]", rate: 35, min: 100, max: 50000, note: "Tăng cả Like và Follow cho trang Page tự động." }
             ]
           },
-          {
-            id: "fb_view",
-            name: "Facebook | Lượt Xem Video & Reels",
+          { id: "fb_view", name: "Facebook | Lượt Xem Video & Reels",
             servers: [
               { id: "sv6", code: "SV6", name: "View Video / Reels [Bảo hành vĩnh viễn]", rate: 5, min: 500, max: 1000000, note: "Hỗ trợ video công khai, view nhảy sau 5-10 phút." }
             ]
           }
         ]
       },
-      tiktok: {
-        name: "TikTok",
-        icon: "fa-brands fa-tiktok",
+      tiktok: { name: "TikTok", icon: "fa-brands fa-tiktok",
         categories: [
-          {
-            id: "tt_follow",
-            name: "TikTok | Follower Việt Nam",
+          { id: "tt_follow", name: "TikTok | Follower Việt Nam",
             servers: [
               { id: "sv7", code: "SV7", name: "Followers Việt Nam [Bảo hành 30 ngày]", rate: 45, min: 100, max: 50000, note: "Follower Việt Nam thật 100%. Tốc độ 1k-3k/ngày." },
               { id: "sv8", code: "SV8", name: "Followers Ngoại [Giá Siêu Rẻ]", rate: 22, min: 100, max: 100000, note: "Follower quốc tế, dùng để mở tính năng Livestream nhanh." }
             ]
           },
-          {
-            id: "tt_like",
-            name: "TikTok | Thả Tim / Likes Video",
+          { id: "tt_like", name: "TikTok | Thả Tim / Likes Video",
             servers: [
               { id: "sv9", code: "SV9", name: "Likes Video TikTok [Việt Nam - Ổn định]", rate: 18, min: 50, max: 50000, note: "Tim video người thật. Giúp video dễ lên xu hướng." }
             ]
           },
-          {
-            id: "tt_view",
-            name: "TikTok | Lượt Xem Video Lên Xu Hướng",
+          { id: "tt_view", name: "TikTok | Lượt Xem Video Lên Xu Hướng",
             servers: [
               { id: "sv10", code: "SV10", name: "Views Video TikTok [Siêu Tốc - Giá Rẻ]", rate: 1.5, min: 1000, max: 10000000, note: "Tốc độ 100k - 1 triệu view/ngày." }
             ]
           }
         ]
       },
-      instagram: {
-        name: "Instagram",
-        icon: "fa-brands fa-instagram",
+      instagram: { name: "Instagram", icon: "fa-brands fa-instagram",
         categories: [
-          {
-            id: "ig_follow",
-            name: "Instagram | Follower Tài Khoản",
+          { id: "ig_follow", name: "Instagram | Follower Tài Khoản",
             servers: [
               { id: "sv11", code: "SV11", name: "Follower Instagram [Việt Nam]", rate: 50, min: 100, max: 20000, note: "Tài khoản Việt Nam có avatar và bài đăng." },
               { id: "sv12", code: "SV12", name: "Follower Instagram [Quốc tế không tụt]", rate: 26, min: 100, max: 100000, note: "Bảo hành 60 ngày nếu tụt quá 10%." }
             ]
           },
-          {
-            id: "ig_like",
-            name: "Instagram | Like & View Reels",
+          { id: "ig_like", name: "Instagram | Like & View Reels",
             servers: [
               { id: "sv13", code: "SV13", name: "Like Bài Viết / Reels [Chất lượng]", rate: 10, min: 50, max: 50000, note: "Tăng mượt mà, an toàn cho tài khoản mới." }
             ]
           }
         ]
       },
-      youtube: {
-        name: "YouTube",
-        icon: "fa-brands fa-youtube",
+      youtube: { name: "YouTube", icon: "fa-brands fa-youtube",
         categories: [
-          {
-            id: "yt_sub",
-            name: "YouTube | Subscribe Kênh",
+          { id: "yt_sub", name: "YouTube | Subscribe Kênh",
             servers: [
               { id: "sv14", code: "SV14", name: "Sub Kênh YouTube [Bảo hành không tụt]", rate: 190, min: 50, max: 10000, note: "Sub an toàn chuẩn chính sách YouTube." }
             ]
           },
-          {
-            id: "yt_view",
-            name: "YouTube | View Video & Shorts",
+          { id: "yt_view", name: "YouTube | View Video & Shorts",
             servers: [
               { id: "sv15", code: "SV15", name: "Views Video YouTube [Thời lượng xem cao]", rate: 35, min: 500, max: 500000, note: "Giúp tăng đề xuất video." }
             ]
           }
         ]
       },
-      telegram: {
-        name: "Telegram",
-        icon: "fa-brands fa-telegram",
+      telegram: { name: "Telegram", icon: "fa-brands fa-telegram",
         categories: [
-          {
-            id: "tg_member",
-            name: "Telegram | Members Nhóm & Kênh",
+          { id: "tg_member", name: "Telegram | Members Nhóm & Kênh",
             servers: [
               { id: "sv16", code: "SV16", name: "Telegram Members [Bảo hành 30 ngày]", rate: 30, min: 100, max: 50000, note: "Member ổn định, nhóm cần để link public." }
             ]
@@ -1408,11 +1313,12 @@
     let curCategoryIndex = 0;
     let curServer = null;
 
-    /* 4. CHUYỂN ĐỔI CHẾ ĐỘ VIEW (LANDING <-> DASHBOARD) */
+    /* =========================================================
+       5. VIEW SWITCH
+       ========================================================= */
     function switchView(viewName) {
       const landing = $("landingView");
       const dash = $("dashboardView");
-
       if (viewName === 'dashboard') {
         landing.classList.add("hidden");
         dash.classList.remove("hidden");
@@ -1426,30 +1332,26 @@
     }
 
     function handleCtaStart() {
-      if (currentUser) {
-        switchView('dashboard');
-      } else {
-        openAuthModal('login');
-      }
+      if (currentUser) switchView('dashboard');
+      else openAuthModal('login');
     }
 
-    /* 5. MODAL AUTH (LOGIN / REGISTER) */
+    /* =========================================================
+       6. AUTH
+       ========================================================= */
     function openAuthModal(mode = 'login') {
       switchAuthTab(mode);
       $("authModal").classList.remove("opacity-0", "pointer-events-none");
     }
-
     function closeAuthModal() {
       $("authModal").classList.add("opacity-0", "pointer-events-none");
       $("authErrorMsg").classList.add("hidden");
     }
-
     function switchAuthTab(mode) {
       authMode = mode;
       const tLog = $("authTabLogin");
       const tReg = $("authTabRegister");
       const btn = $("authSubmitBtn");
-
       if (mode === 'login') {
         tLog.className = "flex-1 py-2 rounded-xl text-xs font-bold transition bg-brand-500 text-white shadow-glow-sm";
         tReg.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
@@ -1460,37 +1362,25 @@
         btn.textContent = "Đăng ký thành viên";
       }
     }
-
     async function handleAuthSubmit(e) {
       e.preventDefault();
       let inputVal = $("authInputUser").value.trim();
       const pass = $("authInputPass").value.trim();
       const errEl = $("authErrorMsg");
       const btn = $("authSubmitBtn");
-
-      if (!inputVal.includes("@")) {
-        inputVal = inputVal + "@br34.vn";
-      }
-
+      if (!inputVal.includes("@")) inputVal = inputVal + "@br34.vn";
       errEl.classList.add("hidden");
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...`;
-
       try {
         if (authMode === 'login') {
-          const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: inputVal,
-            password: pass
-          });
+          const { error } = await supabaseClient.auth.signInWithPassword({ email: inputVal, password: pass });
           if (error) throw error;
           closeAuthModal();
           toast("🎉 Đăng nhập thành công!");
           switchView('dashboard');
         } else {
-          const { data, error } = await supabaseClient.auth.signUp({
-            email: inputVal,
-            password: pass
-          });
+          const { error } = await supabaseClient.auth.signUp({ email: inputVal, password: pass });
           if (error) throw error;
           closeAuthModal();
           toast("🎉 Đăng ký thành công! Hãy đăng nhập để trải nghiệm.");
@@ -1504,18 +1394,17 @@
         btn.textContent = authMode === 'login' ? "Đăng nhập ngay" : "Đăng ký thành viên";
       }
     }
-
     async function handleLogout() {
       await supabaseClient.auth.signOut();
-      currentUser = null;
-      currentProfile = null;
-      currentBalance = 0;
+      currentUser = null; currentProfile = null; currentBalance = 0;
       updateAuthUI(null);
       switchView('landing');
       toast("Đã đăng xuất tài khoản thành công!");
     }
 
-    /* 6. CẬP NHẬT TRẠNG THÁI USER */
+    /* =========================================================
+       7. SESSION SYNC
+       ========================================================= */
     async function syncSession(user) {
       currentUser = user;
       updateAuthUI(user);
@@ -1523,7 +1412,7 @@
       if (user) {
         const { data: prof } = await supabaseClient
           .from("profiles")
-          .select("balance, total_deposit, total_spent, is_admin")
+          .select("balance, total_deposit, total_spent, is_admin, avatar_url")
           .eq("id", user.id)
           .maybeSingle();
 
@@ -1536,38 +1425,33 @@
         const depStr = fmtVnd(totalDep);
         const spentStr = fmtVnd(totalSpent);
 
-        // Landing preview card updates
         $("previewCardBal").textContent = balStr;
         $("previewCardDep").textContent = depStr;
         $("previewCardSpent").textContent = spentStr;
 
-        // Dashboard stats updates
         $("dashHeaderBalance").textContent = balStr;
         $("dashStatBal").textContent = balStr;
         $("dashStatDep").textContent = depStr;
         $("dashStatSpent").textContent = spentStr;
 
-        // ====== CẬP NHẬT CẤP BẬC THEO MỨC NẠP ======
         renderTierBadge(totalDep);
 
-        // Update bill nếu đang có server chọn
+        // APPLY AVATAR
+        applyAvatarToUI(prof?.avatar_url || null);
+
         if (curServer) updateDashBill();
 
-        // Admin check
-        if (prof?.is_admin === true) {
-          $("sideAdminSection").classList.remove("hidden");
-        } else {
-          $("sideAdminSection").classList.add("hidden");
-        }
+        if (prof?.is_admin === true) $("sideAdminSection").classList.remove("hidden");
+        else $("sideAdminSection").classList.add("hidden");
       } else {
         renderTierBadge(0);
+        applyAvatarToUI(null);
       }
     }
 
     function updateAuthUI(user) {
       const guestBox = $("landingGuestActions");
       const userBox = $("landingUserActions");
-
       if (user) {
         guestBox.classList.add("hidden");
         userBox.classList.remove("hidden");
@@ -1586,17 +1470,17 @@
       }
     }
 
-    /* 7. DASHBOARD ORDER ENGINE */
+    /* =========================================================
+       8. DASHBOARD ENGINE
+       ========================================================= */
     function initDashboardEngine() {
       renderDashPlatformChips();
-      // Re-render tier theo profile hiện tại
       renderTierBadge(Number(currentProfile?.total_deposit || 0));
     }
 
     function renderDashPlatformChips() {
       const container = $("dashPlatformChips");
       const keys = Object.keys(SMM_DATA);
-
       container.innerHTML = keys.map(k => {
         const p = SMM_DATA[k];
         const isActive = k === curPlatform;
@@ -1606,12 +1490,10 @@
               ? 'bg-gradient-to-r from-brand-500 to-rose-600 text-white shadow-glow-sm'
               : 'bg-white/5 text-slate-300 hover:bg-white/10'
           }">
-            <i class="${p.icon}"></i>
-            <span>${p.name}</span>
+            <i class="${p.icon}"></i><span>${p.name}</span>
           </button>
         `;
       }).join("");
-
       renderDashCategories();
     }
 
@@ -1624,15 +1506,8 @@
     function renderDashCategories() {
       const p = SMM_DATA[curPlatform];
       const select = $("dashCategorySelect");
-      select.innerHTML = p.categories.map((c, idx) => `
-        <option value="${idx}">${c.name}</option>
-      `).join("");
-
-      select.onchange = (e) => {
-        curCategoryIndex = Number(e.target.value);
-        renderDashServers();
-      };
-
+      select.innerHTML = p.categories.map((c, idx) => `<option value="${idx}">${c.name}</option>`).join("");
+      select.onchange = (e) => { curCategoryIndex = Number(e.target.value); renderDashServers(); };
       renderDashServers();
     }
 
@@ -1640,43 +1515,32 @@
       const cat = SMM_DATA[curPlatform].categories[curCategoryIndex];
       const list = $("dashServerList");
       if (!cat || !cat.servers.length) return;
-
       curServer = cat.servers[0];
-
       list.innerHTML = cat.servers.map((s, idx) => {
         const isSel = idx === 0;
         return `
-          <div onclick="selectDashServer(${idx})" id="dashSrv-${idx}" class="dash-srv-item p-3 rounded-2xl border cursor-pointer transition flex items-center justify-between gap-3 ${
-            isSel
-              ? 'border-brand-500 bg-brand-500/10'
-              : 'border-white/10 bg-neutral-950 hover:border-white/20'
+          <div onclick="selectDashServer(${idx})" class="dash-srv-item p-3 rounded-2xl border cursor-pointer transition flex items-center justify-between gap-3 ${
+            isSel ? 'border-brand-500 bg-brand-500/10' : 'border-white/10 bg-neutral-950 hover:border-white/20'
           }">
             <div class="flex items-center gap-2.5 min-w-0">
-              <span class="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase ${
-                isSel ? 'bg-brand-500 text-white' : 'bg-white/10 text-slate-300'
-              }">${s.code}</span>
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase ${isSel ? 'bg-brand-500 text-white' : 'bg-white/10 text-slate-300'}">${s.code}</span>
               <span class="text-xs font-bold text-slate-200 truncate">${s.name}</span>
             </div>
             <span class="text-xs font-black text-brand-400 shrink-0">${s.rate}đ</span>
           </div>
         `;
       }).join("");
-
       updateDashBill();
     }
 
     function selectDashServer(idx) {
       const cat = SMM_DATA[curPlatform].categories[curCategoryIndex];
       curServer = cat.servers[idx];
-
       document.querySelectorAll(".dash-srv-item").forEach((el, i) => {
-        if (i === idx) {
-          el.className = "dash-srv-item p-3 rounded-2xl border border-brand-500 bg-brand-500/10 cursor-pointer transition flex items-center justify-between gap-3";
-        } else {
-          el.className = "dash-srv-item p-3 rounded-2xl border border-white/10 bg-neutral-950 hover:border-white/20 cursor-pointer transition flex items-center justify-between gap-3";
-        }
+        el.className = i === idx
+          ? "dash-srv-item p-3 rounded-2xl border border-brand-500 bg-brand-500/10 cursor-pointer transition flex items-center justify-between gap-3"
+          : "dash-srv-item p-3 rounded-2xl border border-white/10 bg-neutral-950 hover:border-white/20 cursor-pointer transition flex items-center justify-between gap-3";
       });
-
       updateDashBill();
     }
 
@@ -1685,10 +1549,8 @@
       updateDashBill();
     }
 
-    /* TÍNH BILL VỚI GIẢM GIÁ THEO CẤP BẬC */
     function updateDashBill() {
       if (!curServer) return;
-
       const qty = Math.max(1, Number($("dashOrderQty").value || 0));
       const rawTotal = Math.round((qty * curServer.rate) / 1000);
       const tier = getTierByDeposit(Number(currentProfile?.total_deposit || 0));
@@ -1701,15 +1563,12 @@
       $("billRate").textContent = `${curServer.rate}đ / 1.000`;
       $("billQty").textContent = qty.toLocaleString();
 
-      // Hiển thị dòng giảm giá
       const discRow = $("billDiscountRow");
       if (tier.discount > 0 && discountAmt > 0) {
-        discRow.classList.remove("hidden");
-        discRow.classList.add("flex");
+        discRow.classList.remove("hidden"); discRow.classList.add("flex");
         $("billDiscount").textContent = `-${fmtVnd(discountAmt)} (${tier.discount}%)`;
       } else {
-        discRow.classList.add("hidden");
-        discRow.classList.remove("flex");
+        discRow.classList.add("hidden"); discRow.classList.remove("flex");
       }
 
       $("billTotal").textContent = fmtVnd(total);
@@ -1717,7 +1576,6 @@
 
       const lack = $("dashLackAlert");
       const btn = $("dashSubmitBtn");
-
       if (currentBalance < total && currentUser) {
         lack.classList.remove("hidden");
         btn.disabled = true;
@@ -1734,35 +1592,19 @@
     async function pasteClipboardToDashLink() {
       try {
         const text = await navigator.clipboard.readText();
-        if (text) {
-          $("dashOrderLink").value = text;
-          toast("Đã dán liên kết thành công!");
-        }
-      } catch (e) {
-        toast("Vui lòng dán thủ công", false);
-      }
+        if (text) { $("dashOrderLink").value = text; toast("Đã dán liên kết thành công!"); }
+      } catch (e) { toast("Vui lòng dán thủ công", false); }
     }
 
     async function handleExecuteDashOrder() {
-      if (!currentUser) {
-        openAuthModal('login');
-        return;
-      }
-
+      if (!currentUser) { openAuthModal('login'); return; }
       const link = $("dashOrderLink").value.trim();
       const qty = Number($("dashOrderQty").value || 0);
-
-      if (!link) {
-        toast("Vui lòng nhập liên kết hoặc ID hợp lệ!", false);
-        $("dashOrderLink").focus();
-        return;
-      }
-
+      if (!link) { toast("Vui lòng nhập liên kết hoặc ID hợp lệ!", false); $("dashOrderLink").focus(); return; }
       if (qty < curServer.min || qty > curServer.max) {
         toast(`Số lượng phải từ ${curServer.min.toLocaleString()} đến ${curServer.max.toLocaleString()}!`, false);
         return;
       }
-
       const tier = getTierByDeposit(Number(currentProfile?.total_deposit || 0));
       const rawTotal = Math.round((qty * curServer.rate) / 1000);
       const discountAmt = Math.round(rawTotal * tier.discount / 100);
@@ -1774,28 +1616,16 @@
 
       try {
         const { data: prof, error: pErr } = await supabaseClient
-          .from("profiles")
-          .select("balance, total_spent")
-          .eq("id", currentUser.id)
-          .maybeSingle();
-
+          .from("profiles").select("balance, total_spent").eq("id", currentUser.id).maybeSingle();
         if (pErr) throw pErr;
-
         const bal = Number(prof?.balance || 0);
         const spent = Number(prof?.total_spent || 0);
-
-        if (bal < total) {
-          throw new Error(`Số dư không đủ! Còn thiếu ${fmtVnd(total - bal)}.`);
-        }
-
+        if (bal < total) throw new Error(`Số dư không đủ! Còn thiếu ${fmtVnd(total - bal)}.`);
         const nextBal = bal - total;
         const nextSpent = spent + total;
 
         const { error: uErr } = await supabaseClient
-          .from("profiles")
-          .update({ balance: nextBal, total_spent: nextSpent })
-          .eq("id", currentUser.id);
-
+          .from("profiles").update({ balance: nextBal, total_spent: nextSpent }).eq("id", currentUser.id);
         if (uErr) throw uErr;
 
         const orderCode = "SMM" + Date.now().toString().slice(-8);
@@ -1807,7 +1637,6 @@
           source: "smm-panel",
           status: "pending"
         }]);
-
         if (oErr) {
           await supabaseClient.from("profiles").update({ balance: bal, total_spent: spent }).eq("id", currentUser.id);
           throw oErr;
@@ -1817,7 +1646,6 @@
         currentProfile = { ...currentProfile, balance: nextBal, total_spent: nextSpent };
         await syncSession(currentUser);
         updateDashBill();
-
         toast(`🎉 Tạo đơn thành công! Mã đơn: ${orderCode}`);
         $("dashOrderLink").value = "";
       } catch (err) {
@@ -1828,77 +1656,54 @@
       }
     }
 
-    /* 8. HELPERS: FAQ, URL COPY, THEME, MOBILE SIDEBAR */
+    /* =========================================================
+       9. HELPERS
+       ========================================================= */
     function toggleFaq(el) {
       const content = el.querySelector(".faq-content");
       const icon = el.querySelector(".faq-icon");
       const isOpen = !content.classList.contains("hidden");
-
-      if (isOpen) {
-        content.classList.add("hidden");
-        icon.classList.remove("rotate-45");
-      } else {
-        content.classList.remove("hidden");
-        icon.classList.add("rotate-45");
-      }
+      if (isOpen) { content.classList.add("hidden"); icon.classList.remove("rotate-45"); }
+      else { content.classList.remove("hidden"); icon.classList.add("rotate-45"); }
     }
-
     async function copySimulatedUrl() {
-      const url = $("simulatedUrl").textContent.trim();
       try {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText($("simulatedUrl").textContent.trim());
         toast("📋 Đã sao chép liên kết hệ thống vào bộ nhớ!");
-      } catch (e) {
-        toast("Không thể sao chép tự động", false);
-      }
+      } catch (e) { toast("Không thể sao chép tự động", false); }
     }
-
-    function toggleMobileNav() {
-      const menu = $("mobileNavMenu");
-      menu.classList.toggle("hidden");
-    }
-
-    function toggleLanguageMenu() {
-      toast("Đã chuyển đổi sang Tiếng Việt (Mặc định)");
-    }
+    function toggleMobileNav() { $("mobileNavMenu").classList.toggle("hidden"); }
+    function toggleLanguageMenu() { toast("Đã chuyển đổi sang Tiếng Việt (Mặc định)"); }
 
     function toast(msg, ok = true) {
       const t = $("toast");
       $("toastMsg").textContent = msg;
       $("toastIcon").className = ok ? "fa-solid fa-circle-check text-emerald-400 text-base" : "fa-solid fa-circle-exclamation text-rose-400 text-base";
       t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
-      setTimeout(() => {
-        t.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
-      }, 3500);
+      setTimeout(() => { t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"); }, 3500);
     }
 
     const sidebar = $("sidebar");
     const backdrop = $("sidebarBackdrop");
-    $("openSidebarBtn").onclick = () => {
-      sidebar.classList.remove("-translate-x-full");
-      backdrop.classList.remove("hidden");
-    };
+    $("openSidebarBtn").onclick = () => { sidebar.classList.remove("-translate-x-full"); backdrop.classList.remove("hidden"); };
     $("closeSidebarBtn").onclick = closeSidebar;
     backdrop.onclick = closeSidebar;
-    function closeSidebar() {
-      sidebar.classList.add("-translate-x-full");
-      backdrop.classList.add("hidden");
-    }
+    function closeSidebar() { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); }
 
     $("themeToggleBtn").onclick = () => {
       const root = document.documentElement;
       if (root.classList.contains("dark")) {
-        root.classList.remove("dark");
-        root.classList.add("light");
+        root.classList.remove("dark"); root.classList.add("light");
         localStorage.setItem("br34_theme", "light");
       } else {
-        root.classList.remove("light");
-        root.classList.add("dark");
+        root.classList.remove("light"); root.classList.add("dark");
         localStorage.setItem("br34_theme", "dark");
       }
     };
 
-    /* 9. KHỞI TẠO HỆ THỐNG */
+    /* =========================================================
+       10. INIT
+       ========================================================= */
     const savedTheme = localStorage.getItem("br34_theme");
     if (savedTheme === "light") {
       document.documentElement.classList.remove("dark");
@@ -1918,11 +1723,8 @@
     });
 
     supabaseClient.auth.onAuthStateChange((_event, session) => {
-      if (session && session.user) {
-        syncSession(session.user);
-      } else {
-        syncSession(null);
-      }
+      if (session && session.user) syncSession(session.user);
+      else syncSession(null);
     });
   </script>
 </body>
