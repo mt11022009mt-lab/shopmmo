@@ -1429,7 +1429,8 @@
         // nên cộng THẲNG markup cố định 3.000đ/1k, KHÔNG chia cho 1000 nữa.
         const rows = data.map(s => {
           const rateOriginal = Number(s.rate) || 0;
-          const rateFinal = rateOriginal + SERVICE_MARKUP_PER_1K;
+          // ⚠️ KHÔNG gán rate_final ở đây — cột này là GENERATED ALWAYS AS
+          // (rate_original + markup) STORED trong DB, tự động tính sẵn, không được insert.
 
           return {
             provider_service_id: String(s.service),
@@ -1437,7 +1438,6 @@
             name: s.name,
             rate_original: rateOriginal,
             markup: SERVICE_MARKUP_PER_1K,
-            rate_final: rateFinal,   // ✅ BỔ SUNG CỘT NÀY
             min: Number(s.min) || 1,
             max: Number(s.max) || 1000000,
             type: s.type || null,
@@ -1453,7 +1453,7 @@
           log("\n📊 Kiểm tra 3 dịch vụ mẫu:");
           rows.slice(0, 3).forEach((r, i) => {
             log(`  ${i + 1}. ${r.name}`);
-            log(`     rate_original = ${r.rate_original} | rate_final = ${r.rate_final} (đ/1k)`);
+            log(`     rate_original = ${r.rate_original} | rate_final (DB tự tính) = ${r.rate_original + r.markup} (đ/1k)`);
           });
         }
 
