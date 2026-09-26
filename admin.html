@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BR-34 — Quản Trị Hệ Thống</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+
+<style>
+/* ==========================================================
+   BR-34 LIQUID GLASS THEME (SELF-CONTAINED)
+   Tông màu: Đen Than Chì (#0a0a0f, #14141e) & Đỏ Neon (#f43f5e, #e11d48)
+   ========================================================== */
+:root {
+  --red: #f43f5e;
+  --red2: #e11d48;
+  --red-deep: #be123c;
+  --red-glow: rgba(244, 63, 94, 0.45);
+  --bg-dark: #0a0a0f;
+  --card-bg: rgba(20, 20, 28, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-border-hover: rgba(244, 63, 94, 0.65);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #0a0a0f;
+}
+
+body {
+  background: radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.16) 0%, transparent 45%),
+              radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.14) 0%, transparent 45%),
+              radial-gradient(circle at 50% 80%, rgba(244, 63, 94, 0.10) 0%, transparent 50%),
+              #0a0a0f;
+  color: #f4f4f5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===== AURORA ÁNH SÁNG NỀN ===== */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+.aurora span {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, currentColor, transparent 65%);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+.aurora .a1 { color: #f43f5e; top: -15%; left: -15%; animation: float1 26s ease-in-out infinite; }
+.aurora .a2 { color: #8b5cf6; top: 15%; right: -18%; animation: float2 30s ease-in-out infinite; }
+.aurora .a3 { color: #06b6d4; bottom: -20%; left: 25%; animation: float3 34s ease-in-out infinite; }
+@keyframes float1 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(6vw, 4vh, 0); } }
+@keyframes float2 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-5vw, 6vh, 0); } }
+@keyframes float3 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(4vw, -5vh, 0); } }
+
+.spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.14), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+@media (hover: hover) and (pointer: fine) { .spotlight { opacity: 1; } }
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 15%, #000, transparent);
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 15%, #000, transparent);
+}
+
+/* ===== HIỆU ỨNG KÍNH LỎNG (LIQUID GLASS) ===== */
+.liquid-glass {
+  position: relative;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 20, 30, 0.88) 50%, rgba(25, 25, 38, 0.85) 100%);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22),
+              inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+              0 20px 48px -20px rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.09) 35deg, rgba(244, 63, 94, 0.22) 90deg, transparent 150deg, transparent 360deg);
+  animation: liquidSpin 14s linear infinite;
+  opacity: 0.75;
+}
+
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(140% 70% at 0% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
+              radial-gradient(140% 70% at 100% 100%, rgba(225, 29, 72, 0.12), transparent 55%);
+}
+
+.liquid-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+.liquid-glass:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32),
+              0 24px 50px -18px var(--red-glow);
+}
+
+@keyframes liquidSpin {
+  to { transform: rotate(360deg); }
+}
+
+.glass-card {
+  position: relative;
+  border-radius: 1.25rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(20, 20, 28, 0.8));
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 16px 36px -20px rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition: all 0.25s ease;
+}
+.glass-card:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 20px 40px -18px var(--red-glow);
+}
+
+/* ===== NÚT BẤM (BUTTONS) ===== */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-red {
+  color: #fff;
+  background: linear-gradient(180deg, #ff5c7a, #e11d48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 24px -6px rgba(244, 63, 94, 0.85);
+}
+.btn-red:hover {
+  filter: brightness(1.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 30px -6px rgba(244, 63, 94, 1);
+}
+
+.btn-dark {
+  color: #f4f4f5;
+  background: rgba(26, 26, 36, 0.85);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.btn-dark:hover {
+  background: rgba(38, 38, 52, 0.95);
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #fff;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.6s;
+}
+.btn-shine:hover::after { left: 100%; }
+
+/* ===== FIELDS & SELECTS ===== */
+.field {
+  width: 100%;
+  background: #14141e !important;
+  color: #ffffff !important;
+  font-size: 14px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field::placeholder { color: #71717a; }
+.field:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
+}
+
+select.field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f43f5e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 1.1em !important;
+  padding-right: 2.5rem !important;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+select.field option {
+  background: #14141e !important;
+  color: #ffffff !important;
+  padding: 8px;
+}
+
+/* ===== SMM CHIP ===== */
+.smm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(26, 26, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #a1a1aa;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.smm-chip:hover {
+  color: #fff;
+  border-color: rgba(244, 63, 94, 0.45);
+  background: rgba(38, 38, 54, 0.95);
+  transform: translateY(-1px);
+}
+.smm-chip.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.32) 0%, rgba(225, 29, 72, 0.18) 100%);
+  border-color: var(--red);
+  box-shadow: 0 4px 18px -4px var(--red-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.28rem 0.65rem;
+  border-radius: 0.6rem;
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+}
+.badge-status.done {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.3);
+}
+.badge-status.pending {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+.badge-status.canceled {
+  color: #fb7185;
+  background: rgba(251, 113, 133, 0.12);
+  border-color: rgba(251, 113, 133, 0.3);
+}
+
+.badge-admin { background: rgba(244,63,94,0.18); color: #fda4af; border: 1px solid rgba(244,63,94,0.35); }
+.badge-type-smm { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+.badge-type-res { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+
+.h-grad {
+  background: linear-gradient(180deg, #ffffff 30%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.red-text {
+  background: linear-gradient(90deg, #ff8fa3, #f43f5e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+</style>
+</head>
+<body class="font-sans antialiased text-[#f4f4f5] relative overflow-x-hidden">
+
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div id="spotlight" class="spotlight"></div>
+<div class="grid-bg"></div>
+
+<!-- ============ GATE ĐĂNG NHẬP / KIỂM TRA QUYỀN ADMIN ============ -->
+<div id="gateScreen" class="min-h-screen flex items-center justify-center p-5">
+  <div class="w-full max-w-sm liquid-glass p-7 text-center">
+    <div id="gateLoading">
+      <i class="fa-solid fa-shield-halved text-3xl text-rose-400 mb-3"></i>
+      <p class="text-sm text-zinc-400">Đang kiểm tra quyền quản trị viên...</p>
+      <i class="fa-solid fa-circle-notch fa-spin text-2xl text-zinc-600 mt-4"></i>
+    </div>
+
+    <form id="gateLoginForm" class="hidden text-left space-y-3">
+      <div class="text-center mb-5">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/30 grid place-items-center text-rose-400 text-xl mx-auto mb-2">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h1 class="text-xl font-black h-grad">Đăng nhập Quản Trị</h1>
+        <p class="text-xs text-zinc-400 mt-0.5">Dành riêng cho Admin BR-34</p>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-zinc-400 mb-1">Email quản trị</label>
+        <input id="gEmail" type="email" placeholder="admin@br34.shop" autocomplete="username" class="field" required>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-zinc-400 mb-1">Mật khẩu</label>
+        <input id="gPass" type="password" placeholder="••••••••" autocomplete="current-password" class="field" required>
+      </div>
+      <p id="gateErr" class="hidden text-xs text-rose-400 font-semibold"></p>
+      <button type="submit" id="gateSubmit" class="btn btn-red btn-shine w-full py-3 mt-2 text-sm font-black">
+        ĐĂNG NHẬP ADMIN
+      </button>
+    </form>
+
+    <div id="gateDenied" class="hidden">
+      <i class="fa-solid fa-lock text-3xl text-zinc-500 mb-3"></i>
+      <h1 class="text-lg font-extrabold mb-1 text-white">Không có quyền truy cập</h1>
+      <p class="text-xs text-zinc-400 mb-5">Tài khoản của bạn chưa được cấp quyền quản trị viên.</p>
+      <button id="gateLogout" class="btn btn-dark w-full py-2.5 text-xs">Đăng xuất</button>
+      <a href="index.html" class="block mt-3 text-xs text-rose-400 hover:underline">← Về trang chủ</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ADMIN CHÍNH ============ -->
+<div id="dash" class="hidden min-h-screen pb-16">
+
+  <!-- Header Admin Liquid Glass -->
+  <header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
+      <div class="liquid-glass flex items-center justify-between gap-3 h-16 px-4">
+        
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl overflow-hidden border border-rose-500/40">
+            <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="" class="w-full h-full object-cover object-top">
+          </div>
+          <div>
+            <p class="font-extrabold text-sm text-white">BR-34 <span class="text-rose-400">Quản trị</span></p>
+            <p class="text-[10px] text-zinc-400 -mt-0.5" id="adminWho">—</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="index.html" class="btn btn-dark px-3 py-1.5 text-xs hidden sm:inline-flex">
+            <i class="fa-solid fa-arrow-left"></i> Trang chủ
+          </a>
+          <button id="refreshAllBtn" class="btn btn-dark px-3 py-1.5 text-xs text-emerald-400">
+            <i class="fa-solid fa-rotate"></i> Làm mới
+          </button>
+          <button id="logoutBtn" class="btn btn-dark px-3 py-1.5 text-xs text-rose-400" title="Đăng xuất">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="max-w-6xl mx-auto px-4 mt-2 flex gap-2 overflow-x-auto pb-2">
+      <button class="smm-chip active" data-tab="overview"><i class="fa-solid fa-chart-pie"></i> Tổng quan</button>
+      <button class="smm-chip" data-tab="orders"><i class="fa-solid fa-box-archive"></i> Đơn hàng</button>
+      <button class="smm-chip" data-tab="customers"><i class="fa-solid fa-users-gear"></i> Khách hàng</button>
+      <button class="smm-chip" data-tab="deposits"><i class="fa-solid fa-credit-card"></i> Duyệt nạp tiền <span id="depPendingDot" class="hidden w-2 h-2 rounded-full bg-rose-500 animate-pulse ml-1"></span></button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-5">
+
+    <!-- ===== TAB 1: TỔNG QUAN (OVERVIEW) ===== -->
+    <section id="panel-overview" class="space-y-5">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="liquid-glass p-4 sm:p-5">
+          <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">TỔNG ĐƠN HÀNG</p>
+          <p class="text-2xl sm:text-3xl font-black text-white mt-1" id="statOrders">—</p>
+          <p class="text-[11px] text-amber-400 mt-1"><i class="fa-solid fa-clock mr-1"></i><span id="statOrdersPending">0</span> đang chờ xử lý</p>
+        </div>
+
+        <div class="liquid-glass p-4 sm:p-5">
+          <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">TỔNG ĐÃ NẠP</p>
+          <p class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1"><span id="statDeposited">—</span>đ</p>
+          <p class="text-[11px] text-zinc-500 mt-1">Đã cộng vào ví khách</p>
+        </div>
+
+        <div class="liquid-glass p-4 sm:p-5">
+          <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">CHỜ DUYỆT NẠP</p>
+          <p class="text-2xl sm:text-3xl font-black text-rose-400 mt-1" id="statDepPending">—</p>
+          <p class="text-[11px] text-zinc-400 mt-1"><span id="statDepPendingSum">0</span>đ đang chờ</p>
+        </div>
+
+        <div class="liquid-glass p-4 sm:p-5">
+          <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">TRUY CẬP HÔM NAY</p>
+          <p class="text-2xl sm:text-3xl font-black text-white mt-1" id="statViewsToday">—</p>
+          <p class="text-[11px] text-zinc-500 mt-1"><span id="statViewsTotal">0</span> tổng lượt view</p>
+        </div>
+      </div>
+
+      <!-- Biểu đồ lượt xem 7 ngày -->
+      <div class="liquid-glass p-5">
+        <div class="flex items-center justify-between mb-4">
+          <p class="text-sm font-bold text-white">Lượt truy cập 7 ngày gần đây</p>
+          <i class="fa-solid fa-chart-simple text-rose-400"></i>
+        </div>
+        <div id="viewsChart" class="flex items-end gap-2.5 sm:gap-4 h-32"></div>
+      </div>
+
+      <!-- Đơn hàng mới nhất -->
+      <div class="liquid-glass p-5">
+        <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+          <p class="text-sm font-bold text-white">Đơn hàng mới tạo</p>
+          <button class="text-xs text-rose-400 font-bold hover:underline" onclick="switchTab('orders')">Xem tất cả →</button>
+        </div>
+        <div id="overviewOrders" class="divide-y divide-white/5 text-xs sm:text-sm"></div>
+      </div>
+    </section>
+
+    <!-- ===== TAB 2: QUẢN LÝ ĐƠN HÀNG (ORDERS) ===== -->
+    <section id="panel-orders" class="hidden space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex gap-1.5 flex-wrap" id="orderFilters">
+          <button class="smm-chip active" data-status="">Tất cả</button>
+          <button class="smm-chip" data-status="pending">Chờ xử lý</button>
+          <button class="smm-chip" data-status="done">Hoàn thành</button>
+          <button class="smm-chip" data-status="canceled">Đã huỷ</button>
+        </div>
+
+        <div class="flex gap-1.5 flex-wrap" id="orderTypeFilters">
+          <button class="smm-chip active" data-type="">Cả 2 loại</button>
+          <button class="smm-chip" data-type="smm"><i class="fa-solid fa-bolt mr-1"></i>SMM</button>
+          <button class="smm-chip" data-type="resource"><i class="fa-solid fa-cube mr-1"></i>Tài nguyên</button>
+        </div>
+
+        <input id="orderSearch" type="text" placeholder="Tìm theo link / mã đơn / khách..." class="field !py-1.5 !text-xs ml-auto max-w-[240px]">
+      </div>
+
+      <div class="liquid-glass overflow-x-auto">
+        <table class="w-full text-xs sm:text-sm min-w-[850px]">
+          <thead>
+            <tr class="text-left text-[11px] text-zinc-400 border-b border-white/10 uppercase tracking-wider">
+              <th class="p-3 font-bold">Thời gian</th>
+              <th class="p-3 font-bold">Loại</th>
+              <th class="p-3 font-bold">Dịch vụ / Sản phẩm</th>
+              <th class="p-3 font-bold">Link / Mã đơn</th>
+              <th class="p-3 font-bold">Khách hàng</th>
+              <th class="p-3 font-bold text-right">Giá</th>
+              <th class="p-3 font-bold text-right">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+        <p id="ordersEmpty" class="hidden text-center text-zinc-500 text-xs py-10">Chưa có đơn hàng nào.</p>
+        <div class="p-3 text-center">
+          <button id="ordersMoreBtn" class="btn btn-dark px-4 py-2 text-xs hidden">Tải thêm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB 3: KHÁCH HÀNG (CUSTOMERS) ===== -->
+    <section id="panel-customers" class="hidden space-y-4">
+      <form id="custSearchForm" class="flex gap-2">
+        <input id="custSearchInput" type="text" placeholder="Nhập email hoặc UID khách hàng..." class="field text-xs sm:text-sm">
+        <button class="btn btn-red btn-shine px-5 text-xs font-bold" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i> Tìm
+        </button>
+      </form>
+      <div id="custResults" class="grid sm:grid-cols-2 gap-3"></div>
+      <p id="custEmpty" class="hidden text-center text-zinc-500 text-xs py-10">Không tìm thấy khách hàng nào.</p>
+    </section>
+
+    <!-- ===== TAB 4: DUYỆT NẠP TIỀN (DEPOSITS) ===== -->
+    <section id="panel-deposits" class="hidden space-y-4">
+      <div class="flex gap-1.5 flex-wrap" id="depFilters">
+        <button class="smm-chip active" data-status="pending">Chờ duyệt</button>
+        <button class="smm-chip" data-status="done">Đã duyệt</button>
+        <button class="smm-chip" data-status="rejected">Đã từ chối</button>
+        <button class="smm-chip" data-status="">Tất cả</button>
+      </div>
+      <div id="depResults" class="space-y-2.5"></div>
+      <p id="depEmpty" class="hidden text-center text-zinc-500 text-xs py-10">Không có giao dịch nạp tiền nào.</p>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[80] opacity-0 translate-y-4 pointer-events-none transition-all duration-300 liquid-glass px-4 py-3 text-sm shadow-2xl max-w-[90vw]"></div>
+
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+const vnd = n => Number(n||0).toLocaleString("vi-VN");
+const dt = s => s ? new Date(s).toLocaleString("vi-VN",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "—";
+
+let tt;
+function toast(msg, ok=true){
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok ? "fa-circle-check text-emerald-400" : "fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"), 3500);
+}
+
+const STATUS_LABEL = { pending:"Chờ xử lý", done:"Hoàn thành", canceled:"Đã huỷ", rejected:"Đã từ chối" };
+
+function badge(status){
+  const s = status || "pending";
+  const cls = s === 'done' ? 'done' : (s === 'canceled' || s === 'rejected') ? 'canceled' : 'pending';
+  return `<span class="badge-status ${cls}">${STATUS_LABEL[s]||s}</span>`;
+}
+
+let currentUser = null, isAdmin = false;
+
+async function boot(){
+  const { data:{ session } } = await supabaseClient.auth.getSession();
+  if (!session){ showLogin(); return; }
+  await checkAndEnter(session.user);
+}
+
+async function checkAndEnter(user){
+  currentUser = user;
+  $("gateLoading").classList.remove("hidden");
+  $("gateLoginForm").classList.add("hidden");
+  $("gateDenied").classList.add("hidden");
+  try {
+    const { data } = await supabaseClient.from("profiles").select("is_admin,email").eq("id", user.id).maybeSingle();
+    isAdmin = !!(data && data.is_admin);
+  } catch(e){ isAdmin = false; }
+
+  if (isAdmin){
+    $("adminWho").textContent = user.email || "";
+    $("gateScreen").classList.add("hidden");
+    $("dash").classList.remove("hidden");
+    loadAll();
+  } else {
+    $("gateLoading").classList.add("hidden");
+    $("gateDenied").classList.remove("hidden");
+  }
+}
+
+function showLogin(){
+  $("gateLoading").classList.add("hidden");
+  $("gateDenied").classList.add("hidden");
+  $("gateLoginForm").classList.remove("hidden");
+}
+
+$("gateLoginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("gateSubmit");
+  btn.disabled = true;
+  btn.textContent = "ĐANG ĐĂNG NHẬP...";
+  $("gateErr").classList.add("hidden");
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: $("gEmail").value.trim(),
+      password: $("gPass").value
+    });
+    if (error) throw error;
+    await checkAndEnter(data.user);
+  } catch(x){
+    $("gateErr").textContent = x.message || "Đăng nhập thất bại.";
+    $("gateErr").classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "ĐĂNG NHẬP ADMIN";
+  }
+});
+
+$("gateLogout").onclick = async () => { await supabaseClient.auth.signOut(); location.reload(); };
+$("logoutBtn").onclick = async () => { await supabaseClient.auth.signOut(); location.reload(); };
+
+/* Tabs */
+document.querySelectorAll(".smm-chip[data-tab]").forEach(el => {
+  el.onclick = () => switchTab(el.dataset.tab);
+});
+
+function switchTab(tab){
+  document.querySelectorAll(".smm-chip[data-tab]").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+  ["overview", "orders", "customers", "deposits"].forEach(p => {
+    $(`panel-${p}`).classList.toggle("hidden", p !== tab);
+  });
+}
+
+$("refreshAllBtn").onclick = () => loadAll();
+
+async function loadAll(){
+  loadOverviewStats();
+  loadOrders(true);
+  loadDeposits();
+}
+
+/* Overview */
+async function loadOverviewStats(){
+  try {
+    const [oTotal, oPending, rTotal, rPending] = await Promise.all([
+      supabaseClient.from("orders").select("id", { count:"exact", head:true }),
+      supabaseClient.from("orders").select("id", { count:"exact", head:true }).eq("status", "pending"),
+      supabaseClient.from("resource_orders").select("id", { count:"exact", head:true }),
+      supabaseClient.from("resource_orders").select("id", { count:"exact", head:true }).eq("status", "pending"),
+    ]);
+    $("statOrders").textContent = (oTotal.count||0) + (rTotal.count||0);
+    $("statOrdersPending").textContent = (oPending.count||0) + (rPending.count||0);
+
+    const { data: depDone } = await supabaseClient.from("deposits").select("amount").eq("status", "done");
+    const sumDone = (depDone||[]).reduce((s,r) => s + Number(r.amount||0), 0);
+    $("statDeposited").textContent = vnd(sumDone);
+
+    const { data: depPending } = await supabaseClient.from("deposits").select("amount").eq("status", "pending");
+    $("statDepPending").textContent = (depPending||[]).length;
+    $("statDepPendingSum").textContent = vnd((depPending||[]).reduce((s,r) => s + Number(r.amount||0), 0));
+    $("depPendingDot").classList.toggle("hidden", !(depPending && depPending.length));
+  } catch(e){ console.error(e); }
+
+  loadViews();
+
+  // Đơn mới nhất
+  try {
+    const [oRes, rRes] = await Promise.all([
+      supabaseClient.from("orders").select("service,contact,status,created_at").order("created_at", { ascending:false }).limit(5),
+      supabaseClient.from("resource_orders").select("product_name,order_code,status,created_at").order("created_at", { ascending:false }).limit(5),
+    ]);
+    const merged = [
+      ...(oRes.data||[]).map(o => ({ type:"smm", name:o.service, sub:o.contact, status:o.status, created_at:o.created_at })),
+      ...(rRes.data||[]).map(r => ({ type:"res", name:r.product_name, sub:r.order_code, status:r.status, created_at:r.created_at })),
+    ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+
+    const box = $("overviewOrders");
+    if (!merged.length) { box.innerHTML = `<p class="text-zinc-500 py-3 text-center">Chưa có đơn hàng nào.</p>`; }
+    else box.innerHTML = merged.map(o => `
+      <div class="flex items-center justify-between py-2">
+        <div class="flex items-center gap-2">
+          ${o.type === 'smm' ? '<span class="badge-type-smm px-1.5 py-0.5 rounded text-[10px] font-bold">SMM</span>' : '<span class="badge-type-res px-1.5 py-0.5 rounded text-[10px] font-bold">Tài nguyên</span>'}
+          <div>
+            <p class="font-bold text-white truncate max-w-[200px]">${esc(o.name)}</p>
+            <p class="text-[10px] text-zinc-500">${dt(o.created_at)}</p>
+          </div>
+        </div>
+        ${badge(o.status)}
+      </div>
+    `).join("");
+  } catch(e){ console.error(e); }
+}
+
+async function loadViews(){
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  try {
+    const { count: todayCount } = await supabaseClient.from("page_views").select("id", { count:"exact", head:true }).gte("created_at", startToday.toISOString());
+    const { count: totalCount } = await supabaseClient.from("page_views").select("id", { count:"exact", head:true });
+    $("statViewsToday").textContent = todayCount || 0;
+    $("statViewsTotal").textContent = vnd(totalCount || 0);
+
+    const days = [];
+    for (let i=6; i>=0; i--){
+      const d = new Date(startToday); d.setDate(d.getDate()-i);
+      const dEnd = new Date(d); dEnd.setDate(dEnd.getDate()+1);
+      days.push({ label: d.toLocaleDateString("vi-VN", { weekday:"short" }), from: d.toISOString(), to: dEnd.toISOString() });
+    }
+    const counts = await Promise.all(days.map(async d => {
+      try { const { count } = await supabaseClient.from("page_views").select("id", { count:"exact", head:true }).gte("created_at", d.from).lt("created_at", d.to); return count || 0; }
+      catch(e){ return 0; }
+    }));
+    const max = Math.max(1, ...counts);
+    $("viewsChart").innerHTML = days.map((d, i) => `
+      <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+        <p class="text-[10px] text-zinc-400 font-bold">${counts[i]}</p>
+        <div class="w-full rounded-t-lg" style="height:${Math.max(6, (counts[i]/max)*85)}px; background:linear-gradient(180deg, #ff5c7a, #e11d48)"></div>
+        <p class="text-[10px] text-zinc-500 uppercase">${d.label}</p>
+      </div>`).join("");
+  } catch(e){}
+}
+
+/* Orders */
+let orderStatusFilter = "";
+let orderTypeFilter = "";
+let orderSearchTerm = "";
+let orderPage = 0;
+const ORDER_PAGE_SIZE = 25;
+
+document.querySelectorAll("#orderFilters .smm-chip").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#orderFilters .smm-chip").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    orderStatusFilter = el.dataset.status; orderPage = 0;
+    loadOrders(true);
+  };
+});
+document.querySelectorAll("#orderTypeFilters .smm-chip").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#orderTypeFilters .smm-chip").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    orderTypeFilter = el.dataset.type; orderPage = 0;
+    loadOrders(true);
+  };
+});
+
+let orderSearchDeb;
+$("orderSearch").addEventListener("input", e => {
+  clearTimeout(orderSearchDeb);
+  orderSearchDeb = setTimeout(() => { orderSearchTerm = e.target.value.trim(); orderPage = 0; loadOrders(true); }, 300);
+});
+
+async function loadOrders(reset){
+  try {
+    let merged = [];
+    if (!orderTypeFilter || orderTypeFilter === 'smm'){
+      let q = supabaseClient.from("orders").select("id,link,service,contact,source,status,created_at").order("created_at", { ascending:false }).limit(ORDER_PAGE_SIZE);
+      if (orderStatusFilter) q = q.eq("status", orderStatusFilter);
+      if (orderSearchTerm) q = q.or(`contact.ilike.%${orderSearchTerm}%,link.ilike.%${orderSearchTerm}%,service.ilike.%${orderSearchTerm}%`);
+      const { data } = await q;
+      merged.push(...(data||[]).map(o => ({ ...o, _type:"smm", _name:o.service, _sub:o.contact, _link:o.link, _price:null })));
+    }
+
+    if (!orderTypeFilter || orderTypeFilter === 'resource'){
+      let q = supabaseClient.from("resource_orders").select("id,order_code,product_name,price,status,note,created_at").order("created_at", { ascending:false }).limit(ORDER_PAGE_SIZE);
+      if (orderStatusFilter) q = q.eq("status", orderStatusFilter);
+      if (orderSearchTerm) q = q.or(`product_name.ilike.%${orderSearchTerm}%,order_code.ilike.%${orderSearchTerm}%`);
+      const { data } = await q;
+      merged.push(...(data||[]).map(r => ({ ...r, _type:"resource", _name:r.product_name, _sub:r.order_code, _link:null, _price:r.price })));
+    }
+
+    merged.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const body = $("ordersBody");
+    if (reset) body.innerHTML = "";
+    merged.forEach(o => body.insertAdjacentHTML("beforeend", orderRow(o)));
+    $("ordersEmpty").classList.toggle("hidden", !(reset && merged.length === 0));
+
+    body.querySelectorAll("select.order-status").forEach(sel => {
+      sel.onchange = () => updateOrderStatus(sel.dataset.type, sel.dataset.id, sel.value, sel);
+    });
+  } catch(e){ console.error(e); }
+}
+
+function orderRow(o){
+  const isSMM = o._type === "smm";
+  return `<tr class="border-b border-white/5 hover:bg-white/[.02]">
+    <td class="p-3 text-xs text-zinc-400 whitespace-nowrap">${dt(o.created_at)}</td>
+    <td class="p-3">${isSMM ? '<span class="badge-type-smm px-1.5 py-0.5 rounded text-[10px] font-bold">SMM</span>' : '<span class="badge-type-res px-1.5 py-0.5 rounded text-[10px] font-bold">Tài nguyên</span>'}</td>
+    <td class="p-3 font-bold text-white max-w-[200px] truncate">${esc(o._name)}</td>
+    <td class="p-3 text-xs max-w-[200px] truncate">${isSMM ? `<a href="${esc(o._link||'#')}" target="_blank" class="text-blue-400 hover:underline">${esc(o._link)}</a>` : `<span class="font-mono text-zinc-400">${esc(o._sub)}</span>`}</td>
+    <td class="p-3 text-xs text-zinc-300 truncate">${esc(o._sub)}</td>
+    <td class="p-3 text-right whitespace-nowrap font-bold text-emerald-400">${o._price ? vnd(o._price)+'đ' : '—'}</td>
+    <td class="p-3 text-right">
+      <select class="field order-status !w-auto !py-1 !px-2 !text-xs" data-type="${o._type}" data-id="${o.id}">
+        ${["pending","done","canceled"].map(s => `<option value="${s}" ${o.status===s?"selected":""}>${STATUS_LABEL[s]}</option>`).join("")}
+      </select>
+    </td>
+  </tr>`;
+}
+
+async function updateOrderStatus(type, id, status, sel){
+  sel.disabled = true;
+  try {
+    const table = type === "smm" ? "orders" : "resource_orders";
+    const { error } = await supabaseClient.from(table).update({ status }).eq("id", id);
+    if (error) throw error;
+    toast("Đã cập nhật trạng thái đơn!");
+    loadOverviewStats();
+  } catch(e){ toast("Lỗi: " + e.message, false); }
+  finally { sel.disabled = false; }
+}
+
+/* Customers */
+$("custSearchForm").onsubmit = async e => {
+  e.preventDefault();
+  const q = $("custSearchInput").value.trim();
+  const box = $("custResults");
+  box.innerHTML = `<p class="text-zinc-500 text-xs col-span-2 py-6 text-center">Đang tìm...</p>`;
+  $("custEmpty").classList.add("hidden");
+  try {
+    let query = supabaseClient.from("profiles").select("id,email,balance,total_deposit,total_spent,is_admin").limit(20);
+    if (q) query = query.ilike("email", `%${q}%`);
+    const { data } = await query;
+    box.innerHTML = "";
+    if (!data || !data.length) { $("custEmpty").classList.remove("hidden"); return; }
+    data.forEach(r => box.insertAdjacentHTML("beforeend", customerCard(r)));
+  } catch(e){}
+};
+
+function customerCard(r){
+  return `
+    <div class="liquid-glass p-4" data-row="${r.id}">
+      <div class="flex items-center justify-between mb-2">
+        <p class="font-bold text-xs sm:text-sm text-white truncate">${esc(r.email||"(vô danh)")}${r.is_admin ? ' <span class="badge-admin text-[10px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : ''}</p>
+        <p class="cust-balance text-sm font-black text-emerald-400">${vnd(r.balance)}đ</p>
+      </div>
+      <div class="flex items-center gap-2 mt-3">
+        <input type="number" min="1000" step="1000" placeholder="Số tiền" class="field cust-amount !py-1.5 !text-xs">
+        <button type="button" class="btn btn-dark px-3 py-1.5 text-xs text-rose-400" onclick="adjustBalance('${r.id}', -1, this)">Trừ</button>
+        <button type="button" class="btn btn-red btn-shine px-3 py-1.5 text-xs font-bold" onclick="adjustBalance('${r.id}', 1, this)">Cộng</button>
+      </div>
+    </div>
+  `;
+}
+
+async function adjustBalance(id, sign, btn){
+  const card = btn.closest("[data-row]");
+  const input = card.querySelector(".cust-amount");
+  const amt = Number(input.value);
+  if (!amt || amt <= 0) return toast("Nhập số tiền hợp lệ!", false);
+
+  const balEl = card.querySelector(".cust-balance");
+  const current = Number((balEl.textContent||"0").replace(/\D/g,"")) || 0;
+  const next = Math.max(0, current + sign*amt);
+
+  try {
+    const { error } = await supabaseClient.from("profiles").update({ balance: next }).eq("id", id);
+    if (error) throw error;
+    balEl.textContent = vnd(next) + "đ";
+    input.value = "";
+    toast(sign > 0 ? "Đã cộng tiền vào ví khách!" : "Đã trừ tiền ví khách!");
+  } catch(e){ toast("Lỗi: " + e.message, false); }
+}
+
+/* Deposits */
+let depStatusFilter = "pending";
+document.querySelectorAll("#depFilters .smm-chip").forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll("#depFilters .smm-chip").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    depStatusFilter = el.dataset.status;
+    loadDeposits();
+  };
+});
+
+async function loadDeposits(){
+  const box = $("depResults");
+  box.innerHTML = `<p class="text-zinc-500 text-xs py-6 text-center">Đang tải...</p>`;
+  $("depEmpty").classList.add("hidden");
+  try {
+    let q = supabaseClient.from("deposits").select("*").order("created_at", { ascending:false }).limit(50);
+    if (depStatusFilter) q = q.eq("status", depStatusFilter);
+    const { data } = await q;
+    box.innerHTML = "";
+    if (!data || !data.length) { $("depEmpty").classList.remove("hidden"); return; }
+    box.innerHTML = data.map(r => `
+      <div class="liquid-glass p-3.5 flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <p class="font-bold text-xs text-white">${esc(r.username)} <span class="text-emerald-400 font-black ml-1">+${vnd(r.amount)}đ</span></p>
+          <p class="text-[10px] text-zinc-400 font-mono mt-0.5">${esc(r.note)} · ${dt(r.created_at)}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          ${badge(r.status)}
+          ${r.status === 'pending' ? `
+            <button class="btn btn-dark px-3 py-1 text-xs text-rose-400" onclick="processDeposit('${r.id}', 'reject')">Từ chối</button>
+            <button class="btn btn-red btn-shine px-3 py-1 text-xs font-bold" onclick="processDeposit('${r.id}', 'approve')">Duyệt ngay</button>
+          ` : ''}
+        </div>
+      </div>
+    `).join("");
+  } catch(e){}
+}
+
+async function processDeposit(id, action){
+  try {
+    const fn = action === "approve" ? "admin_approve_deposit" : "admin_reject_deposit";
+    const { error } = await supabaseClient.rpc(fn, { p_id: Number(id) });
+    if (error) throw error;
+    toast(action === "approve" ? "Đã duyệt cộng tiền thành công!" : "Đã từ chối giao dịch.");
+    loadDeposits();
+    loadOverviewStats();
+  } catch(e){ toast("Lỗi: " + e.message, false); }
+}
+
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+boot();
+
+// Spotlight mouse effect
+if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
+  const sp = $("spotlight");
+  let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my, raf = null;
+  addEventListener("mousemove", e => {
+    mx = e.clientX; my = e.clientY;
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+  function tick(){
+    cx += (mx-cx) * 0.15; cy += (my-cy) * 0.15;
+    sp.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    if (Math.abs(mx-cx) < 0.5 && Math.abs(my-cy) < 0.5) { raf = null; return; }
+    raf = requestAnimationFrame(tick);
+  }
+}
+</script>
+</body>
+</html>
