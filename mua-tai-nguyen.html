@@ -156,6 +156,7 @@
             <a href="tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm">
               <i class="fa-solid fa-box-open w-4 text-center text-indigo-500"></i>
               <span>Mua tài nguyên số</span>
+              <span class="ml-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-rose-500 text-white">Hết hàng</span>
               <span class="ml-auto w-2 h-2 rounded-full bg-brand-500"></span>
             </a>
           </nav>
@@ -228,6 +229,26 @@
       <!-- CONTENT BODY -->
       <div class="p-4 sm:p-6 lg:p-8 space-y-6">
 
+        <!-- 0. THÔNG BÁO HẾT HÀNG TOÀN BỘ (hiện khi OUT_OF_STOCK_MODE = true) -->
+        <section id="maintenanceNotice" class="hidden p-5 rounded-3xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200/80 dark:border-amber-800/60 shadow-soft">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 grid place-items-center text-xl shrink-0">
+              <i class="fa-solid fa-box-archive"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-extrabold text-sm text-amber-950 dark:text-amber-200">Toàn Bộ Tài Nguyên Đang Tạm Hết Hàng</h3>
+              <p class="text-xs text-amber-800/80 dark:text-amber-300/80 mt-0.5 leading-relaxed">
+                Bọn mình đang nhập lại kho từ nhà cung cấp. Bạn vẫn xem được đầy đủ sản phẩm & giá bên dưới, hàng sẽ mở bán lại sớm.
+              </p>
+            </div>
+            <a href="https://zalo.me/0976976627" target="_blank" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md transition shrink-0">
+              <i class="fa-brands fa-facebook-messenger mr-1"></i> Đặt trước qua Zalo
+            </a>
+          </div>
+        </section>
+
+        <div id="productSection">
+
         <!-- 1. BANNER QUY TẮC ĐỊNH GIÁ & BẢO HÀNH -->
         <section class="p-5 rounded-3xl bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/20 dark:to-purple-950/20 border border-indigo-200/80 dark:border-indigo-800/60 shadow-soft">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -276,6 +297,8 @@
         <p id="emptyNotice" class="hidden text-center py-16 text-slate-400 text-sm font-semibold">
           Không tìm thấy tài nguyên nào phù hợp.
         </p>
+
+        </div>
 
         <!-- 4. LỊCH SỬ MUA GẦN NHẤT CỦA USER -->
         <section class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
@@ -423,6 +446,19 @@
 
     const $ = id => document.getElementById(id);
     const fmtVnd = n => Number(n || 0).toLocaleString("vi-VN") + "đ";
+
+    /* ============================================================
+       CHẾ ĐỘ HẾT HÀNG TOÀN BỘ — bật vì SMM1S chưa có API cho tài
+       nguyên số nên chưa có kho thật để bán. Khách vẫn xem được
+       sản phẩm & giá, nhưng không bấm mua được.
+       Đổi thành false khi đã có kho hàng thật đồng bộ từ web mẹ.
+       ============================================================ */
+    const MAINTENANCE_MODE = true;
+
+    function applyMaintenanceMode() {
+      if (!MAINTENANCE_MODE) return;
+      $("maintenanceNotice").classList.remove("hidden");
+    }
 
     let currentUser = null;
     let currentBalance = 0;
@@ -586,16 +622,23 @@
       }
 
       empty.classList.add("hidden");
-      grid.innerHTML = list.map(p => `
-        <div class="modern-card p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card flex flex-col justify-between">
+      grid.innerHTML = list.map(p => {
+        const outOfStock = MAINTENANCE_MODE;
+        return `
+        <div class="modern-card p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card flex flex-col justify-between ${outOfStock ? 'opacity-70' : ''}">
           <div>
             <div class="flex items-center justify-between mb-3">
               <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
                 ${p.badge}
               </span>
-              <span class="text-[11px] font-bold text-emerald-500 flex items-center gap-1">
-                <i class="fa-solid fa-circle-check text-[10px]"></i> Sẵn hàng: ${p.stock}
-              </span>
+              ${outOfStock
+                ? `<span class="text-[11px] font-bold text-rose-500 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-xmark text-[10px]"></i> Hết hàng
+                  </span>`
+                : `<span class="text-[11px] font-bold text-emerald-500 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-check text-[10px]"></i> Sẵn hàng: ${p.stock}
+                  </span>`
+              }
             </div>
 
             <div class="flex items-start gap-3.5 mb-3">
@@ -614,12 +657,18 @@
               <p class="text-[10px] text-slate-400 uppercase font-bold">Giá chỉ từ</p>
               <p class="text-base font-black text-brand-600 dark:text-brand-400">${fmtVnd(p.price)}</p>
             </div>
-            <button type="button" onclick="openBuyModal('${p.id}')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow-sm hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
-              <i class="fa-solid fa-cart-shopping"></i> MUA NGAY
-            </button>
+            ${outOfStock
+              ? `<button type="button" disabled class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-extrabold text-xs cursor-not-allowed flex items-center gap-1.5">
+                  <i class="fa-solid fa-ban"></i> HẾT HÀNG
+                </button>`
+              : `<button type="button" onclick="openBuyModal('${p.id}')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow-sm hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-cart-shopping"></i> MUA NGAY
+                </button>`
+            }
           </div>
         </div>
-      `).join("");
+      `;
+      }).join("");
     }
 
     function filterCategory(cat) {
@@ -644,6 +693,10 @@
        MODAL MUA HÀNG & TÍNH TIỀN
        ======================================================== */
     function openBuyModal(productId) {
+      if (MAINTENANCE_MODE) {
+        toast("Sản phẩm này đang tạm hết hàng, vui lòng quay lại sau!", false);
+        return;
+      }
       if (!currentUser) {
         alert("Vui lòng đăng nhập tài khoản trước khi mua tài nguyên!");
         location.href = "index.html";
@@ -694,6 +747,10 @@
 
     /* THỰC HIỆN TRỪ TIỀN & XUẤT DỮ LIỆU TÀI NGUYÊN */
     async function executePurchase() {
+      if (MAINTENANCE_MODE) {
+        toast("Sản phẩm này đang tạm hết hàng, vui lòng quay lại sau!", false);
+        return;
+      }
       if (!currentUser || !selectedProduct) return;
       const qty = Math.max(1, Number($("modalBuyQty").value || 1));
       const total = selectedProduct.price * qty;
@@ -935,6 +992,7 @@
     }
 
     initTheme();
+    applyMaintenanceMode();
     renderProducts();
 
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
