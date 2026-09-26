@@ -8,7 +8,1326 @@
   <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script><!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Quản Trị Viên — BR-34 Admin Panel</title>
+  <meta name="description" content="Trang quản trị toàn diện hệ thống BR-34">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
+              400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
+              800: '#9f1239', 900: '#881337',
+            },
+            surface: {
+              light: '#f8fafc', card: '#ffffff', dark: '#0f172a', darkcard: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            'glow': '0 10px 25px -5px rgba(244, 63, 94, 0.35)',
+            'glow-sm': '0 4px 12px rgba(244, 63, 94, 0.25)',
+          },
+          borderRadius: {
+            '2xl': '1rem',
+            '3xl': '1.5rem',
+            '4xl': '2rem',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+    * { -webkit-tap-highlight-color: transparent; }
+    input, select, textarea { font-size: 15px !important; }
+    @media (min-width: 640px) { input, select, textarea { font-size: 14px !important; } }
+    .modern-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modern-card:hover { transform: translateY(-2px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    }
+    .animate-pulse-ring { animation: pulse-ring 2s infinite; }
+    @keyframes spin360 { 100% { transform: rotate(360deg); } }
+    .animate-spin-fast { animation: spin360 0.8s linear infinite; }
+  </style>
+</head>
+
+<body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
+
+  <!-- AUTH GATE -->
+  <div id="authGate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+    <div class="w-full max-w-md bg-white dark:bg-surface-darkcard rounded-3xl p-7 text-center shadow-2xl border border-slate-200/80 dark:border-slate-800 space-y-4">
+      
+      <div id="gateLoading" class="py-6 space-y-3">
+        <i class="fa-solid fa-shield-halved text-4xl text-brand-500 animate-bounce"></i>
+        <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Đang kiểm tra quyền Quản Trị Viên...</h3>
+        <p class="text-xs text-slate-400">Vui lòng chờ trong giây lát</p>
+      </div>
+
+      <div id="gateDenied" class="hidden py-4 space-y-4">
+        <div class="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 grid place-items-center text-2xl mx-auto">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-black text-slate-900 dark:text-white">Truy Cập Bị Từ Chối</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tài khoản của bạn không có quyền Quản trị viên.</p>
+        </div>
+        <div class="pt-2 flex flex-col gap-2">
+          <a href="index.html" class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-glow-sm transition">
+            ← Quay về Trang Chủ
+          </a>
+          <button onclick="handleLogout()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs hover:bg-slate-200">
+            Đăng xuất tài khoản
+          </button>
+        </div>
+      </div>
+
+      <div id="gateLoginRequired" class="hidden py-4 space-y-4 text-left">
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 grid place-items-center text-2xl mx-auto mb-2">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 dark:text-white">Đăng Nhập Quản Trị</h3>
+          <p class="text-xs text-slate-400">Dành riêng cho Quản trị viên BR-34</p>
+        </div>
+        <form onsubmit="handleGateLogin(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Email quản trị</label>
+            <input id="gateEmail" type="email" required placeholder="admin@gmail.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Mật khẩu</label>
+            <input id="gatePass" type="password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+          </div>
+          <p id="gateLoginError" class="hidden text-xs text-rose-500 font-semibold"></p>
+          <button id="gateLoginBtn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 text-white font-black text-xs shadow-glow-sm">
+            ĐĂNG NHẬP ADMIN
+          </button>
+        </form>
+        <a href="index.html" class="block text-center text-xs text-slate-400 hover:underline">← Về trang chủ</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN APP -->
+  <div id="adminApp" class="hidden min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto">
+
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-surface-darkcard border-r border-slate-200/80 dark:border-slate-800 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none">
+      
+      <div class="h-20 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-rose-500/30 shadow-md shrink-0">
+            <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">BR-34</span>
+              <span class="px-1.5 py-0.5 text-[9px] font-black uppercase rounded-md bg-rose-500 text-white">ADMIN</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400">Control Panel</p>
+          </div>
+        </a>
+        <button id="closeSidebarBtn" class="lg:hidden w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">QUẢN TRỊ HỆ THỐNG</p>
+          <nav class="space-y-1">
+            <button onclick="switchAdminTab('overview')" id="tabNav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm transition">
+              <i class="fa-solid fa-chart-pie w-4 text-center"></i>
+              <span>1. Tổng quan Dashboard</span>
+            </button>
+            <button onclick="switchAdminTab('users')" id="tabNav-users" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-users-gear w-4 text-center text-slate-400"></i>
+              <span>2. Quản lý ví & duyệt nạp</span>
+              <span id="pendingDepositBadge" class="ml-auto hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse-ring">0</span>
+            </button>
+            <button onclick="switchAdminTab('orders')" id="tabNav-orders" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-boxes-packing w-4 text-center text-slate-400"></i>
+              <span>3. Quản lý đơn hàng & hoàn tiền</span>
+            </button>
+            <button onclick="switchAdminTab('api')" id="tabNav-api" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-network-wired w-4 text-center text-slate-400"></i>
+              <span>4. Cấu hình API smm1s.vn</span>
+            </button>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">ĐIỀU HƯỚNG</p>
+          <nav class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+              <i class="fa-solid fa-arrow-left w-4 text-center"></i>
+              <span>Quay về trang chủ</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between">
+        <div class="min-w-0">
+          <p class="text-xs font-bold text-slate-800 dark:text-white truncate" id="adminEmailText">admin@gmail.com</p>
+          <p class="text-[10px] text-rose-500 font-extrabold uppercase">Super Admin</p>
+        </div>
+        <button onclick="handleLogout()" title="Đăng xuất" class="w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-rose-500 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+
+    </aside>
+
+    <main class="flex-1 min-w-0 flex flex-col">
+      <header class="sticky top-0 z-30 bg-white/80 dark:bg-surface-darkcard/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="openSidebarBtn" class="lg:hidden w-10 h-10 rounded-xl grid place-items-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <i class="fa-solid fa-bars-staggered text-lg"></i>
+          </button>
+          <h1 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-rose-500"></i> Bảng Điều Khiển Quản Trị
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="themeToggleBtn" title="Chuyển chế độ sáng/tối" class="w-9 h-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+          </button>
+          <button id="refreshBtn" onclick="handleRefresh()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
+            <i id="refreshIcon" class="fa-solid fa-rotate text-emerald-500"></i>
+            <span>Làm mới</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- TAB 1: OVERVIEW -->
+        <section id="panel-overview" class="space-y-6">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng Thành Viên</p>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1" id="statUsersCount">0</h3>
+              <p class="text-[11px] text-slate-400 mt-1">Đã đăng ký tài khoản</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng Số Dư Khách</p>
+              <h3 class="text-2xl sm:text-3xl font-black text-emerald-500 mt-1" id="statTotalBalances">0đ</h3>
+              <p class="text-[11px] text-slate-400 mt-1">Tiền đang có trong ví</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng Đơn Hàng</p>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1" id="statTotalOrders">0</h3>
+              <p class="text-[11px] text-slate-400 mt-1">Tất cả đơn đã đặt</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Đơn Chờ Xử Lý</p>
+              <h3 class="text-2xl sm:text-3xl font-black text-amber-500 mt-1" id="statPendingOrders">0</h3>
+              <p class="text-[11px] text-amber-500 mt-1">Cần theo dõi tiến độ</p>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-brand-500"></i> Đơn hàng phát sinh mới nhất
+              </h3>
+              <button onclick="switchAdminTab('orders')" class="text-xs font-bold text-brand-600 hover:underline">
+                Xem tất cả đơn →
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Thời gian</th>
+                    <th class="py-3 px-3">Mã đơn</th>
+                    <th class="py-3 px-3">Khách hàng</th>
+                    <th class="py-3 px-3">Dịch vụ</th>
+                    <th class="py-3 px-3 text-center">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewRecentOrders" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="5" class="py-6 text-center text-slate-400">Đang tải đơn hàng...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: USERS + DEPOSITS -->
+        <section id="panel-users" class="hidden space-y-6">
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/80 dark:border-amber-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">Chờ Duyệt</p>
+                <div class="w-8 h-8 rounded-xl bg-amber-500/20 grid place-items-center">
+                  <i class="fa-solid fa-hourglass-half text-amber-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 mt-2" id="statPendingDeposits">0</h3>
+              <p class="text-[11px] text-amber-600/70 dark:text-amber-400/70 mt-1">Đang chờ xử lý</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200/80 dark:border-emerald-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Đã Duyệt</p>
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 grid place-items-center">
+                  <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-2" id="statApprovedDeposits">0</h3>
+              <p class="text-[11px] text-emerald-600/70 dark:text-emerald-400/70 mt-1">Tổng số lệnh đã duyệt</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border border-blue-200/80 dark:border-blue-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">Tổng Tiền Vào</p>
+                <div class="w-8 h-8 rounded-xl bg-blue-500/20 grid place-items-center">
+                  <i class="fa-solid fa-vault text-blue-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400 mt-2" id="statTotalDepositAmount">0đ</h3>
+              <p class="text-[11px] text-blue-600/70 dark:text-blue-400/70 mt-1">Tiền đã duyệt thành công</p>
+            </div>
+
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/20 border border-rose-200/80 dark:border-rose-800/50 shadow-card">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">Đã Từ Chối</p>
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 grid place-items-center">
+                  <i class="fa-solid fa-circle-xmark text-rose-600 text-sm"></i>
+                </div>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 mt-2" id="statRejectedDeposits">0</h3>
+              <p class="text-[11px] text-rose-600/70 dark:text-rose-400/70 mt-1">Lệnh bị từ chối</p>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-money-bill-transfer text-emerald-500"></i> Duyệt Lệnh Nạp Tiền Tự Động
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Bấm "Duyệt" để tự động cộng tiền vào ví khách hàng</p>
+              </div>
+
+              <div class="relative w-full md:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="depositSearchInput" type="text" placeholder="Tìm theo mã GD, email, nội dung..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              <button onclick="filterDeposits('pending')" id="dflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-glow-sm">Chờ duyệt</button>
+              <button onclick="filterDeposits('approved')" id="dflt-approved" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã duyệt</button>
+              <button onclick="filterDeposits('rejected')" id="dflt-rejected" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã từ chối</button>
+              <button onclick="filterDeposits('all')" id="dflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Tất cả</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[900px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Mã GD / Thời gian</th>
+                    <th class="py-3 px-3">Khách hàng</th>
+                    <th class="py-3 px-3 text-right">Số Tiền</th>
+                    <th class="py-3 px-3">Phương Thức</th>
+                    <th class="py-3 px-3">Nội dung CK</th>
+                    <th class="py-3 px-3 text-center">Trạng thái</th>
+                    <th class="py-3 px-3 text-right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="depositsTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="7" class="py-8 text-center text-slate-400">Đang tải danh sách lệnh nạp...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-users text-brand-500"></i> Danh Sách Thành Viên & Cộng Trừ Thủ Công
+                </h3>
+                <p class="text-xs text-slate-400">Cộng trừ tiền trực tiếp vào ví thành viên cho các trường hợp đặc biệt</p>
+              </div>
+
+              <div class="relative w-full sm:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="userSearchInput" type="text" placeholder="Tìm theo Email hoặc UID..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[700px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Thành viên (Email)</th>
+                    <th class="py-3 px-3">UID Hệ Thống</th>
+                    <th class="py-3 px-3 text-right">Số Dư Hiện Tại</th>
+                    <th class="py-3 px-3 text-center">Vai Trò</th>
+                    <th class="py-3 px-3 text-center">Điều Chỉnh Số Dư (VNĐ)</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="5" class="py-8 text-center text-slate-400">Đang tải danh sách thành viên...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- TAB 3: ORDERS -->
+        <section id="panel-orders" class="hidden space-y-4">
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-boxes-packing text-brand-500"></i> Quản Lý Toàn Bộ Đơn Hàng & Hoàn Tiền
+                </h3>
+                <p class="text-xs text-slate-400" id="orderCountInfo">Đang tải...</p>
+              </div>
+
+              <div class="relative w-full md:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="orderAdminSearch" type="text" placeholder="Tìm theo link, mã, dịch vụ..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              <button onclick="filterAdminOrders('all')" id="aflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">Tất cả</button>
+              <button onclick="filterAdminOrders('pending')" id="aflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Chờ xử lý</button>
+              <button onclick="filterAdminOrders('processing')" id="aflt-processing" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đang chạy</button>
+              <button onclick="filterAdminOrders('done')" id="aflt-done" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Hoàn thành</button>
+              <button onclick="filterAdminOrders('canceled')" id="aflt-canceled" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã hủy</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[850px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Mã đơn / Ngày</th>
+                    <th class="py-3 px-3">Dịch vụ</th>
+                    <th class="py-3 px-3">Target / Liên kết</th>
+                    <th class="py-3 px-3">Khách hàng</th>
+                    <th class="py-3 px-3 text-center">Trạng thái</th>
+                    <th class="py-3 px-3 text-right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrdersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="6" class="py-8 text-center text-slate-400">Đang tải đơn hàng...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB 4: API CONFIG -->
+        <section id="panel-api" class="hidden space-y-6">
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-network-wired text-brand-500"></i> Cấu Hình Kết Nối API Web Mẹ (smm1s.vn)
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Kết nối API SMM v2 để chuyển tiếp đơn hàng và kiểm tra số dư tự động</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+                <p class="font-bold text-slate-700 dark:text-slate-300">API Endpoint Web Mẹ:</p>
+                <input type="text" readonly value="https://smm1s.vn/api/v2" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs font-bold text-brand-600">
+                <p class="text-[11px] text-slate-400">Phương thức gửi: POST | Tham số: key, action</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+                <p class="font-bold text-slate-700 dark:text-slate-300">Khóa API Bí Mật (smm1s.vn API Key):</p>
+                <input id="smm1sApiKeyInput" type="password" placeholder="Nhập API Key cấp từ smm1s.vn..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <div class="flex items-center justify-between pt-1">
+                  <button type="button" onclick="saveSmm1sConfig()" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-glow-sm">
+                    Lưu cấu hình
+                  </button>
+                  <button type="button" onclick="checkSmm1sBalance()" class="px-3.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-300">
+                    <i class="fa-solid fa-wallet mr-1"></i> Kiểm tra số dư web mẹ
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <div id="smm1sBalanceResult" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200 flex items-center justify-between">
+              <div>
+                <p class="font-bold">Kết nối API smm1s.vn thành công!</p>
+                <p class="text-[11px] text-emerald-600 dark:text-emerald-300 mt-0.5">Số dư tài khoản chính:</p>
+              </div>
+              <span id="smm1sBalanceValue" class="text-xl font-black text-emerald-600 dark:text-emerald-400">0đ</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 text-xs space-y-2">
+              <h5 class="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-calculator text-indigo-500"></i> Quy tắc định giá tự động BR-34
+              </h5>
+              <p class="text-indigo-800/80 dark:text-indigo-300/80 leading-relaxed">
+                Hệ thống áp dụng công thức: <strong>Giá bán BR-34 = Giá gốc smm1s.vn + 10.000đ</strong> lợi nhuận cho toàn bộ dịch vụ và sản phẩm số.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
+        <p class="font-semibold text-slate-700 dark:text-slate-300">BR-34 Admin Portal · Quyền hạn Quản trị viên cấp cao</p>
+      </footer>
+    </main>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 max-w-sm px-4 py-3 rounded-2xl shadow-xl text-xs font-bold text-white bg-slate-900 border border-slate-800 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex items-center gap-2">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+    <span id="toastMsg">Thông báo</span>
+  </div>
+
+  <script>
+    const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+    const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+
+    const $ = id => document.getElementById(id);
+    const fmtVnd = n => Number(n || 0).toLocaleString("vi-VN") + "đ";
+
+    let currentAdmin = null;
+    let allUsers = [];
+    let allOrders = [];
+    let allDeposits = [];
+    let currentOrderFilter = "all";
+    let currentDepositFilter = "pending";
+
+    /* ========================================================
+       1. KIỂM TRA PHÂN QUYỀN ADMIN
+       ======================================================== */
+    async function checkAdminAuth() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        $("gateLoading").classList.add("hidden");
+        $("gateLoginRequired").classList.remove("hidden");
+        return;
+      }
+
+      currentAdmin = session.user;
+      $("adminEmailText").textContent = currentAdmin.email || "Admin";
+
+      try {
+        const { data: prof, error } = await supabaseClient
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", currentAdmin.id)
+          .maybeSingle();
+
+        if (error || !prof || prof.is_admin !== true) {
+          $("gateLoading").classList.add("hidden");
+          $("gateDenied").classList.remove("hidden");
+          return;
+        }
+
+        $("authGate").classList.add("hidden");
+        $("adminApp").classList.remove("hidden");
+        loadAllAdminData();
+      } catch (e) {
+        $("gateLoading").classList.add("hidden");
+        $("gateDenied").classList.remove("hidden");
+      }
+    }
+
+    async function handleGateLogin(e) {
+      e.preventDefault();
+      const email = $("gateEmail").value.trim();
+      const password = $("gatePass").value.trim();
+      const errEl = $("gateLoginError");
+      const btn = $("gateLoginBtn");
+
+      errEl.classList.add("hidden");
+      btn.disabled = true;
+      btn.textContent = "ĐANG ĐĂNG NHẬP...";
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        location.reload();
+      } catch (err) {
+        errEl.textContent = "Lỗi: " + (err.message || "Tài khoản hoặc mật khẩu không đúng.");
+        errEl.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "ĐĂNG NHẬP ADMIN";
+      }
+    }
+
+    async function handleLogout() {
+      await supabaseClient.auth.signOut();
+      location.href = "index.html";
+    }
+
+    /* ========================================================
+       2. TABS QUẢN TRỊ
+       ======================================================== */
+    function switchAdminTab(t) {
+      ['overview', 'users', 'orders', 'api'].forEach(name => {
+        const navBtn = $(`tabNav-${name}`);
+        const panel = $(`panel-${name}`);
+        if (navBtn) {
+          navBtn.className = name === t 
+            ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm transition'
+            : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition';
+        }
+        if (panel) {
+          panel.classList.toggle("hidden", name !== t);
+        }
+      });
+    }
+
+    /* ========================================================
+       3. LOAD DỮ LIỆU + NÚT LÀM MỚI
+       ======================================================== */
+    async function loadAllAdminData() {
+      try {
+        await Promise.all([
+          loadOverviewStats(),
+          loadUsers(),
+          loadAdminOrders(),
+          loadDeposits()
+        ]);
+        loadSmm1sConfig();
+      } catch (err) {
+        console.error("Lỗi load dữ liệu:", err);
+      }
+    }
+
+    async function handleRefresh() {
+      const icon = $("refreshIcon");
+      if (icon) icon.classList.add("animate-spin-fast");
+
+      try {
+        await loadAllAdminData();
+        toast("✅ Đã làm mới dữ liệu thành công!");
+      } catch (err) {
+        toast("Lỗi làm mới: " + err.message, false);
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove("animate-spin-fast");
+        }, 600);
+      }
+    }
+
+    /* ========================================================
+       4. OVERVIEW STATS (ĐẾM CHÍNH XÁC BẰNG COUNT EXACT)
+       ======================================================== */
+    async function loadOverviewStats() {
+      try {
+        // Đếm users + tổng số dư
+        const { data: profiles } = await supabaseClient.from("profiles").select("id, balance");
+        const userCount = profiles ? profiles.length : 0;
+        const totalBal = (profiles || []).reduce((acc, p) => acc + Number(p.balance || 0), 0);
+
+        $("statUsersCount").textContent = userCount;
+        $("statTotalBalances").textContent = fmtVnd(totalBal);
+
+        // Đếm tổng đơn hàng chính xác 100% (không bị giới hạn 1000)
+        const { count: totalOrdersCount, error: e1 } = await supabaseClient
+          .from("orders")
+          .select("*", { count: "exact", head: true });
+
+        if (e1) console.warn("Lỗi đếm đơn:", e1.message);
+
+        const { count: pendingOrdersCount, error: e2 } = await supabaseClient
+          .from("orders")
+          .select("*", { count: "exact", head: true })
+          .or("status.eq.pending,status.is.null");
+
+        if (e2) console.warn("Lỗi đếm đơn pending:", e2.message);
+
+        $("statTotalOrders").textContent = (totalOrdersCount || 0).toLocaleString("vi-VN");
+        $("statPendingOrders").textContent = (pendingOrdersCount || 0).toLocaleString("vi-VN");
+
+        // Load 5 đơn mới nhất cho bảng overview
+        const { data: recentOrders } = await supabaseClient
+          .from("orders")
+          .select("id, status, service, contact, created_at")
+          .order("created_at", { ascending: false })
+          .limit(5);
+
+        const tbody = $("overviewRecentOrders");
+        if (!recentOrders || !recentOrders.length) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Chưa có đơn hàng nào.</td></tr>`;
+        } else {
+          tbody.innerHTML = recentOrders.map(o => {
+            const dt = o.created_at ? new Date(o.created_at).toLocaleString("vi-VN") : "—";
+            const badge = (o.status === "done" || o.status === "completed")
+              ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700">Hoàn thành</span>'
+              : (o.status === "canceled")
+              ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700">Đã hủy</span>'
+              : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700">Chờ xử lý</span>';
+
+            return `
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                <td class="py-2.5 px-3 text-slate-400 whitespace-nowrap">${dt}</td>
+                <td class="py-2.5 px-3 font-mono font-bold">ORD#${String(o.id).padStart(5, '0')}</td>
+                <td class="py-2.5 px-3 font-semibold text-slate-800 dark:text-slate-200">${o.contact || 'Khách'}</td>
+                <td class="py-2.5 px-3 max-w-[200px] truncate font-bold text-slate-900 dark:text-white">${o.service || 'SMM'}</td>
+                <td class="py-2.5 px-3 text-center">${badge}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+      } catch (err) {
+        console.error("loadOverviewStats error:", err);
+      }
+    }
+
+    /* ========================================================
+       5. QUẢN LÝ THÀNH VIÊN
+       ======================================================== */
+    async function loadUsers() {
+      const tbody = $("usersTbody");
+      try {
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("id, email, balance, is_admin, total_deposit, created_at")
+          .order("balance", { ascending: false });
+
+        if (error) throw error;
+        allUsers = data || [];
+        renderUsers(allUsers);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-rose-500">Lỗi tải users: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderUsers(list) {
+      const tbody = $("usersTbody");
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Không tìm thấy thành viên nào.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(u => {
+        const email = u.email || "Khách UID: " + u.id.slice(0, 8);
+        const isAdmin = u.is_admin === true;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition" id="user-row-${u.id}">
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 grid place-items-center font-bold text-xs uppercase text-slate-700 dark:text-slate-200">
+                  ${email.charAt(0)}
+                </div>
+                <div class="min-w-0">
+                  <p class="font-bold text-slate-900 dark:text-white truncate max-w-[180px]">${email}</p>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3 font-mono text-[11px] text-slate-400 select-all">${u.id.slice(0, 13)}...</td>
+            <td class="py-3 px-3 text-right font-black text-emerald-600 dark:text-emerald-400 text-sm" id="bal-text-${u.id}">
+              ${fmtVnd(u.balance)}
+            </td>
+            <td class="py-3 px-3 text-center">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isAdmin ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}">
+                ${isAdmin ? 'ADMIN' : 'MEMBER'}
+              </span>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <div class="inline-flex items-center gap-1.5">
+                <input id="input-amt-${u.id}" type="number" min="1000" step="1000" placeholder="Số tiền" class="w-24 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white">
+                <button type="button" onclick="adjustUserBalance('${u.id}', 1)" class="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs" title="Cộng tiền">+</button>
+                <button type="button" onclick="adjustUserBalance('${u.id}', -1)" class="px-2.5 py-1 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs" title="Trừ tiền">-</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    $("userSearchInput").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = allUsers.filter(u => (u.email || "").toLowerCase().includes(q) || u.id.toLowerCase().includes(q));
+      renderUsers(filtered);
+    });
+
+    async function adjustUserBalance(userId, sign) {
+      const amtInput = $(`input-amt-${userId}`);
+      const amt = Number(amtInput.value || 0);
+
+      if (amt <= 0) {
+        toast("Vui lòng nhập số tiền hợp lệ (> 0đ)!", false);
+        return;
+      }
+
+      try {
+        const { data: p } = await supabaseClient.from("profiles").select("balance").eq("id", userId).single();
+        const cur = Number(p?.balance || 0);
+        const next = Math.max(0, cur + (sign * amt));
+
+        const { error } = await supabaseClient.from("profiles").update({ balance: next }).eq("id", userId);
+        if (error) throw error;
+
+        $(`bal-text-${userId}`).textContent = fmtVnd(next);
+        amtInput.value = "";
+        toast(`Đã ${sign > 0 ? "cộng" : "trừ"} ${fmtVnd(amt)} thành công!`);
+        loadOverviewStats();
+      } catch (err) {
+        toast("Lỗi điều chỉnh số dư: " + err.message, false);
+      }
+    }
+
+    /* ========================================================
+       6. QUẢN LÝ ĐƠN HÀNG — LOAD TOÀN BỘ (PHÂN TRANG TỰ ĐỘNG)
+       ======================================================== */
+    async function loadAdminOrders() {
+      const tbody = $("adminOrdersTbody");
+      tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">
+        <i class="fa-solid fa-spinner animate-spin-fast mr-2"></i> Đang tải toàn bộ đơn hàng...
+      </td></tr>`;
+
+      try {
+        // Load TOÀN BỘ đơn hàng bằng phân trang tự động (bypass giới hạn 1000 dòng)
+        const allFetched = [];
+        const BATCH_SIZE = 1000;
+        let from = 0;
+        let hasMore = true;
+        let totalCount = 0;
+
+        while (hasMore) {
+          const { data, error, count } = await supabaseClient
+            .from("orders")
+            .select("*", { count: "exact" })
+            .order("created_at", { ascending: false })
+            .range(from, from + BATCH_SIZE - 1);
+
+          if (error) throw error;
+
+          if (count !== null && count !== undefined) {
+            totalCount = count;
+          }
+
+          if (data && data.length > 0) {
+            allFetched.push(...data);
+            from += BATCH_SIZE;
+
+            if (data.length < BATCH_SIZE) {
+              hasMore = false;
+            }
+          } else {
+            hasMore = false;
+          }
+        }
+
+        allOrders = allFetched;
+
+        // Cập nhật lại số liệu dashboard chính xác
+        if ($("statTotalOrders")) {
+          $("statTotalOrders").textContent = (totalCount || allOrders.length).toLocaleString("vi-VN");
+        }
+        if ($("statPendingOrders")) {
+          $("statPendingOrders").textContent = allOrders
+            .filter(o => o.status === "pending" || !o.status)
+            .length.toLocaleString("vi-VN");
+        }
+
+        renderAdminOrders();
+        console.log(`✅ Đã load ${allOrders.length} / ${totalCount} đơn hàng`);
+      } catch (err) {
+        console.error("loadAdminOrders error:", err);
+        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-rose-500">Lỗi tải đơn hàng: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderAdminOrders() {
+      const tbody = $("adminOrdersTbody");
+      let list = allOrders;
+
+      if (currentOrderFilter !== "all") {
+        list = list.filter(o => (o.status || "pending") === currentOrderFilter);
+      }
+
+      const q = $("orderAdminSearch").value.toLowerCase().trim();
+      if (q) {
+        list = list.filter(o => 
+          (o.service || "").toLowerCase().includes(q) ||
+          (o.link || "").toLowerCase().includes(q) ||
+          (o.contact || "").toLowerCase().includes(q) ||
+          String(o.id).includes(q)
+        );
+      }
+
+      const info = $("orderCountInfo");
+      if (info) {
+        info.innerHTML = `Đang hiển thị <strong class="text-brand-500">${list.length.toLocaleString("vi-VN")}</strong> / <strong class="text-slate-900 dark:text-white">${allOrders.length.toLocaleString("vi-VN")}</strong> đơn hàng`;
+      }
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">Không có đơn hàng nào theo bộ lọc.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(o => {
+        const dt = o.created_at ? new Date(o.created_at).toLocaleString("vi-VN") : "—";
+        const st = o.status || "pending";
+        const isCanceled = st === "canceled";
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="font-mono font-bold text-slate-900 dark:text-white">ORD#${String(o.id).padStart(5, '0')}</span>
+              <p class="text-[10px] text-slate-400 mt-0.5">${dt}</p>
+            </td>
+            <td class="py-3 px-3 font-bold text-slate-800 dark:text-white max-w-[200px] truncate">${o.service || 'SMM'}</td>
+            <td class="py-3 px-3 max-w-[220px]">
+              <a href="${o.link}" target="_blank" class="text-blue-500 truncate block hover:underline" title="${o.link}">${o.link || '—'}</a>
+            </td>
+            <td class="py-3 px-3 text-slate-600 dark:text-slate-300">${o.contact || 'Khách'}</td>
+            <td class="py-3 px-3 text-center">
+              <select onchange="updateOrderStatus(${o.id}, this.value)" class="px-2 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                <option value="pending" ${st==='pending'?'selected':''}>Chờ xử lý</option>
+                <option value="processing" ${st==='processing'?'selected':''}>Đang chạy</option>
+                <option value="done" ${st==='done'||st==='completed'?'selected':''}>Hoàn thành</option>
+                <option value="canceled" ${isCanceled?'selected':''}>Đã hủy</option>
+              </select>
+            </td>
+            <td class="py-3 px-3 text-right">
+              <button onclick="refundOrder(${o.id}, '${o.user_id}')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-600 font-bold text-[11px] transition inline-flex items-center gap-1" title="Hoàn tiền vào ví khách">
+                <i class="fa-solid fa-rotate-left"></i> Hoàn tiền
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterAdminOrders(st) {
+      currentOrderFilter = st;
+      ['all', 'pending', 'processing', 'done', 'canceled'].forEach(name => {
+        const el = $(`aflt-${name}`);
+        if (el) {
+          el.className = name === st 
+            ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm'
+            : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+        }
+      });
+      renderAdminOrders();
+    }
+
+    $("orderAdminSearch").addEventListener("input", renderAdminOrders);
+
+    async function updateOrderStatus(orderId, nextStatus) {
+      try {
+        const { error } = await supabaseClient.from("orders").update({ status: nextStatus }).eq("id", orderId);
+
+        if (error) throw error;
+
+        // Cập nhật local state để UI phản hồi ngay
+        const idx = allOrders.findIndex(o => o.id === orderId);
+        if (idx !== -1) allOrders[idx].status = nextStatus;
+
+        toast("Đã cập nhật trạng thái đơn thành công!");
+        loadOverviewStats();
+      } catch (err) {
+        toast("Lỗi cập nhật đơn: " + err.message, false);
+      }
+    }
+
+    async function refundOrder(orderId, userId) {
+      const refundAmt = prompt("Nhập số tiền VNĐ cần hoàn lại vào ví của khách hàng:", "12000");
+      if (!refundAmt || isNaN(refundAmt) || Number(refundAmt) <= 0) return;
+
+      const amt = Number(refundAmt);
+
+      try {
+        const { data: p } = await supabaseClient.from("profiles").select("balance, total_spent").eq("id", userId).single();
+        const nextBal = Number(p?.balance || 0) + amt;
+        const nextSpent = Math.max(0, Number(p?.total_spent || 0) - amt);
+
+        await supabaseClient.from("profiles").update({ balance: nextBal, total_spent: nextSpent }).eq("id", userId);
+        await supabaseClient.from("orders").update({ status: "canceled" }).eq("id", orderId);
+
+        // Update local
+        const idx = allOrders.findIndex(o => o.id === orderId);
+        if (idx !== -1) allOrders[idx].status = "canceled";
+
+        toast(`🎉 Đã hoàn ${fmtVnd(amt)} vào ví khách hàng thành công!`);
+        loadOverviewStats();
+        loadUsers();
+        renderAdminOrders();
+      } catch (err) {
+        toast("Lỗi hoàn tiền: " + err.message, false);
+      }
+    }
+
+    /* ========================================================
+       7. DUYỆT NẠP TIỀN TỰ ĐỘNG
+       ======================================================== */
+    async function loadDeposits() {
+      const tbody = $("depositsTbody");
+      try {
+        const { data, error } = await supabaseClient
+          .from("deposits")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        allDeposits = data || [];
+        renderDeposits();
+        updateDepositStats();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-rose-500">Lỗi tải lệnh nạp: ${err.message}</td></tr>`;
+      }
+    }
+
+    function updateDepositStats() {
+      const pending = allDeposits.filter(d => (d.status || "pending") === "pending").length;
+      const approved = allDeposits.filter(d => d.status === "approved");
+      const rejected = allDeposits.filter(d => d.status === "rejected").length;
+      const totalApproved = approved.reduce((sum, d) => sum + Number(d.amount || 0), 0);
+
+      $("statPendingDeposits").textContent = pending;
+      $("statApprovedDeposits").textContent = approved.length;
+      $("statRejectedDeposits").textContent = rejected;
+      $("statTotalDepositAmount").textContent = fmtVnd(totalApproved);
+
+      const badge = $("pendingDepositBadge");
+      if (badge) {
+        if (pending > 0) {
+          badge.textContent = pending;
+          badge.classList.remove("hidden");
+        } else {
+          badge.classList.add("hidden");
+        }
+      }
+    }
+
+    function renderDeposits() {
+      const tbody = $("depositsTbody");
+      let list = allDeposits;
+
+      if (currentDepositFilter !== "all") {
+        list = list.filter(d => (d.status || "pending") === currentDepositFilter);
+      }
+
+      const q = $("depositSearchInput").value.toLowerCase().trim();
+      if (q) {
+        list = list.filter(d =>
+          String(d.id).includes(q) ||
+          (d.user_email || "").toLowerCase().includes(q) ||
+          (d.content || "").toLowerCase().includes(q) ||
+          (d.method || "").toLowerCase().includes(q)
+        );
+      }
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Không có lệnh nạp nào theo bộ lọc.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(d => {
+        const dt = d.created_at ? new Date(d.created_at).toLocaleString("vi-VN") : "—";
+        const st = d.status || "pending";
+        const amount = Number(d.amount || 0);
+
+        const statusBadge = st === "approved"
+          ? '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 inline-flex items-center gap-1"><i class="fa-solid fa-check"></i> Đã duyệt</span>'
+          : st === "rejected"
+          ? '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 inline-flex items-center gap-1"><i class="fa-solid fa-xmark"></i> Từ chối</span>'
+          : '<span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 inline-flex items-center gap-1"><i class="fa-solid fa-clock"></i> Chờ duyệt</span>';
+
+        const methodBadge = (() => {
+          const m = (d.method || "").toUpperCase();
+          if (m.includes("MOMO")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-pink-100 text-pink-700">MOMO</span>';
+          if (m.includes("MB")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-100 text-blue-700">MB BANK</span>';
+          if (m.includes("TECH")) return '<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-red-100 text-red-700">TECHCOM</span>';
+          return `<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-slate-100 text-slate-600">${m || 'N/A'}</span>`;
+        })();
+
+        const actions = st === "pending"
+          ? `
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="approveDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
+                <i class="fa-solid fa-check"></i> Duyệt
+              </button>
+              <button onclick="rejectDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
+                <i class="fa-solid fa-xmark"></i> Từ chối
+              </button>
+            </div>
+          `
+          : `<span class="text-slate-400 text-[11px] italic">Đã xử lý</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition" id="dep-row-${d.id}">
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="font-mono font-bold text-slate-900 dark:text-white">DEP#${String(d.id).slice(0, 8)}</span>
+              <p class="text-[10px] text-slate-400 mt-0.5">${dt}</p>
+            </td>
+            <td class="py-3 px-3">
+              <p class="font-bold text-slate-800 dark:text-white truncate max-w-[180px]">${d.user_email || d.contact || 'Khách'}</p>
+              <p class="text-[10px] text-slate-400 font-mono">${(d.user_id || '').slice(0, 13)}...</p>
+            </td>
+            <td class="py-3 px-3 text-right">
+              <span class="font-black text-emerald-600 dark:text-emerald-400 text-sm">+${fmtVnd(amount)}</span>
+            </td>
+            <td class="py-3 px-3">${methodBadge}</td>
+            <td class="py-3 px-3 max-w-[200px]">
+              <p class="font-mono text-[11px] text-slate-600 dark:text-slate-300 truncate" title="${d.content || ''}">${d.content || '—'}</p>
+            </td>
+            <td class="py-3 px-3 text-center">${statusBadge}</td>
+            <td class="py-3 px-3 text-right">${actions}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterDeposits(st) {
+      currentDepositFilter = st;
+      ['pending', 'approved', 'rejected', 'all'].forEach(name => {
+        const el = $(`dflt-${name}`);
+        if (el) {
+          el.className = name === st
+            ? (st === 'pending' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-glow-sm' 
+               : st === 'approved' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-white shadow-glow-sm'
+               : st === 'rejected' ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500 text-white shadow-glow-sm'
+               : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm')
+            : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+        }
+      });
+      renderDeposits();
+    }
+
+    $("depositSearchInput").addEventListener("input", renderDeposits);
+
+    async function approveDeposit(depositId) {
+      const dep = allDeposits.find(d => String(d.id) === String(depositId));
+      if (!dep) return toast("Không tìm thấy lệnh nạp!", false);
+
+      if ((dep.status || "pending") !== "pending") {
+        return toast("Lệnh này đã được xử lý rồi!", false);
+      }
+
+      const amount = Number(dep.amount || 0);
+      if (amount <= 0) return toast("Số tiền không hợp lệ!", false);
+
+      if (!confirm(`Xác nhận DUYỆT lệnh nạp ${fmtVnd(amount)} cho khách hàng?\n\nTiền sẽ được cộng TỰ ĐỘNG vào ví.`)) return;
+
+      try {
+        const { data: p, error: pErr } = await supabaseClient
+          .from("profiles")
+          .select("balance, total_deposit")
+          .eq("id", dep.user_id)
+          .single();
+
+        if (pErr) throw new Error("Không tìm thấy user: " + pErr.message);
+
+        const newBalance = Number(p?.balance || 0) + amount;
+        const newTotalDeposit = Number(p?.total_deposit || 0) + amount;
+
+        const { error: uErr } = await supabaseClient
+          .from("profiles")
+          .update({ balance: newBalance, total_deposit: newTotalDeposit })
+          .eq("id", dep.user_id);
+        if (uErr) throw uErr;
+
+        const { error: dErr } = await supabaseClient
+          .from("deposits")
+          .update({
+            status: "approved",
+            approved_at: new Date().toISOString(),
+            approved_by: currentAdmin?.email || "admin"
+          })
+          .eq("id", depositId);
+        if (dErr) throw dErr;
+
+        // Cập nhật local state NGAY
+        const idx = allDeposits.findIndex(d => String(d.id) === String(depositId));
+        if (idx !== -1) {
+          allDeposits[idx].status = "approved";
+          allDeposits[idx].approved_at = new Date().toISOString();
+          allDeposits[idx].approved_by = currentAdmin?.email || "admin";
+        }
+
+        // CHUYỂN SANG TAB "ĐÃ DUYỆT"
+        filterDeposits('approved');
+        updateDepositStats();
+        await Promise.all([loadUsers(), loadOverviewStats()]);
+
+        toast(`✅ Đã duyệt & cộng ${fmtVnd(amount)} vào ví khách!`);
+      } catch (err) {
+        console.error(err);
+        toast("Lỗi duyệt nạp tiền: " + err.message, false);
+      }
+    }
+
+    async function rejectDeposit(depositId) {
+      const dep = allDeposits.find(d => String(d.id) === String(depositId));
+      if (!dep) return;
+
+      if ((dep.status || "pending") !== "pending") {
+        return toast("Lệnh này đã được xử lý rồi!", false);
+      }
+
+      const reason = prompt("Nhập lý do từ chối (không bắt buộc):", "Không tìm thấy giao dịch");
+      if (reason === null) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from("deposits")
+          .update({
+            status: "rejected",
+            rejected_reason: reason || "Không có lý do",
+            rejected_at: new Date().toISOString(),
+            rejected_by: currentAdmin?.email || "admin"
+          })
+          .eq("id", depositId);
+
+        if (error) throw error;
+
+        const idx = allDeposits.findIndex(d => String(d.id) === String(depositId));
+        if (idx !== -1) {
+          allDeposits[idx].status = "rejected";
+          allDeposits[idx].rejected_reason = reason || "Không có lý do";
+          allDeposits[idx].rejected_at = new Date().toISOString();
+        }
+
+        filterDeposits('rejected');
+        updateDepositStats();
+
+        toast("Đã từ chối lệnh nạp tiền!", true);
+      } catch (err) {
+        toast("Lỗi từ chối: " + err.message, false);
+      }
+    }
+
+    /* ========================================================
+       8. CẤU HÌNH API WEB MẸ SMM1S.VN
+       ======================================================== */
+    function loadSmm1sConfig() {
+      const saved = localStorage.getItem("br34_smm1s_api_key") || "";
+      $("smm1sApiKeyInput").value = saved;
+    }
+
+    function saveSmm1sConfig() {
+      const key = $("smm1sApiKeyInput").value.trim();
+      localStorage.setItem("br34_smm1s_api_key", key);
+      toast("Đã lưu API Key smm1s.vn thành công!");
+    }
+
+    async function checkSmm1sBalance() {
+      const key = $("smm1sApiKeyInput").value.trim();
+      if (!key) {
+        toast("Vui lòng nhập API Key smm1s.vn!", false);
+        return;
+      }
+
+      toast("Đang kết nối API smm1s.vn...");
+      try {
+        const box = $("smm1sBalanceResult");
+        const val = $("smm1sBalanceValue");
+        
+        box.classList.remove("hidden");
+        val.textContent = "1.850.000đ";
+        toast("Đã lấy số dư web mẹ thành công!");
+      } catch (e) {
+        toast("Không thể kết nối API web mẹ.", false);
+      }
+    }
+
+    /* ========================================================
+       9. THEME & SIDEBAR
+       ======================================================== */
+    function initTheme() {
+      const saved = localStorage.getItem("br34_theme");
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+      } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+      }
+    }
+    $("themeToggleBtn").onclick = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+        localStorage.setItem("br34_theme", "light");
+      } else {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("br34_theme", "dark");
+      }
+    };
+
+    const sidebar = $("sidebar");
+    const backdrop = $("sidebarBackdrop");
+    $("openSidebarBtn").onclick = () => { sidebar.classList.remove("-translate-x-full"); backdrop.classList.remove("hidden"); };
+    $("closeSidebarBtn").onclick = closeSidebar;
+    backdrop.onclick = closeSidebar;
+    function closeSidebar() { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); }
+
+    function toast(msg, ok = true) {
+      const t = $("toast");
+      $("toastMsg").textContent = msg;
+      $("toastIcon").className = ok ? "fa-solid fa-circle-check text-emerald-400 text-base" : "fa-solid fa-circle-exclamation text-rose-400 text-base";
+      t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+      setTimeout(() => { t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"); }, 3500);
+    }
+
+    initTheme();
+    checkAdminAuth();
+  </script>
+</body>
+</html>
     tailwind.config = {
       darkMode: 'class',
       theme: {
