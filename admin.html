@@ -67,6 +67,8 @@
       100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
     }
     .animate-pulse-ring { animation: pulse-ring 2s infinite; }
+    .animate-spin { animation: spin 0.8s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
 </head>
 
@@ -216,8 +218,9 @@
             <i class="fa-solid fa-moon dark:hidden"></i>
             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
           </button>
-          <button onclick="loadAllAdminData()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
-            <i class="fa-solid fa-rotate text-emerald-500"></i> Làm mới
+          <button id="refreshBtn" onclick="handleRefresh()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
+            <i id="refreshIcon" class="fa-solid fa-rotate text-emerald-500 transition-transform"></i>
+            <span>Làm mới</span>
           </button>
         </div>
       </header>
@@ -623,14 +626,36 @@
     }
 
     /* ========================================================
-       3. LOAD DỮ LIỆU
+       3. LOAD DỮ LIỆU + NÚT LÀM MỚI
        ======================================================== */
     async function loadAllAdminData() {
-      loadOverviewStats();
-      loadUsers();
-      loadAdminOrders();
-      loadDeposits();
-      loadSmm1sConfig();
+      try {
+        await Promise.all([
+          loadOverviewStats(),
+          loadUsers(),
+          loadAdminOrders(),
+          loadDeposits()
+        ]);
+        loadSmm1sConfig();
+      } catch (err) {
+        console.error("Lỗi load dữ liệu:", err);
+      }
+    }
+
+    async function handleRefresh() {
+      const icon = $("refreshIcon");
+      if (icon) icon.classList.add("animate-spin");
+
+      try {
+        await loadAllAdminData();
+        toast("✅ Đã làm mới dữ liệu thành công!");
+      } catch (err) {
+        toast("Lỗi làm mới: " + err.message, false);
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove("animate-spin");
+        }, 500);
+      }
     }
 
     async function loadOverviewStats() {
@@ -678,7 +703,7 @@
     }
 
     /* ========================================================
-       4. QUẢN LÝ THÀNH VIÊN (KHÔNG CÒN NÚT THĂNG/HẠ ADMIN)
+       4. QUẢN LÝ THÀNH VIÊN
        ======================================================== */
     async function loadUsers() {
       const tbody = $("usersTbody");
@@ -773,12 +798,11 @@
     }
 
     /* ========================================================
-       5. QUẢN LÝ ĐƠN HÀNG (KHÔI PHỤC TOÀN BỘ)
+       5. QUẢN LÝ ĐƠN HÀNG
        ======================================================== */
     async function loadAdminOrders() {
       const tbody = $("adminOrdersTbody");
       try {
-        // Load TẤT CẢ đơn hàng cũ, không giới hạn
         const { data, error } = await supabaseClient
           .from("orders")
           .select("*")
@@ -810,7 +834,6 @@
         );
       }
 
-      // Cập nhật số lượng đơn hiển thị
       const info = $("orderCountInfo");
       if (info) {
         info.textContent = `Hiển thị ${list.length} / ${allOrders.length} đơn hàng (bao gồm cả đơn cũ)`;
@@ -992,7 +1015,8 @@
           ? `
             <div class="flex items-center justify-end gap-1.5">
               <button onclick="approveDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
-                <i class="fa-solid fa-check"></i> Duyệt              </button>
+                <i class="fa-solid fa-check"></i> Duyệt
+              </button>
               <button onclick="rejectDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
                 <i class="fa-solid fa-xmark"></i> Từ chối
               </button>
@@ -1056,6 +1080,7 @@
       if (!confirm(`Xác nhận DUYỆT lệnh nạp ${fmtVnd(amount)} cho khách hàng?\n\nTiền sẽ được cộng TỰ ĐỘNG vào ví.`)) return;
 
       try {
+        // 1. Lấy số dư hiện tại của user
         const { data: p, error: pErr } = await supabaseClient
           .from("profiles")
           .select("balance, total_deposit")
@@ -1067,12 +1092,14 @@
         const newBalance = Number(p?.balance || 0) + amount;
         const newTotalDeposit = Number(p?.total_deposit || 0) + amount;
 
+        // 2. Cập nhật số dư user
         const { error: uErr } = await supabaseClient
           .from("profiles")
           .update({ balance: newBalance, total_deposit: newTotalDeposit })
           .eq("id", dep.user_id);
         if (uErr) throw uErr;
 
+        // 3. Cập nhật trạng thái lệnh nạp
         const { error: dErr } = await supabaseClient
           .from("deposits")
           .update({
@@ -1083,10 +1110,22 @@
           .eq("id", depositId);
         if (dErr) throw dErr;
 
+        // 4. Cập nhật local state NGAY để UI phản hồi tức thì
+        const idx = allDeposits.findIndex(d => String(d.id) === String(depositId));
+        if (idx !== -1) {
+          allDeposits[idx].status = "approved";
+          allDeposits[idx].approved_at = new Date().toISOString();
+          allDeposits[idx].approved_by = currentAdmin?.email || "admin";
+        }
+
+        // 5. CHUYỂN SANG TAB "ĐÃ DUYỆT" - lệnh biến mất khỏi "Chờ duyệt"
+        filterDeposits('approved');
+
+        // 6. Update stats + refresh
+        updateDepositStats();
+        await Promise.all([loadUsers(), loadOverviewStats()]);
+
         toast(`✅ Đã duyệt & cộng ${fmtVnd(amount)} vào ví khách!`);
-        loadDeposits();
-        loadOverviewStats();
-        loadUsers();
       } catch (err) {
         console.error(err);
         toast("Lỗi duyệt nạp tiền: " + err.message, false);
@@ -1117,9 +1156,19 @@
 
         if (error) throw error;
 
-        toast("Đã từ chối lệnh nạp tiền!", true);
-        loadDeposits();
+        // Cập nhật local state
+        const idx = allDeposits.findIndex(d => String(d.id) === String(depositId));
+        if (idx !== -1) {
+          allDeposits[idx].status = "rejected";
+          allDeposits[idx].rejected_reason = reason || "Không có lý do";
+          allDeposits[idx].rejected_at = new Date().toISOString();
+        }
+
+        // Chuyển sang tab Đã từ chối
+        filterDeposits('rejected');
         updateDepositStats();
+
+        toast("Đã từ chối lệnh nạp tiền!", true);
       } catch (err) {
         toast("Lỗi từ chối: " + err.message, false);
       }
