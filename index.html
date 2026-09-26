@@ -529,7 +529,6 @@
           </div>
           <div class="min-w-0 flex-1">
             <h4 id="sideUserName" class="text-xs font-bold text-white truncate">Khách hàng</h4>
-            <p class="text-[11px] font-extrabold text-brand-400 mt-0.5" id="sideUserBalance">0đ</p>
           </div>
           <button onclick="handleLogout()" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 grid place-items-center transition" title="Đăng xuất">
             <i class="fa-solid fa-power-off text-xs"></i>
@@ -1448,7 +1447,6 @@
         $("landingUserBalance").textContent = fmtVnd(currentBalance);
         $("sideUserName").textContent = prefix;
         $("sideUserAvatarText").textContent = prefix.charAt(0).toUpperCase();
-        $("sideUserBalance").textContent = fmtVnd(currentBalance);
       } else {
         guestBox.classList.remove("hidden");
         userBox.classList.add("hidden");
