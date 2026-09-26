@@ -678,7 +678,10 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">3. Chọn Máy Chủ (Server)</label>
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">3. Chọn Máy Chủ (Server)</label>
+                <span class="text-[11px] text-slate-500"><i class="fa-solid fa-circle-info mr-1"></i>Giá / 1.000 đơn vị</span>
+              </div>
               <div id="dashServerList" class="space-y-2.5 max-h-72 overflow-y-auto pr-1"></div>
             </div>
 
@@ -1526,7 +1529,7 @@
               <span class="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase ${isSel ? 'bg-brand-500 text-white' : 'bg-white/10 text-slate-300'}">${s.code}</span>
               <span class="text-xs font-bold text-slate-200 truncate">${s.name}</span>
             </div>
-            <span class="text-xs font-black text-brand-400 shrink-0">${s.rate}đ</span>
+            <span class="text-xs font-black text-brand-400 shrink-0">${s.rate}đ<span class="text-slate-500 font-semibold">/1k</span></span>
           </div>
         `;
       }).join("");
