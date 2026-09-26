@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Quản Trị Viên — BR-34 Admin Panel</title>
-  <meta name="description" content="Trang quản trị toàn diện hệ thống BR-34: Quản lý thành viên, điều chỉnh số dư ví, duyệt đơn hàng và cấu hình API smm1s.vn.">
+  <meta name="description" content="Trang quản trị toàn diện hệ thống BR-34">
   <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -43,15 +42,12 @@
     }
   </script>
 
-  <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -76,9 +72,7 @@
 
 <body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
 
-  <!-- ========================================================
-       GATE KIỂM TRA PHÂN QUYỀN (ACCESS GATE)
-       ======================================================== -->
+  <!-- AUTH GATE -->
   <div id="authGate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
     <div class="w-full max-w-md bg-white dark:bg-surface-darkcard rounded-3xl p-7 text-center shadow-2xl border border-slate-200/80 dark:border-slate-800 space-y-4">
       
@@ -94,7 +88,7 @@
         </div>
         <div>
           <h3 class="text-lg font-black text-slate-900 dark:text-white">Truy Cập Bị Từ Chối</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tài khoản của bạn không có quyền Quản trị viên (is_admin: false).</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tài khoản của bạn không có quyền Quản trị viên.</p>
         </div>
         <div class="pt-2 flex flex-col gap-2">
           <a href="index.html" class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-glow-sm transition">
@@ -134,9 +128,7 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MAIN ADMIN APP
-       ======================================================== -->
+  <!-- MAIN ADMIN APP -->
   <div id="adminApp" class="hidden min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto">
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
@@ -168,24 +160,19 @@
             <button onclick="switchAdminTab('overview')" id="tabNav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm transition">
               <i class="fa-solid fa-chart-pie w-4 text-center"></i>
               <span>1. Tổng quan Dashboard</span>
-              <span class="ml-auto w-2 h-2 rounded-full bg-brand-500"></span>
             </button>
             <button onclick="switchAdminTab('users')" id="tabNav-users" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-users-gear w-4 text-center text-slate-400"></i>
-              <span>2. Quản lý thành viên & ví</span>
+              <span>2. Quản lý ví & duyệt nạp</span>
+              <span id="pendingDepositBadge" class="ml-auto hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse-ring">0</span>
             </button>
             <button onclick="switchAdminTab('orders')" id="tabNav-orders" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-boxes-packing w-4 text-center text-slate-400"></i>
               <span>3. Quản lý đơn hàng & hoàn tiền</span>
             </button>
-            <button onclick="switchAdminTab('deposits')" id="tabNav-deposits" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
-              <i class="fa-solid fa-money-bill-transfer w-4 text-center text-slate-400"></i>
-              <span>4. Duyệt nạp tiền tự động</span>
-              <span id="pendingDepositBadge" class="ml-auto hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse-ring">0</span>
-            </button>
             <button onclick="switchAdminTab('api')" id="tabNav-api" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-network-wired w-4 text-center text-slate-400"></i>
-              <span>5. Cấu hình API smm1s.vn</span>
+              <span>4. Cấu hình API smm1s.vn</span>
             </button>
           </nav>
         </div>
@@ -255,7 +242,7 @@
             <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
               <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng Đơn Hàng</p>
               <h3 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1" id="statTotalOrders">0</h3>
-              <p class="text-[11px] text-slate-400 mt-1">SMM & Tài nguyên</p>
+              <p class="text-[11px] text-slate-400 mt-1">Tất cả đơn đã đặt</p>
             </div>
 
             <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
@@ -293,95 +280,10 @@
           </div>
         </section>
 
-        <!-- TAB 2: USERS -->
-        <section id="panel-users" class="hidden space-y-4">
-          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div>
-                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <i class="fa-solid fa-users text-brand-500"></i> Danh Sách Thành Viên & Quản Lý Số Dư
-                </h3>
-                <p class="text-xs text-slate-400">Cộng trừ tiền trực tiếp vào ví thành viên và phân quyền Quản trị</p>
-              </div>
+        <!-- TAB 2: USERS + DEPOSITS (GỘP) -->
+        <section id="panel-users" class="hidden space-y-6">
 
-              <div class="relative w-full sm:w-72">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input id="userSearchInput" type="text" placeholder="Tìm theo Email hoặc UID..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-              </div>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-xs text-left min-w-[750px]">
-                <thead>
-                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
-                    <th class="py-3 px-3">Thành viên (Email)</th>
-                    <th class="py-3 px-3">UID Hệ Thống</th>
-                    <th class="py-3 px-3 text-right">Số Dư Hiện Tại</th>
-                    <th class="py-3 px-3 text-center">Vai Trò</th>
-                    <th class="py-3 px-3 text-center">Điều Chỉnh Số Dư (VNĐ)</th>
-                    <th class="py-3 px-3 text-right">Quyền Admin</th>
-                  </tr>
-                </thead>
-                <tbody id="usersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
-                  <tr><td colspan="6" class="py-8 text-center text-slate-400">Đang tải danh sách thành viên...</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- TAB 3: ORDERS -->
-        <section id="panel-orders" class="hidden space-y-4">
-          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
-            
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div>
-                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <i class="fa-solid fa-boxes-packing text-brand-500"></i> Quản Lý Toàn Bộ Đơn Hàng & Hoàn Tiền
-                </h3>
-                <p class="text-xs text-slate-400">Cập nhật trạng thái hoặc hoàn tiền về ví người dùng khi đơn lỗi</p>
-              </div>
-
-              <div class="relative w-full md:w-72">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input id="orderAdminSearch" type="text" placeholder="Tìm theo link, mã, dịch vụ..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-              <button onclick="filterAdminOrders('all')" id="aflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">Tất cả</button>
-              <button onclick="filterAdminOrders('pending')" id="aflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Chờ xử lý</button>
-              <button onclick="filterAdminOrders('processing')" id="aflt-processing" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đang chạy</button>
-              <button onclick="filterAdminOrders('done')" id="aflt-done" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Hoàn thành</button>
-              <button onclick="filterAdminOrders('canceled')" id="aflt-canceled" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã hủy</button>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-xs text-left min-w-[850px]">
-                <thead>
-                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
-                    <th class="py-3 px-3">Mã đơn / Ngày</th>
-                    <th class="py-3 px-3">Dịch vụ</th>
-                    <th class="py-3 px-3">Target / Liên kết</th>
-                    <th class="py-3 px-3">Khách hàng</th>
-                    <th class="py-3 px-3 text-center">Trạng thái</th>
-                    <th class="py-3 px-3 text-right">Hành động</th>
-                  </tr>
-                </thead>
-                <tbody id="adminOrdersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
-                  <tr><td colspan="6" class="py-8 text-center text-slate-400">Đang tải đơn hàng...</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- TAB 4: DEPOSITS APPROVAL -->
-        <section id="panel-deposits" class="hidden space-y-6">
-
+          <!-- PHẦN A: THỐNG KÊ NẠP TIỀN -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/80 dark:border-amber-800/50 shadow-card">
               <div class="flex items-center justify-between">
@@ -428,11 +330,12 @@
             </div>
           </div>
 
+          <!-- PHẦN B: DANH SÁCH LỆNH NẠP TIỀN (DUYỆT TỰ ĐỘNG) -->
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
                 <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <i class="fa-solid fa-money-bill-transfer text-brand-500"></i> Danh Sách Lệnh Nạp Tiền
+                  <i class="fa-solid fa-money-bill-transfer text-emerald-500"></i> Duyệt Lệnh Nạp Tiền Tự Động
                 </h3>
                 <p class="text-xs text-slate-400 mt-0.5">Bấm "Duyệt" để tự động cộng tiền vào ví khách hàng</p>
               </div>
@@ -469,9 +372,93 @@
               </table>
             </div>
           </div>
+
+          <!-- PHẦN C: DANH SÁCH THÀNH VIÊN & CỘNG TRỪ TAY -->
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-users text-brand-500"></i> Danh Sách Thành Viên & Cộng Trừ Thủ Công
+                </h3>
+                <p class="text-xs text-slate-400">Cộng trừ tiền trực tiếp vào ví thành viên cho các trường hợp đặc biệt</p>
+              </div>
+
+              <div class="relative w-full sm:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="userSearchInput" type="text" placeholder="Tìm theo Email hoặc UID..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[700px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Thành viên (Email)</th>
+                    <th class="py-3 px-3">UID Hệ Thống</th>
+                    <th class="py-3 px-3 text-right">Số Dư Hiện Tại</th>
+                    <th class="py-3 px-3 text-center">Vai Trò</th>
+                    <th class="py-3 px-3 text-center">Điều Chỉnh Số Dư (VNĐ)</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="5" class="py-8 text-center text-slate-400">Đang tải danh sách thành viên...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
         </section>
 
-        <!-- TAB 5: API CONFIG -->
+        <!-- TAB 3: ORDERS -->
+        <section id="panel-orders" class="hidden space-y-4">
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-boxes-packing text-brand-500"></i> Quản Lý Toàn Bộ Đơn Hàng & Hoàn Tiền
+                </h3>
+                <p class="text-xs text-slate-400" id="orderCountInfo">Đang tải...</p>
+              </div>
+
+              <div class="relative w-full md:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="orderAdminSearch" type="text" placeholder="Tìm theo link, mã, dịch vụ..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              <button onclick="filterAdminOrders('all')" id="aflt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">Tất cả</button>
+              <button onclick="filterAdminOrders('pending')" id="aflt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Chờ xử lý</button>
+              <button onclick="filterAdminOrders('processing')" id="aflt-processing" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đang chạy</button>
+              <button onclick="filterAdminOrders('done')" id="aflt-done" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Hoàn thành</button>
+              <button onclick="filterAdminOrders('canceled')" id="aflt-canceled" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã hủy</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left min-w-[850px]">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-3">Mã đơn / Ngày</th>
+                    <th class="py-3 px-3">Dịch vụ</th>
+                    <th class="py-3 px-3">Target / Liên kết</th>
+                    <th class="py-3 px-3">Khách hàng</th>
+                    <th class="py-3 px-3 text-center">Trạng thái</th>
+                    <th class="py-3 px-3 text-right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrdersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr><td colspan="6" class="py-8 text-center text-slate-400">Đang tải đơn hàng...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB 4: API CONFIG -->
         <section id="panel-api" class="hidden space-y-6">
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
             <div>
@@ -517,7 +504,7 @@
                 <i class="fa-solid fa-calculator text-indigo-500"></i> Quy tắc định giá tự động BR-34
               </h5>
               <p class="text-indigo-800/80 dark:text-indigo-300/80 leading-relaxed">
-                Hệ thống áp dụng công thức: <strong>Giá bán BR-34 = Giá gốc smm1s.vn + 10.000đ</strong> lợi nhuận cho toàn bộ dịch vụ và sản phẩm số (Gemini Pro, YouTube Premium, ChatGPT, Locket Gold, Via Facebook...).
+                Hệ thống áp dụng công thức: <strong>Giá bán BR-34 = Giá gốc smm1s.vn + 10.000đ</strong> lợi nhuận cho toàn bộ dịch vụ và sản phẩm số.
               </p>
             </div>
 
@@ -532,7 +519,6 @@
     </main>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="fixed bottom-6 right-6 z-50 max-w-sm px-4 py-3 rounded-2xl shadow-xl text-xs font-bold text-white bg-slate-900 border border-slate-800 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex items-center gap-2">
     <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
     <span id="toastMsg">Thông báo</span>
@@ -622,7 +608,7 @@
        2. TABS QUẢN TRỊ
        ======================================================== */
     function switchAdminTab(t) {
-      ['overview', 'users', 'orders', 'deposits', 'api'].forEach(name => {
+      ['overview', 'users', 'orders', 'api'].forEach(name => {
         const navBtn = $(`tabNav-${name}`);
         const panel = $(`panel-${name}`);
         if (navBtn) {
@@ -692,7 +678,7 @@
     }
 
     /* ========================================================
-       4. QUẢN LÝ THÀNH VIÊN & ĐIỀU CHỈNH SỐ DƯ
+       4. QUẢN LÝ THÀNH VIÊN (KHÔNG CÒN NÚT THĂNG/HẠ ADMIN)
        ======================================================== */
     async function loadUsers() {
       const tbody = $("usersTbody");
@@ -706,14 +692,14 @@
         allUsers = data || [];
         renderUsers(allUsers);
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-rose-500">Lỗi tải users: ${err.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-rose-500">Lỗi tải users: ${err.message}</td></tr>`;
       }
     }
 
     function renderUsers(list) {
       const tbody = $("usersTbody");
       if (!list.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">Không tìm thấy thành viên nào.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Không tìm thấy thành viên nào.</td></tr>`;
         return;
       }
 
@@ -748,11 +734,6 @@
                 <button type="button" onclick="adjustUserBalance('${u.id}', 1)" class="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs" title="Cộng tiền">+</button>
                 <button type="button" onclick="adjustUserBalance('${u.id}', -1)" class="px-2.5 py-1 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs" title="Trừ tiền">-</button>
               </div>
-            </td>
-            <td class="py-3 px-3 text-right">
-              <button onclick="toggleAdminRole('${u.id}', ${!isAdmin})" class="px-2.5 py-1 rounded-lg ${isAdmin ? 'bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} font-bold text-[11px] transition">
-                ${isAdmin ? 'Hạ quyền' : 'Thăng Admin'}
-              </button>
             </td>
           </tr>
         `;
@@ -791,24 +772,13 @@
       }
     }
 
-    async function toggleAdminRole(userId, newStatus) {
-      if (!confirm(`Bạn có chắc muốn ${newStatus ? 'CẤP QUYỀN ADMIN' : 'HẠ QUYỀN'} cho người dùng này?`)) return;
-      try {
-        const { error } = await supabaseClient.from("profiles").update({ is_admin: newStatus }).eq("id", userId);
-        if (error) throw error;
-        toast("Đã cập nhật quyền thành công!");
-        loadUsers();
-      } catch (err) {
-        toast("Lỗi phân quyền: " + err.message, false);
-      }
-    }
-
     /* ========================================================
-       5. QUẢN LÝ ĐƠN HÀNG & HOÀN TIỀN
+       5. QUẢN LÝ ĐƠN HÀNG (KHÔI PHỤC TOÀN BỘ)
        ======================================================== */
     async function loadAdminOrders() {
       const tbody = $("adminOrdersTbody");
       try {
+        // Load TẤT CẢ đơn hàng cũ, không giới hạn
         const { data, error } = await supabaseClient
           .from("orders")
           .select("*")
@@ -838,6 +808,12 @@
           (o.contact || "").toLowerCase().includes(q) ||
           String(o.id).includes(q)
         );
+      }
+
+      // Cập nhật số lượng đơn hiển thị
+      const info = $("orderCountInfo");
+      if (info) {
+        info.textContent = `Hiển thị ${list.length} / ${allOrders.length} đơn hàng (bao gồm cả đơn cũ)`;
       }
 
       if (!list.length) {
@@ -929,7 +905,7 @@
     }
 
     /* ========================================================
-       6. DUYỆT NẠP TIỀN TỰ ĐỘNG (DEPOSITS)
+       6. DUYỆT NẠP TIỀN TỰ ĐỘNG
        ======================================================== */
     async function loadDeposits() {
       const tbody = $("depositsTbody");
@@ -1016,8 +992,7 @@
           ? `
             <div class="flex items-center justify-end gap-1.5">
               <button onclick="approveDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
-                <i class="fa-solid fa-check"></i> Duyệt
-              </button>
+                <i class="fa-solid fa-check"></i> Duyệt              </button>
               <button onclick="rejectDeposit('${d.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-bold text-[11px] shadow-sm transition inline-flex items-center gap-1">
                 <i class="fa-solid fa-xmark"></i> Từ chối
               </button>
