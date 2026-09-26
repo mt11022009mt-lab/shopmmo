@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Test SMM1S</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui; background: #09090b; color: #fff; padding: 30px; margin: 0; }
+    .box { max-width: 700px; margin: 0 auto; }
+    h1 { color: #f43f5e; }
+    .card { background: #18181f; border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    input { width: 100%; padding: 12px; background: #09090b; border: 1px solid rgba(255,255,255,.1); border-radius: 10px; color: #fff; margin: 6px 0; box-sizing: border-box; }
+    input:focus { border-color: #f43f5e; outline: none; }
+    button { padding: 14px 24px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; }
+    .btn { background: #f43f5e; color: #fff; width: 100%; margin-top: 8px; }
+    .btn:hover { background: #e11d48; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    pre { background: #09090b; padding: 16px; border-radius: 10px; font-size: 13px; white-space: pre-wrap; word-break: break-word; min-height: 120px; font-family: monospace; border: 1px solid rgba(255,255,255,.05); margin: 0; }
+    .ok { color: #10b981; }
+    .err { color: #f43f5e; }
+    .info { color: #3b82f6; }
+    h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #a1a1aa; margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+<div class="box">
+  <h1>🧪 Test SMM1S Connection</h1>
+  <p style="color:#a1a1aa;font-size:14px;">Kiểm tra kết nối giữa BR-34 và API SMM1S.VN</p>
+
+  <div class="card">
+    <h3>Bước 1: Đăng nhập BR-34</h3>
+    <div id="loginForm">
+      <input id="email" type="text" placeholder="Email hoặc username BR-34">
+      <input id="pass" type="password" placeholder="Mật khẩu">
+      <button class="btn" id="loginBtn" onclick="doLogin()">🔓 ĐĂNG NHẬP</button>
+    </div>
+    <div id="loggedIn" style="display:none;">
+      <p class="ok">✅ Đã đăng nhập: <strong id="userEmail"></strong></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Bước 2: Test kết nối SMM1S</h3>
+    <button class="btn" id="testBtn" onclick="doTest()">🚀 TEST KẾT NỐI</button>
+    <button class="btn" id="servicesBtn" onclick="doServices()" style="background:#0ea5e9;">📋 LOAD DANH SÁCH DỊCH VỤ</button>
+  </div>
+
+  <div class="card">
+    <h3>📋 Kết quả</h3>
+    <pre id="result">Nhấn nút Test để bắt đầu...</pre>
+  </div>
+</div>
+
+<script>
+ const URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+  const KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+  const sb = supabase.createClient(URL, KEY);
+
+  const $ = id => document.getElementById(id);
+  const log = m => $("result").textContent += m + "\n";
+
+  async function checkSession() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      $("loginForm").style.display = "none";
+      $("loggedIn").style.display = "block";
+      $("userEmail").textContent = session.user.email;
+    }
+  }
+
+  async function doLogin() {
+    let email = $("email").value.trim();
+    const pass = $("pass").value.trim();
+    if (!email || !pass) { alert("Nhập email và mật khẩu!"); return; }
+    if (!email.includes("@")) email += "@br34.vn";
+    $("loginBtn").disabled = true;
+    $("loginBtn").textContent = "⏳ Đang đăng nhập...";
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    $("loginBtn").disabled = false;
+    $("loginBtn").textContent = "🔓 ĐĂNG NHẬP";
+    if (error) { alert("❌ Lỗi đăng nhập:\n" + error.message); return; }
+    alert("✅ Đăng nhập thành công!");
+    checkSession();
+  }
+
+  async function callProxy(action, params = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) throw new Error("Chưa đăng nhập");
+    const res = await fetch(URL + "/functions/v1/smm1s-proxy", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + session.access_token
+      },
+      body: JSON.stringify({ action, ...params })
+    });
+    return { status: res.status, data: await res.json() };
+  }
+
+  async function doTest() {
+    $("result").textContent = "";
+    $("testBtn").disabled = true;
+    $("testBtn").textContent = "⏳ Đang gọi API...";
+    log("🚀 BẮT ĐẦU TEST\n");
+    try {
+      const { status, data } = await callProxy("balance");
+      log("📊 HTTP Status: " + status);
+      log("📦 Response:\n" + JSON.stringify(data, null, 2) + "\n");
+      if (data.balance) {
+        log("🎉 THÀNH CÔNG! Số dư SMM1S: " + data.balance + " " + (data.currency || "VND"));
+        alert("🎉 THÀNH CÔNG!\n\nSố dư SMM1S: " + data.balance + " " + (data.currency || "VND"));
+      } else {
+        log("❌ LỖI: " + (data.error || "Không rõ"));
+        alert("❌ LỖI:\n" + (data.error || "Không rõ"));
+      }
+    } catch (e) {
+      log("❌ Lỗi fetch: " + e.message);
+      alert("❌ " + e.message);
+    } finally {
+      $("testBtn").disabled = false;
+      $("testBtn").textContent = "🚀 TEST KẾT NỐI";
+    }
+  }
+
+  async function doServices() {
+    $("result").textContent = "";
+    $("servicesBtn").disabled = true;
+    $("servicesBtn").textContent = "⏳ Đang tải...";
+    log("📋 Đang tải danh sách dịch vụ từ SMM1S...\n");
+    try {
+      const { status, data } = await callProxy("services");
+      log("📊 HTTP Status: " + status);
+      if (Array.isArray(data)) {
+        log("✅ Load được " + data.length + " dịch vụ!\n");
+        log("📋 10 dịch vụ đầu:\n");
+        data.slice(0, 10).forEach(s => {
+          log(`  ID: ${s.service} | ${s.name} | ${s.rate}đ/1k`);
+        });
+        log("\n💡 Xem đầy đủ trong Console (F12)");
+        console.table(data.slice(0, 30));
+        alert("✅ Load được " + data.length + " dịch vụ!\nXem Console (F12) để biết chi tiết");
+      } else {
+        log("❌ LỖI: " + (data.error || "Không rõ"));
+        alert("❌ LỖI:\n" + (data.error || "Không rõ"));
+      }
+    } catch (e) {
+      log("❌ Lỗi: " + e.message);
+      alert("❌ " + e.message);
+    } finally {
+      $("servicesBtn").disabled = false;
+      $("servicesBtn").textContent = "📋 LOAD DANH SÁCH DỊCH VỤ";
+    }
+  }
+
+  checkSession();
+</script>
+</body>
+</html>
