@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nạp tiền — BR-34</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+</head>
+<body class="font-sans antialiased text-[#f4f4f5] bg-[#09090b] relative overflow-x-hidden">
+
+<!-- AURORA + SPOTLIGHT -->
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div id="spotlight" class="spotlight"></div>
+
+<!-- ============ THANH ĐIỀU HƯỚNG LIQUID GLASS ============ -->
+<header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
+    <div class="liquid-glass grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
+          <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
+        </div>
+        <span data-brand class="h-grad">BR-34</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium shrink-0">
+        <a href="index.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition">Trang chủ</a>
+        <a href="nap-tien.html" class="px-3.5 py-1.5 rounded-full text-white font-bold bg-white/10 border border-white/15">Nạp tiền</a>
+        <a href="mua-tai-nguyen.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">
+          Mua tài nguyên <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-500 text-white">Hot</span>
+        </a>
+      </nav>
+
+      <!-- Right Header -->
+      <div class="justify-self-end flex items-center gap-2 shrink-0">
+        <a href="index.html" class="btn btn-dark px-3.5 py-2 text-xs">
+          <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">Trang chủ</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main class="relative max-w-lg mx-auto px-4 py-8 sm:py-12">
+  <div class="grid-bg"></div>
+
+  <!-- Trạng thái chưa đăng nhập -->
+  <div id="needLogin" class="hidden liquid-glass p-8 text-center">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 grid place-items-center text-2xl text-rose-400">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <h2 class="mt-4 text-lg font-extrabold text-white">Bạn cần đăng nhập</h2>
+    <p class="mt-1.5 text-xs text-zinc-400">Vui lòng đăng nhập hoặc tạo tài khoản để nạp tiền vào ví BR-34.</p>
+    <a href="index.html" class="btn btn-red btn-shine w-full py-3 mt-6 text-sm">ĐĂNG NHẬP / ĐĂNG KÝ</a>
+  </div>
+
+  <!-- Trang nạp tiền -->
+  <div id="depositPage" class="hidden space-y-5">
+    <div class="text-center">
+      <h1 class="text-2xl sm:text-3xl font-black h-grad">Nạp Tiền Vào Ví</h1>
+      <p class="mt-1.5 text-xs text-zinc-400">Quét mã VietQR bên dưới để nạp tiền tự động qua ngân hàng 24/7</p>
+    </div>
+
+    <!-- Liquid Glass Deposit Card -->
+    <div class="liquid-glass p-5 sm:p-6">
+      
+      <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Chọn nhanh số tiền</label>
+      <div id="depQuickAmounts" class="grid grid-cols-4 gap-2 mb-4"></div>
+
+      <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Số tiền muốn nạp (đ)</label>
+      <input id="depAmount" type="number" min="10000" step="1000" placeholder="vd: 100000" class="field" inputmode="numeric">
+
+      <!-- QR Code Display -->
+      <div class="mt-5 flex flex-col items-center">
+        <div class="rounded-2xl bg-white p-3 shadow-2xl shadow-rose-500/20">
+          <img id="depQrImg" src="" alt="QR chuyển khoản" width="230" height="230" class="rounded-lg" style="width:230px;height:230px">
+        </div>
+        <p class="mt-3 text-sm font-extrabold text-white">TRAN MINH TUAN</p>
+        <p class="text-xs text-zinc-400">Techcombank · VietQR / Napas 247</p>
+      </div>
+
+      <!-- Info Rows -->
+      <div class="mt-5 space-y-2.5 text-xs">
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-zinc-500">Số tài khoản Techcombank</p>
+            <p id="depAccNo" class="text-sm font-mono font-bold text-white mt-0.5">1907 6780 6580 18</p>
+          </div>
+          <button type="button" data-copy="depAccNo" class="btn btn-dark p-2 w-8 h-8 rounded-lg text-rose-400 hover:text-white" title="Copy số tài khoản">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-zinc-500">Nội dung chuyển khoản (Bắt buộc)</p>
+            <p id="depNote" class="text-sm font-mono font-bold text-rose-400 mt-0.5">—</p>
+          </div>
+          <button type="button" data-copy="depNote" class="btn btn-dark p-2 w-8 h-8 rounded-lg text-rose-400 hover:text-white" title="Copy cú pháp">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-200 leading-relaxed">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i><b>Lưu ý quan trọng:</b> Nhập <b>đúng nội dung chuyển khoản</b> ở trên để hệ thống nhận diện và đối soát tự động. Chuyển khoản xong bấm nút bên dưới và gửi bill qua Zalo nếu cần hỗ trợ nhanh.
+      </div>
+
+      <p id="depErr" class="hidden mt-3 text-xs text-rose-400 font-semibold text-center"></p>
+      <button id="depSubmitBtn" type="button" class="btn btn-red btn-shine w-full py-3.5 mt-4 text-sm font-black">
+        <i class="fa-solid fa-check"></i> TÔI ĐÃ CHUYỂN KHOẢN
+      </button>
+
+      <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="mt-3 flex items-center justify-center gap-1.5 text-xs text-zinc-400 hover:text-white underline">
+        <i class="fa-solid fa-comment-dots text-blue-400"></i> Gửi bill xác nhận qua Zalo Admin (0976976627)
+      </a>
+    </div>
+
+    <!-- Lịch sử nạp gần đây -->
+    <div class="liquid-glass p-5">
+      <p class="text-sm font-bold flex items-center gap-2 mb-3">
+        <i class="fa-regular fa-clock text-rose-400"></i> Lịch sử nạp gần đây
+      </p>
+      <div id="depHistory" class="space-y-2 text-xs text-zinc-400">Đang tải...</div>
+    </div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-xl text-sm font-semibold liquid-glass opacity-0 pointer-events-none transition-all duration-300 translate-y-4 text-center max-w-[90vw]" style="top:5rem"></div>
+
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+
+let currentUser = null;
+let tt;
+function toast(msg, ok = true) {
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok ? "fa-circle-check text-emerald-400" : "fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"), 3500);
+}
+
+const BANK_BIN = "970407";           // Techcombank
+const BANK_ACC = "19076780658018";   // TRAN MINH TUAN
+const BANK_ACC_NAME = "TRAN MINH TUAN";
+const QUICK_AMOUNTS = [50000, 100000, 200000, 500000];
+const ZALO_NUMBER = "0976976627";
+let depositReady = false;
+
+function depNoteFor(user){
+  const uname = (user.email || "").split("@")[0].toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+  return `NAP ${uname || user.id.slice(0,8).toUpperCase()}`;
+}
+
+function updateDepositQr(){
+  const amt = Math.max(0, parseInt($("depAmount").value || "0", 10) || 0);
+  const note = $("depNote").textContent;
+  let url = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACC}-compact2.png?accountName=${encodeURIComponent(BANK_ACC_NAME)}`;
+  if (amt >= 1000) url += `&amount=${amt}`;
+  if (note && note !== "—") url += `&addInfo=${encodeURIComponent(note)}`;
+  $("depQrImg").src = url;
+}
+
+function loadDepositHistory(){
+  const box = $("depHistory");
+  supabaseClient.from("deposits").select("amount,status,created_at")
+    .eq("user_id", currentUser.id).order("created_at", { ascending: false }).limit(5)
+    .then(({ data, error }) => {
+      if (error || !data || !data.length) { box.textContent = "Chưa có giao dịch nạp tiền nào."; return; }
+      const badge = st => st === "done" ? '<span class="badge-status done"><i class="fa-solid fa-check"></i> Đã duyệt</span>'
+        : st === "rejected" ? '<span class="badge-status canceled"><i class="fa-solid fa-xmark"></i> Từ chối</span>'
+        : '<span class="badge-status pending"><i class="fa-solid fa-clock"></i> Chờ duyệt</span>';
+      box.innerHTML = data.map(d => `
+        <div class="flex items-center justify-between rounded-xl bg-white/5 border border-white/5 px-3 py-2">
+          <span class="font-extrabold text-white text-sm">+${(d.amount||0).toLocaleString("vi-VN")}đ</span>
+          <div>${badge(d.status)}</div>
+        </div>`).join("");
+    })
+    .catch(() => { box.textContent = "Chưa có giao dịch nào."; });
+}
+
+function initDeposit(){
+  if (depositReady) { $("depNote").textContent = depNoteFor(currentUser); updateDepositQr(); loadDepositHistory(); return; }
+  depositReady = true;
+
+  $("depQuickAmounts").innerHTML = QUICK_AMOUNTS.map(a =>
+    `<button type="button" data-amt="${a}" class="btn btn-dark py-2 text-xs">${a/1000}k</button>`
+  ).join("");
+  $("depQuickAmounts").addEventListener("click", e => {
+    const btn = e.target.closest("[data-amt]");
+    if (!btn) return;
+    $("depAmount").value = btn.dataset.amt;
+    updateDepositQr();
+  });
+  $("depAmount").addEventListener("input", updateDepositQr);
+
+  $("depNote").textContent = depNoteFor(currentUser);
+  updateDepositQr();
+  loadDepositHistory();
+
+  $("depSubmitBtn").onclick = async () => {
+    const errEl = $("depErr");
+    errEl.classList.add("hidden");
+    const amt = Math.max(0, parseInt($("depAmount").value || "0", 10) || 0);
+    if (amt < 10000) { errEl.textContent = "Vui lòng nhập số tiền từ 10.000đ trở lên."; errEl.classList.remove("hidden"); return; }
+
+    const btn = $("depSubmitBtn");
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ĐANG GỬI...`;
+    try {
+      const { error } = await supabaseClient.from("deposits").insert([{
+        user_id: currentUser.id,
+        username: (currentUser.email || "").split("@")[0],
+        amount: amt,
+        note: $("depNote").textContent,
+        status: "pending"
+      }]);
+      if (error) throw error;
+      toast("Đã ghi nhận yêu cầu nạp tiền! Vui lòng gửi bill qua Zalo nếu cần duyệt gấp.");
+      $("depAmount").value = "";
+      updateDepositQr();
+      loadDepositHistory();
+      window.open(`https://zalo.me/${ZALO_NUMBER}`, "_blank", "noopener");
+    } catch (x) {
+      console.error(x);
+      errEl.textContent = "Lỗi gửi yêu cầu: " + (x.message || "Vui lòng liên hệ Admin qua Zalo.");
+      errEl.classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> TÔI ĐÃ CHUYỂN KHOẢN`;
+    }
+  };
+}
+
+/* Copy Click Helper */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-copy]");
+  if (!btn) return;
+  const src = $(btn.dataset.copy);
+  if (!src) return;
+  const text = src.textContent.trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("Đã sao chép: " + text);
+  } catch (x) {
+    toast("Không copy được, vui lòng copy thủ công.", false);
+  }
+});
+
+/* Khởi tạo phiên Auth */
+function renderAuthState(){
+  if (currentUser) {
+    $("needLogin").classList.add("hidden");
+    $("depositPage").classList.remove("hidden");
+    initDeposit();
+  } else {
+    $("needLogin").classList.remove("hidden");
+    $("depositPage").classList.add("hidden");
+  }
+}
+
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  currentUser = session ? session.user : null;
+  renderAuthState();
+});
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  currentUser = session ? session.user : null;
+  renderAuthState();
+});
+</script>
+</body>
+</html>

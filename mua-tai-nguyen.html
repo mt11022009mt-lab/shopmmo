@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mua tài nguyên — BR-34</title>
+<meta name="theme-color" content="#09090b">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+</head>
+<body class="font-sans antialiased text-[#f4f4f5] bg-[#09090b] relative overflow-x-hidden">
+
+<!-- AURORA + SPOTLIGHT -->
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div id="spotlight" class="spotlight"></div>
+
+<!-- ============ HEADER LIQUID GLASS ============ -->
+<header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-3 pb-2">
+    <div class="liquid-glass grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
+          <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
+        </div>
+        <span data-brand class="h-grad">BR-34</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium shrink-0">
+        <a href="index.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition">Trang chủ</a>
+        <a href="nap-tien.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition">Nạp tiền</a>
+        <a href="mua-tai-nguyen.html" class="px-3.5 py-1.5 rounded-full text-white font-bold bg-white/10 border border-white/15 flex items-center gap-1.5">
+          Mua tài nguyên <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-500 text-white">Hot</span>
+        </a>
+      </nav>
+
+      <!-- Right Header -->
+      <div class="justify-self-end flex items-center gap-2 shrink-0">
+        <div id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-bold text-emerald-400 whitespace-nowrap">
+          <i class="fa-solid fa-wallet text-[11px]"></i>
+          <span id="headerBalanceVal">0đ</span>
+        </div>
+        <a href="index.html" class="btn btn-dark px-3.5 py-2 text-xs">
+          <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">Trang chủ</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main class="relative max-w-[1400px] mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
+  <div class="grid-bg"></div>
+
+  <!-- TAB CHÍNH -->
+  <div class="flex gap-2 mb-6 flex-wrap">
+    <button id="tabBuy" class="btn btn-red btn-shine px-5 py-2.5 text-xs sm:text-sm">
+      <i class="fa-solid fa-cart-shopping"></i> Mua tài nguyên
+    </button>
+    <button id="tabHistory" class="btn btn-dark px-5 py-2.5 text-xs sm:text-sm">
+      <i class="fa-solid fa-clock-rotate-left text-rose-400"></i> Lịch sử mua TN
+      <span id="histCount" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 ml-1">0</span>
+    </button>
+  </div>
+
+  <!-- VIEW MUA -->
+  <section id="viewBuy">
+    <div class="overflow-x-auto pb-3 mb-6">
+      <div id="categoryTabs" class="flex gap-2 min-w-max"></div>
+    </div>
+    
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <p id="emptyState" class="hidden text-center text-zinc-500 py-16">Chưa có sản phẩm nào trong mục này.</p>
+
+    <!-- Lưu ý -->
+    <div class="mt-6 liquid-glass p-4 sm:p-5 border-amber-400/30 bg-amber-500/5">
+      <div class="flex items-start gap-3">
+        <span class="w-9 h-9 rounded-xl grid place-items-center bg-amber-400/15 border border-amber-400/30 text-amber-300 shrink-0">
+          <i class="fa-solid fa-circle-info"></i>
+        </span>
+        <div class="flex-1 min-w-0 text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+          <p class="font-bold text-amber-300 mb-1">Lưu ý khi mua tài nguyên</p>
+          <p>Sau khi nhận tài nguyên, hãy kiểm tra dữ liệu sớm. Nếu đơn bị lỗi, hãy <b class="text-amber-200">chụp màn hình</b> lại và liên hệ Zalo <a href="https://zalo.me/0976976627" target="_blank" class="underline text-blue-400 font-bold">0976976627</a> để được bảo hành và hỗ trợ nhanh nhất.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW LỊCH SỬ -->
+  <section id="viewHistory" class="hidden">
+    <div id="histLoginBanner" class="hidden mb-6 liquid-glass p-5">
+      <div class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-2xl grid place-items-center bg-amber-400/15 border border-amber-400/30 text-amber-300 shrink-0">
+          <i class="fa-solid fa-lock text-lg"></i>
+        </span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-sm text-white">Bạn chưa đăng nhập</h3>
+          <p class="text-xs text-zinc-400 mt-1">Vui lòng đăng nhập để xem lịch sử mua tài nguyên của bạn.</p>
+        </div>
+        <a href="index.html" class="btn btn-red btn-shine px-4 py-2 text-xs shrink-0">
+          <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+        </a>
+      </div>
+    </div>
+
+    <div id="histContent" class="hidden">
+      <div class="mb-4 grid sm:grid-cols-[1fr_auto] gap-3">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+          <input id="histSearch" type="text" class="field pl-9 text-xs sm:text-sm" placeholder="Tìm theo tên sản phẩm hoặc mã đơn...">
+        </div>
+        <button id="histRefresh" type="button" class="btn btn-dark px-5 py-2 text-xs sm:text-sm">
+          <i class="fa-solid fa-rotate-right"></i> Làm mới
+        </button>
+      </div>
+
+      <div class="mb-5 flex gap-2 flex-wrap">
+        <button class="smm-chip active" data-status="all">Tất cả <span class="cnt font-mono ml-1" data-cnt="all">0</span></button>
+        <button class="smm-chip" data-status="pending">Đang xử lý <span class="cnt font-mono ml-1" data-cnt="pending">0</span></button>
+        <button class="smm-chip" data-status="done">Hoàn thành <span class="cnt font-mono ml-1" data-cnt="done">0</span></button>
+        <button class="smm-chip" data-status="canceled">Đã huỷ <span class="cnt font-mono ml-1" data-cnt="canceled">0</span></button>
+      </div>
+
+      <div id="historyList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+      <div id="historyEmpty" class="hidden text-center py-16 liquid-glass p-8">
+        <i class="fa-solid fa-receipt text-3xl text-zinc-600 mb-3"></i>
+        <h3 class="text-base font-bold text-white">Chưa có đơn nào</h3>
+        <p class="text-xs text-zinc-500 mt-1">Bạn chưa mua tài nguyên nào. Hãy chuyển sang tab Mua để bắt đầu.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL MUA -->
+<div id="buyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="liquid-glass w-full max-w-md p-6 relative">
+    <button id="closeBuyModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="text-lg font-black h-grad flex items-center gap-2"><i class="fa-solid fa-bag-shopping text-rose-400"></i>Xác nhận mua</h3>
+    <p class="text-xs text-zinc-400 mt-0.5">Kiểm tra thông tin tài nguyên trước khi xác nhận</p>
+
+    <div class="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center gap-3">
+      <div id="buyLogo" class="w-12 h-12 rounded-xl bg-white p-2 flex items-center justify-center shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <p id="buyName" class="font-bold text-sm leading-snug text-white"></p>
+        <p id="buyPrice" class="text-rose-400 font-black text-base mt-0.5"></p>
+      </div>
+    </div>
+
+    <div class="mt-3 grid grid-cols-2 gap-2">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+        <p class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Số dư hiện tại</p>
+        <p id="buyBalance" class="text-emerald-400 font-black text-base mt-0.5">0đ</p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+        <p class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Sau khi mua</p>
+        <p id="buyAfter" class="font-black text-base mt-0.5 text-white">0đ</p>
+      </div>
+    </div>
+
+    <div id="buyWarn" class="hidden mt-3 rounded-xl border border-amber-400/30 bg-amber-400/10 p-2.5 text-xs text-amber-200 leading-relaxed">
+      <i class="fa-solid fa-triangle-exclamation mr-1"></i><span id="buyWarnText"></span>
+    </div>
+
+    <div class="mt-3">
+      <label class="block text-xs font-semibold text-zinc-400 mb-1">Ghi chú (Tùy chọn)</label>
+      <textarea id="buyNote" rows="2" class="field text-xs" placeholder="Email nhận tài khoản, yêu cầu riêng..."></textarea>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-2">
+      <button id="buyCancel" type="button" class="btn btn-dark py-2.5 text-xs">Huỷ</button>
+      <button id="buyConfirm" type="button" class="btn btn-red btn-shine py-2.5 text-xs font-black">
+        <i class="fa-solid fa-check"></i> Xác nhận mua
+      </button>
+    </div>
+    <a id="buyGoTopUp" href="nap-tien.html" class="hidden btn btn-dark w-full py-2.5 text-xs mt-2 text-center text-emerald-400">
+      <i class="fa-solid fa-wallet mr-1"></i> Nạp thêm tiền vào ví ngay
+    </a>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-xl text-sm font-semibold liquid-glass opacity-0 pointer-events-none transition-all duration-300 translate-y-4 text-center max-w-[90vw]" style="top:5rem"></div>
+
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY, {
+  global: { fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" }) }
+});
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n||0).toLocaleString("vi-VN") + "đ";
+
+let currentUser = null;
+let currentBalance = 0;
+let myOrders = [];
+let pendingProduct = null;
+
+const LOGOS = {
+  all: "https://cdn-icons-png.flaticon.com/512/3524/3524636.png",
+  openai: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+  anthropic: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
+  gemini: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+  kimi: "https://avatars.githubusercontent.com/u/129152888?s=200&v=4",
+  canva: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
+  capcut: "https://upload.wikimedia.org/wikipedia/commons/6/6b/CapCut_logo.svg",
+  freepik: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Freepik_logo.svg",
+  zalo: "https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg",
+  facebook: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+  tiktok: "https://upload.wikimedia.org/wikipedia/commons/3/3b/TikTok_icon.svg",
+  youtube: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
+  twitter: "https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg",
+  x: "https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg",
+  netflix: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+  garena: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Garena_logo.svg",
+  lienquan: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Lien_Quan_Mobile_logo.png",
+  autodesk: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Autodesk_logo.svg",
+  hubspot: "https://upload.wikimedia.org/wikipedia/commons/3/3f/HubSpot_Logo.svg",
+  beauty: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
+  phone: "https://cdn-icons-png.flaticon.com/512/724/724664.png",
+  mail: "https://cdn-icons-png.flaticon.com/512/542/542638.png",
+  default: "https://cdn-icons-png.flaticon.com/512/3524/3524636.png",
+};
+
+const logoSVG = key => {
+  const src = LOGOS[key] || LOGOS.default;
+  return `<img src="${src}" alt="" class="w-full h-full object-contain p-1" loading="lazy" referrerpolicy="no-referrer">`;
+};
+
+const CATEGORIES = [
+  { id:"all", name:"Tất Cả", logo:"all" },
+  { id:"api-ai", name:"API AI", logo:"openai" },
+  { id:"canva", name:"Canva Pro", logo:"canva" },
+  { id:"capcut", name:"CapCut Pro", logo:"capcut" },
+  { id:"chatgpt", name:"ChatGPT", logo:"openai" },
+  { id:"marketing", name:"Marketing Tools", logo:"hubspot" },
+  { id:"gemini", name:"Gemini Pro", logo:"gemini" },
+  { id:"netflix", name:"Netflix 4K", logo:"netflix" },
+  { id:"youtube", name:"Youtube Premium", logo:"youtube" }
+];
+
+const PRODUCTS = [
+  { id:"p01", name:"CapCut Pro 7Days - Bản quyền", cat:"capcut", price:20000, logo:"capcut", stock:10 },
+  { id:"p02", name:"100$ API Claude 30D (Anthropic)", cat:"api-ai", price:20000, logo:"anthropic", stock:5 },
+  { id:"p03", name:"API Freepik Magnific Premium 2 tháng", cat:"api-ai", price:190000, logo:"freepik", stock:8 },
+  { id:"p04", name:"API Grok xAI 100$ 1 tháng", cat:"api-ai", price:1220000, logo:"x", stock:3 },
+  { id:"p05", name:"API KIMI 15M TOKEN", cat:"api-ai", price:20000, logo:"kimi", stock:12 },
+  { id:"p06", name:"Autodesk Full Apps Bản quyền 1 năm", cat:"marketing", price:79000, logo:"autodesk", stock:15 },
+  { id:"p07", name:"Bot Zalo Rải Link 1 Tháng", cat:"marketing", price:50000, logo:"zalo", stock:7 },
+  { id:"p08", name:"Canva Pro 1 Tháng (Chính chủ)", cat:"canva", price:50000, logo:"canva", stock:20 },
+  { id:"p10", name:"CapCut Pro 1 Tháng (Full tính năng)", cat:"capcut", price:35000, logo:"capcut", stock:18 },
+  { id:"p11", name:"CapCut Pro 1 Năm (Account Cấp)", cat:"capcut", price:219999, logo:"capcut", stock:9 },
+  { id:"p15", name:"ChatGPT Plus GPT-4o 1 Tháng", cat:"chatgpt", price:160000, logo:"openai", stock:14 },
+  { id:"p16", name:"Google Gemini Advanced Pro 1 Năm", cat:"gemini", price:20000, logo:"gemini", stock:25 },
+  { id:"p17", name:"YouTube Premium 1 Năm (Account)", cat:"youtube", price:99999, logo:"youtube", stock:30 }
+];
+
+let activeCat = "all";
+
+function renderTabs() {
+  $("categoryTabs").innerHTML = CATEGORIES.map(c => `
+    <button class="smm-chip ${c.id === activeCat ? 'active' : ''}" data-cat="${c.id}">
+      <span class="w-4 h-4 inline-block">${logoSVG(c.logo)}</span>
+      <span>${c.name}</span>
+    </button>
+  `).join("");
+
+  $("categoryTabs").querySelectorAll(".smm-chip").forEach(btn => {
+    btn.onclick = () => { activeCat = btn.dataset.cat; renderTabs(); renderGrid(); };
+  });
+}
+
+function renderGrid() {
+  const list = activeCat === "all" ? PRODUCTS : PRODUCTS.filter(p => p.cat === activeCat);
+  $("emptyState").classList.toggle("hidden", list.length > 0);
+
+  $("productGrid").innerHTML = list.map(p => `
+    <div class="liquid-glass p-4 flex gap-3.5 items-center">
+      <div class="w-14 h-14 rounded-xl bg-white p-2 grid place-items-center shrink-0 border border-white/10 shadow">
+        ${logoSVG(p.logo)}
+      </div>
+      <div class="flex-1 min-w-0">
+        <h3 class="font-bold text-xs sm:text-sm text-white line-clamp-2">${p.name}</h3>
+        <p class="text-[11px] text-emerald-400 font-semibold mt-0.5">Sẵn hàng: ${p.stock}</p>
+        <p class="font-black text-sm text-rose-400 mt-1">${fmt(p.price)}</p>
+      </div>
+      <button type="button" class="btn btn-red btn-shine px-3.5 py-2 text-xs shrink-0 font-bold" onclick="handleBuy('${p.id}')">
+        <i class="fa-solid fa-cart-shopping"></i> Mua
+      </button>
+    </div>
+  `).join("");
+}
+
+function handleBuy(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+
+  if (!currentUser) {
+    location.href = "index.html";
+    return;
+  }
+
+  pendingProduct = p;
+  $("buyLogo").innerHTML = logoSVG(p.logo);
+  $("buyName").textContent = p.name;
+  $("buyPrice").textContent = fmt(p.price);
+  $("buyBalance").textContent = fmt(currentBalance);
+
+  const after = currentBalance - p.price;
+  const afterEl = $("buyAfter");
+  afterEl.textContent = fmt(Math.max(0, after));
+  afterEl.className = after < 0 ? "font-black text-base mt-0.5 text-rose-400" : "font-black text-base mt-0.5 text-emerald-400";
+
+  const warn = $("buyWarn");
+  const warnText = $("buyWarnText");
+  const confirmBtn = $("buyConfirm");
+  const topUp = $("buyGoTopUp");
+
+  if (after < 0) {
+    warn.classList.remove("hidden");
+    warnText.textContent = `Số dư không đủ! Còn thiếu ${fmt(Math.abs(after))}.`;
+    confirmBtn.disabled = true;
+    confirmBtn.classList.add("opacity-50", "pointer-events-none");
+    topUp.classList.remove("hidden");
+  } else {
+    warn.classList.add("hidden");
+    confirmBtn.disabled = false;
+    confirmBtn.classList.remove("opacity-50", "pointer-events-none");
+    topUp.classList.add("hidden");
+  }
+
+  $("buyNote").value = "";
+  $("buyModal").classList.remove("opacity-0", "pointer-events-none");
+}
+
+$("closeBuyModal").onclick = () => $("buyModal").classList.add("opacity-0", "pointer-events-none");
+$("buyCancel").onclick = () => $("buyModal").classList.add("opacity-0", "pointer-events-none");
+
+$("buyConfirm").onclick = async () => {
+  if (!pendingProduct || !currentUser) return;
+  const btn = $("buyConfirm");
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...`;
+
+  try {
+    const { data: profile, error: pErr } = await supabaseClient
+      .from("profiles").select("balance,total_spent").eq("id", currentUser.id).maybeSingle();
+    if (pErr) throw pErr;
+
+    const balance = Number(profile?.balance || 0);
+    const spent = Number(profile?.total_spent || 0);
+
+    if (balance < pendingProduct.price) throw new Error("Số dư không đủ!");
+
+    const newBalance = balance - pendingProduct.price;
+    const newSpent = spent + pendingProduct.price;
+    const code = "TN" + Date.now().toString().slice(-8);
+
+    // Trừ tiền
+    const { error: uErr } = await supabaseClient
+      .from("profiles").update({ balance: newBalance, total_spent: newSpent }).eq("id", currentUser.id);
+    if (uErr) throw uErr;
+
+    // Tạo đơn
+    const { error: oErr } = await supabaseClient.from("resource_orders").insert([{
+      user_id: currentUser.id,
+      order_code: code,
+      product_id: pendingProduct.id,
+      product_name: pendingProduct.name,
+      product_logo: pendingProduct.logo,
+      category: pendingProduct.cat,
+      price: pendingProduct.price,
+      status: "pending",
+      note: $("buyNote").value.trim() || null
+    }]);
+
+    if (oErr) {
+      await supabaseClient.from("profiles").update({ balance, total_spent: spent }).eq("id", currentUser.id);
+      throw oErr;
+    }
+
+    currentBalance = newBalance;
+    $("buyModal").classList.add("opacity-0", "pointer-events-none");
+    toast(`🎉 Đã mua thành công "${pendingProduct.name}"!`);
+    refreshBalance();
+    loadOrders();
+  } catch(e) {
+    toast("Lỗi: " + (e.message || "Thử lại sau."), false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> Xác nhận mua`;
+  }
+};
+
+/* View Tabs */
+$("tabBuy").onclick = () => {
+  $("tabBuy").className = "btn btn-red btn-shine px-5 py-2.5 text-xs sm:text-sm";
+  $("tabHistory").className = "btn btn-dark px-5 py-2.5 text-xs sm:text-sm";
+  $("viewBuy").classList.remove("hidden");
+  $("viewHistory").classList.add("hidden");
+};
+$("tabHistory").onclick = () => {
+  $("tabHistory").className = "btn btn-red btn-shine px-5 py-2.5 text-xs sm:text-sm";
+  $("tabBuy").className = "btn btn-dark px-5 py-2.5 text-xs sm:text-sm";
+  $("viewBuy").classList.add("hidden");
+  $("viewHistory").classList.remove("hidden");
+  loadOrders();
+};
+
+/* Lịch sử đơn hàng */
+async function loadOrders() {
+  if (!currentUser) {
+    $("histLoginBanner").classList.remove("hidden");
+    $("histContent").classList.add("hidden");
+    return;
+  }
+  $("histLoginBanner").classList.add("hidden");
+  $("histContent").classList.remove("hidden");
+
+  const { data } = await supabaseClient.from("resource_orders")
+    .select("*").eq("user_id", currentUser.id).order("created_at", { ascending: false });
+  myOrders = data || [];
+  $("histCount").textContent = myOrders.length;
+  renderHistory();
+}
+
+function renderHistory() {
+  const container = $("historyList");
+  if (!myOrders.length) {
+    container.innerHTML = "";
+    $("historyEmpty").classList.remove("hidden");
+    return;
+  }
+  $("historyEmpty").classList.add("hidden");
+
+  container.innerHTML = myOrders.map(o => {
+    const badgeCls = o.status === 'done' ? 'done' : o.status === 'canceled' ? 'canceled' : 'pending';
+    const badgeLabel = o.status === 'done' ? 'Hoàn thành' : o.status === 'canceled' ? 'Đã hủy' : 'Đang xử lý';
+
+    return `
+      <div class="liquid-glass p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white p-1.5 shrink-0">${logoSVG(o.product_logo)}</div>
+          <div class="flex-1 min-w-0">
+            <h4 class="font-bold text-xs sm:text-sm text-white line-clamp-2">${o.product_name}</h4>
+            <p class="text-[10px] font-mono text-zinc-500">${o.order_code}</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+          <span class="font-black text-rose-400 text-sm">${fmt(o.price)}</span>
+          <span class="badge-status ${badgeCls}">${badgeLabel}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function refreshBalance() {
+  if (!currentUser) return;
+  supabaseClient.from("profiles").select("balance").eq("id", currentUser.id).maybeSingle()
+    .then(({ data }) => {
+      currentBalance = Number(data?.balance || 0);
+      $("headerBalanceVal").textContent = fmt(currentBalance);
+    });
+}
+
+function toast(msg, ok = true) {
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok ? "fa-circle-check text-emerald-400" : "fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  setTimeout(() => t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"), 3500);
+}
+
+renderTabs();
+renderGrid();
+
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  currentUser = session ? session.user : null;
+  refreshBalance();
+});
+supabaseClient.auth.onAuthStateChange((_e, session) => {
+  currentUser = session ? session.user : null;
+  refreshBalance();
+});
+</script>
+</body>
+</html>

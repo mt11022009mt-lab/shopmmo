@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BR-34 — SMM Panel & Dịch Vụ Mạng Xã Hội</title>
+<meta name="theme-color" content="#09090b">
+<meta name="google-site-verification" content="oJaGIbTibxuXLGQhvqtK3rMbgvzjUv2yFnd_cdaQtPo" />
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
+</head>
+<body class="font-sans antialiased text-[#f4f4f5] bg-[#09090b] relative overflow-x-hidden">
+
+<!-- AURORA & SPOTLIGHT -->
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div id="spotlight" class="spotlight"></div>
+
+<!-- ============ THANH ĐIỀU HƯỚNG LIQUID GLASS ============ -->
+<header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
+    <div class="liquid-glass grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4 h-16 pl-3 pr-2.5 sm:pl-5 sm:pr-3">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="justify-self-start flex items-center gap-2.5 font-extrabold text-lg shrink-0">
+        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0 shadow-lg shadow-rose-500/30">
+          <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34 Logo" class="w-full h-full object-cover object-top">
+        </div>
+        <span data-brand class="h-grad">BR-34</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium shrink-0">
+        <a href="index.html" class="px-3.5 py-1.5 rounded-full text-white font-bold bg-white/10 border border-white/15">Trang chủ</a>
+        <a href="nap-tien.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition">Nạp tiền</a>
+        <a href="mua-tai-nguyen.html" class="px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">
+          Mua tài nguyên <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-500 text-white">Hot</span>
+        </a>
+        <a id="navAdminLink" href="admin.html" class="hidden px-3.5 py-1.5 rounded-full text-amber-400 hover:text-amber-300 hover:bg-white/5 transition flex items-center gap-1">
+          <i class="fa-solid fa-user-shield text-xs"></i>Quản trị
+        </a>
+      </nav>
+
+      <!-- Right Header: Balance & User Actions -->
+      <div class="justify-self-end flex items-center gap-2 shrink-0">
+        <div id="userBox" class="relative hidden flex items-center gap-2">
+          
+          <!-- Balance Pill -->
+          <a href="nap-tien.html" id="headerBalance" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-bold text-emerald-400 whitespace-nowrap hover:border-emerald-400 transition" title="Số dư hiện tại - Bấm để nạp thêm">
+            <i class="fa-solid fa-wallet text-[11px]"></i>
+            <span id="headerBalanceVal">0đ</span>
+          </a>
+
+          <!-- Avatar Button & Menu -->
+          <button id="avatarBtn" type="button" aria-label="Tài khoản" class="avatar-ring w-10 h-10">
+            <span>
+              <img id="avatarImg" alt="" hidden>
+              <i id="avatarFallback" class="fa-solid fa-user text-sm"></i>
+            </span>
+          </button>
+
+          <div id="avatarMenu" class="hidden absolute right-0 top-12 w-56 rounded-2xl border border-white/10 p-2 shadow-2xl z-50 bg-[#121217]">
+            <p id="menuName" class="px-3 py-2 mb-1 text-xs font-bold text-zinc-300 border-b border-white/10 truncate"></p>
+            <button id="openAccount" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
+              <i class="fa-solid fa-id-card text-emerald-400"></i>Thông tin tài khoản
+            </button>
+            <a id="openAdminBtn" href="admin.html" class="hidden w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
+              <i class="fa-solid fa-user-shield text-amber-400"></i>Trang quản trị
+            </a>
+            <a href="nap-tien.html" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
+              <i class="fa-solid fa-qrcode text-rose-400"></i>Nạp tiền VietQR
+            </a>
+            <button id="avatarChange" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
+              <i class="fa-regular fa-image text-rose-400"></i>Đổi ảnh đại diện
+            </button>
+            <button id="avatarRemove" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
+              <i class="fa-regular fa-trash-can text-zinc-400"></i>Xoá ảnh
+            </button>
+            <button id="avatarLogout" type="button" class="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-white/5 text-rose-400 border-t border-white/10 mt-1 flex items-center gap-2">
+              <i class="fa-solid fa-right-from-bracket"></i>Đăng xuất
+            </button>
+          </div>
+          <input id="avatarFile" type="file" accept="image/*" hidden>
+        </div>
+
+        <button id="authHeaderBtn" type="button" class="btn btn-red btn-shine px-4 py-2 text-sm whitespace-nowrap">Đăng nhập</button>
+        <button id="menuBtn" type="button" aria-label="Mở menu" class="md:hidden w-10 h-10 rounded-xl btn-dark grid place-items-center"><i class="fa-solid fa-bars"></i></button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="navMob" class="hidden md:hidden mt-2 rounded-2xl border border-white/10 bg-[#121217]/90 backdrop-blur-xl p-3 grid gap-1 text-sm font-medium">
+      <a href="index.html" class="px-3 py-2 rounded-lg bg-white/10 text-white font-bold">Trang chủ</a>
+      <a href="nap-tien.html" class="px-3 py-2 rounded-lg text-zinc-300 hover:text-white">Nạp tiền</a>
+      <a href="mua-tai-nguyen.html" class="px-3 py-2 rounded-lg text-zinc-300 hover:text-white flex items-center justify-between">
+        Mua tài nguyên <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-500 text-white">Hot</span>
+      </a>
+      <a id="navMobAdmin" href="admin.html" class="hidden px-3 py-2 rounded-lg text-amber-400 font-bold">Trang quản trị</a>
+    </nav>
+  </div>
+</header>
+
+<main class="relative overflow-x-hidden">
+  <div class="grid-bg"></div>
+
+  <!-- HERO SECTION -->
+  <section class="max-w-4xl mx-auto px-4 pt-10 sm:pt-16 text-center">
+    <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:border-rose-500/40 transition">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      Hỗ trợ 24/7 qua Zalo 0976976627 <i class="fa-solid fa-chevron-right text-[10px] text-zinc-400"></i>
+    </a>
+    
+    <h1 class="mt-6 font-black tracking-tight leading-[1.08] text-4xl sm:text-6xl h-grad">
+      Hệ Thống SMM Panel<br><span class="red-text">BR-34 LIQUID GLASS</span>
+    </h1>
+    <p class="mt-4 text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">
+      Dịch vụ tăng like, follow, sub, view mạng xã hội tự động. Đặt đơn siêu tốc, tích hợp thanh toán VietQR và tài nguyên bản quyền.
+    </p>
+
+    <div class="mt-7 flex items-center justify-center gap-3 flex-wrap">
+      <a href="#dat-don" class="btn btn-red btn-shine px-7 py-3 text-sm">
+        <i class="fa-solid fa-bolt"></i> Tạo đơn hàng ngay
+      </a>
+      <a href="mua-tai-nguyen.html" class="btn btn-dark px-6 py-3 text-sm">
+        <i class="fa-solid fa-store text-rose-400"></i> Mua tài nguyên số
+      </a>
+    </div>
+
+    <!-- Supported platforms bar -->
+    <div class="mt-10 flex items-center gap-3 text-xs text-zinc-400 max-w-md mx-auto">
+      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-rose-500/50"></span>
+      <span class="shrink-0 font-bold uppercase tracking-wider text-[11px]">Đa Nền Tảng Tự Động</span>
+      <span class="flex gap-2 shrink-0">
+        <span class="w-7 h-7 rounded-lg grid place-items-center text-white text-xs" style="background:#1877f2"><i class="fa-brands fa-facebook-f"></i></span>
+        <span class="w-7 h-7 rounded-lg grid place-items-center text-white text-xs bg-black border border-white/20"><i class="fa-brands fa-tiktok"></i></span>
+        <span class="w-7 h-7 rounded-lg grid place-items-center text-white text-xs" style="background:linear-gradient(45deg,#f9a03f,#e1306c,#833ab4)"><i class="fa-brands fa-instagram"></i></span>
+        <span class="w-7 h-7 rounded-lg grid place-items-center text-white text-xs bg-red-600"><i class="fa-brands fa-youtube"></i></span>
+      </span>
+      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-rose-500/50"></span>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       PHÂN HỆ TẠO ĐƠN HÀNG SMM (SMM ORDER PANEL CHUẨN SMM1S)
+       ======================================================== -->
+  <section id="dat-don" class="max-w-4xl mx-auto px-4 mt-12 scroll-mt-24">
+    <div class="liquid-glass p-5 sm:p-7">
+      
+      <div class="flex items-center justify-between pb-4 mb-5 border-b border-white/10 flex-wrap gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/30 grid place-items-center text-rose-400">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </span>
+          <div>
+            <h2 class="text-lg font-black h-grad">Tạo Đơn Hàng Mới</h2>
+            <p class="text-xs text-zinc-400">Chọn nền tảng, dịch vụ và nhập link để lên đơn tự động</p>
+          </div>
+        </div>
+        <button type="button" onclick="$('ruleModal').classList.remove('hidden')" class="btn btn-dark px-3 py-1.5 text-xs text-rose-300">
+          <i class="fa-solid fa-circle-info"></i> Quy định đặt đơn
+        </button>
+      </div>
+
+      <!-- Platform Chips -->
+      <div class="mb-5">
+        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+          <i class="fa-solid fa-layer-group text-rose-400 mr-1"></i> Chọn nền tảng:
+        </label>
+        <div class="flex gap-2 overflow-x-auto pb-1" id="smmPlatformChips">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Dropdown Dịch Vụ -->
+      <div class="grid sm:grid-cols-2 gap-3 mb-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
+            <i class="fa-solid fa-share-nodes text-rose-400 mr-1"></i> Nền tảng
+          </label>
+          <select id="smmPlatformSelect" class="field"></select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
+            <i class="fa-solid fa-list-check text-rose-400 mr-1"></i> Loại dịch vụ
+          </label>
+          <select id="smmServiceSelect" class="field"></select>
+        </div>
+      </div>
+
+      <!-- Danh Sách Máy Chủ (Server List) -->
+      <div class="mb-5">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">
+            <i class="fa-solid fa-server text-rose-400 mr-1"></i> Chọn máy chủ (Server):
+          </label>
+          <span id="smmServerCount" class="text-xs text-zinc-500 font-semibold">0 gói khả dụng</span>
+        </div>
+        <div id="smmServerList" class="space-y-2">
+          <!-- Rendered by JS -->
+        </div>
+        <div id="smmServerNote" class="mt-2 text-xs p-3 rounded-xl border border-rose-500/20 bg-rose-500/5 text-zinc-300 hidden"></div>
+      </div>
+
+      <!-- Chi Tiết Đơn Hàng: Link & Số Lượng -->
+      <div class="glass-card p-4 sm:p-5 mb-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-1.5">
+            <b class="text-rose-400">*</b> Liên kết bài viết / Video / Kênh cần chạy:
+          </label>
+          <div class="flex gap-2">
+            <input id="smmLinkInput" type="text" placeholder="https://www.tiktok.com/@user/video/... hoặc link Facebook" class="field" required>
+            <button type="button" id="btnPasteLink" class="btn btn-dark px-4 text-xs shrink-0 whitespace-nowrap text-rose-400 hover:text-white">
+              <i class="fa-solid fa-paste"></i> Dán link
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-zinc-300">
+              <b class="text-rose-400">*</b> Số lượng:
+            </label>
+            <span id="smmQtyRange" class="text-xs text-zinc-500 font-mono">(100 ~ 50.000)</span>
+          </div>
+          <input id="smmQtyInput" type="number" min="1" value="100" class="field">
+          <div class="flex gap-2 mt-2">
+            <button type="button" class="btn btn-dark px-2.5 py-1 text-xs" onclick="setQty(100)">+100</button>
+            <button type="button" class="btn btn-dark px-2.5 py-1 text-xs" onclick="setQty(500)">+500</button>
+            <button type="button" class="btn btn-dark px-2.5 py-1 text-xs" onclick="setQty(1000)">+1.000</button>
+            <button type="button" class="btn btn-dark px-2.5 py-1 text-xs" onclick="setQty(5000)">+5.000</button>
+          </div>
+        </div>
+
+        <!-- Khung bình luận (Chỉ hiện khi dịch vụ có comment) -->
+        <div id="smmCommentBox" class="hidden">
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-1.5">
+            <b class="text-rose-400">*</b> Nội dung bình luận (Mỗi dòng 1 comment):
+          </label>
+          <textarea id="smmComments" rows="4" class="field text-sm" placeholder="Sản phẩm rất đẹp&#10;Shop tư vấn nhiệt tình nha&#10;Giao hàng nhanh quá"></textarea>
+          <p class="text-[11px] text-zinc-500 mt-1">Số lượng sẽ tự động tính theo số dòng bình luận hợp lệ.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1">
+            Ghi chú (Tùy chọn):
+          </label>
+          <input id="smmNoteInput" type="text" placeholder="Ghi chú thêm cho admin nếu có..." class="field text-sm">
+        </div>
+      </div>
+
+      <!-- Liquid Glass Confirmation Box -->
+      <div class="rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-950/30 via-zinc-900/60 to-black/80 p-5 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+          <div>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Dịch vụ đã chọn</p>
+            <p id="confirmServiceName" class="font-extrabold text-sm sm:text-base text-white mt-0.5">Chưa chọn dịch vụ</p>
+          </div>
+          <span id="confirmRateBadge" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-white/10 text-rose-400">0đ / 1k</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-4 text-xs">
+          <div class="p-2.5 rounded-xl bg-white/5 border border-white/5">
+            <span class="text-zinc-500 font-semibold block">SỐ LƯỢNG</span>
+            <strong id="confirmQtyVal" class="text-sm font-bold text-white">100</strong>
+          </div>
+          <div class="p-2.5 rounded-xl bg-white/5 border border-white/5">
+            <span class="text-zinc-500 font-semibold block">SỐ DƯ KHẢ DỤNG</span>
+            <strong id="confirmUserBal" class="text-sm font-bold text-emerald-400">0đ</strong>
+          </div>
+          <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 col-span-2 sm:col-span-1">
+            <span class="text-zinc-500 font-semibold block">TRẠNG THÁI</span>
+            <strong class="text-sm font-bold text-rose-400">Sẵn sàng</strong>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 flex-wrap gap-3">
+          <div>
+            <p class="text-[11px] font-bold text-zinc-400 uppercase">TỔNG THANH TOÁN:</p>
+            <p id="confirmTotalPay" class="text-2xl sm:text-3xl font-black text-rose-400">0đ</p>
+          </div>
+          <button type="button" id="btnSubmitSMMOrder" class="btn btn-red btn-shine px-8 py-3.5 text-sm sm:text-base font-black">
+            <i class="fa-solid fa-check"></i> ĐẶT HÀNG NGAY
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       BẢNG ĐIỀU KHIỂN & THỐNG KÊ TÀI KHOẢN (REALTIME TỪ SUPABASE)
+       ======================================================== -->
+  <section class="max-w-4xl mx-auto px-4 mt-12">
+    <div class="liquid-glass p-5 sm:p-6">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div>
+          <h3 class="font-extrabold text-base">Thống kê tài khoản</h3>
+          <p class="text-xs text-zinc-400">Dữ liệu ví và đơn hàng của bạn</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">
+            <i class="fa-solid fa-user-check mr-1"></i> <span id="dashUserDisplay">Khách vãng lai</span>
+          </span>
+        </div>
+      </div>
+
+      <div id="stats" class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- Rendered with real user balance from Supabase -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TÍNH NĂNG NỔI BẬT -->
+  <section class="max-w-5xl mx-auto px-4 mt-14">
+    <h2 class="text-2xl sm:text-3xl font-black text-center h-grad mb-8">Tính Năng Vượt Trội</h2>
+    <div class="grid sm:grid-cols-3 gap-4">
+      <div class="liquid-glass p-6">
+        <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl text-rose-300 bg-rose-500/15 border border-rose-500/30 mb-4">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Tốc Độ Tên Lửa</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">Hệ thống tiếp nhận lệnh và phân phối tới server buff ngay sau 30 giây đến 1 phút.</p>
+      </div>
+
+      <div class="liquid-glass p-6">
+        <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 mb-4">
+          <i class="fa-solid fa-qrcode"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Nạp Tiền VietQR Auto</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">Tích hợp mã QR chuyển khoản 24/7, xác nhận nhanh chóng để bạn tiếp tục đặt đơn không gián đoạn.</p>
+      </div>
+
+      <div class="liquid-glass p-6">
+        <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl text-purple-300 bg-purple-500/15 border border-purple-500/30 mb-4">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Bảo Hành & Uy Tín</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">Đội ngũ admin túc trực hỗ trợ qua Zalo, chính sách bảo hành rõ ràng, an toàn 100% cho kênh.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIÊN HỆ & FOOTER -->
+  <footer class="max-w-5xl mx-auto px-4 mt-16 pb-28">
+    <div class="liquid-glass p-6 sm:p-7 grid sm:grid-cols-[1fr_auto] gap-5 items-center">
+      <div>
+        <h2 class="text-xl font-extrabold h-grad">Bạn cần hỗ trợ hoặc tư vấn bảng giá đại lý?</h2>
+        <p class="text-sm text-zinc-400 mt-1">Hotline / Zalo: <b class="text-rose-400">0976976627</b> (Hỗ trợ 24/7)</p>
+      </div>
+      <div class="flex flex-wrap gap-2.5">
+        <a href="tel:0976976627" class="btn btn-dark px-4 py-2.5 text-sm"><i class="fa-solid fa-phone text-emerald-400"></i> Gọi</a>
+        <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="btn btn-red btn-shine px-4 py-2.5 text-sm">Zalo</a>
+      </div>
+    </div>
+    <p class="text-center text-xs text-zinc-600 mt-8">© 2026 <span data-brand>BR-34</span> — Nền tảng SMM Panel & Dịch Vụ Mạng Xã Hội Chuyên Nghiệp.</p>
+  </footer>
+</main>
+
+<!-- FLOATING BUTTONS -->
+<div class="fixed right-3 z-40 flex flex-col gap-3" style="bottom:max(1.25rem,calc(env(safe-area-inset-bottom) + .75rem))">
+  <a href="https://zalo.me/0976976627" target="_blank" rel="noopener" class="w-12 h-12 rounded-full grid place-items-center bg-[#0068ff] text-white font-black text-xs shadow-lg shadow-blue-500/30 hover:scale-110 transition">Zalo</a>
+  <a href="tel:0976976627" class="w-12 h-12 rounded-full grid place-items-center bg-emerald-500 text-white text-xl shadow-lg shadow-emerald-500/30 hover:scale-110 transition"><i class="fa-solid fa-phone"></i></a>
+</div>
+
+<!-- ==========================================
+     MODALS
+     ========================================== -->
+
+<!-- 1. AUTH MODAL (LOGIN / REGISTER VIA SUPABASE) -->
+<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="liquid-glass w-full max-w-md p-6 relative">
+    <button id="closeAuthModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="authTitle" class="text-xl font-bold text-center mb-1 h-grad">Đăng nhập tài khoản</h3>
+    <p id="authSub" class="text-xs text-zinc-400 text-center mb-6">Đăng nhập để đặt đơn và nạp tiền vào ví</p>
+
+    <form id="authForm" class="space-y-3.5" novalidate>
+      <div>
+        <label class="block text-xs font-semibold text-zinc-400 mb-1">Tên đăng nhập</label>
+        <input id="authEmail" type="text" required placeholder="vd: tuantran123" maxlength="40" autocapitalize="none" autocorrect="off" spellcheck="false" class="field">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-zinc-400 mb-1">Mật khẩu</label>
+        <input id="authPassword" type="password" required placeholder="••••••••" class="field">
+      </div>
+      <div id="authPasswordConfirmWrap" class="hidden">
+        <label class="block text-xs font-semibold text-zinc-400 mb-1">Nhập lại mật khẩu</label>
+        <input id="authPasswordConfirm" type="password" placeholder="••••••••" class="field">
+      </div>
+      <p id="authErr" class="hidden text-xs text-rose-400 font-semibold"></p>
+      <button id="authSubmitBtn" type="submit" class="btn btn-red btn-shine w-full py-3 mt-2">ĐĂNG NHẬP</button>
+    </form>
+
+    <div class="mt-4 pt-4 border-t border-white/10 text-center text-xs text-zinc-400">
+      <span id="authToggleText">Chưa có tài khoản?</span>
+      <button id="authToggleBtn" type="button" class="text-rose-400 font-bold hover:underline ml-1">Đăng ký ngay</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. ACCOUNT MODAL -->
+<div id="accountModal" class="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="liquid-glass w-full max-w-lg p-6 relative max-h-[92vh] overflow-y-auto">
+    <button id="closeAccountModal" type="button" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+    <div class="flex items-center gap-4 mb-5">
+      <div class="avatar-big w-16 h-16 shrink-0">
+        <span>
+          <img id="accAvatarImg" alt="" hidden>
+          <i id="accAvatarFallback" class="fa-solid fa-user text-2xl text-zinc-300"></i>
+        </span>
+      </div>
+      <div class="min-w-0">
+        <p id="accName" class="text-lg font-extrabold truncate">khachhang</p>
+        <span class="inline-block mt-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300">Thành viên BR-34</span>
+      </div>
+    </div>
+
+    <div class="space-y-2.5 text-sm">
+      <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
+        <span class="text-xs text-zinc-400">Tên đăng nhập:</span>
+        <strong id="accUsername" class="text-white">—</strong>
+      </div>
+      <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
+        <span class="text-xs text-zinc-400">ID tài khoản (UID):</span>
+        <code id="accUid" class="text-xs text-rose-300">—</code>
+      </div>
+      <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
+        <span class="text-xs text-zinc-400">Số dư hiện tại:</span>
+        <strong id="accBalance" class="text-emerald-400 font-extrabold text-base">0đ</strong>
+      </div>
+    </div>
+
+    <div class="mt-5 grid grid-cols-2 gap-2.5">
+      <a href="nap-tien.html" class="btn btn-red btn-shine py-2.5 text-xs text-center"><i class="fa-solid fa-wallet"></i> Nạp tiền</a>
+      <button id="accLogout" type="button" class="btn btn-dark py-2.5 text-xs"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. RULE NOTICE MODAL -->
+<div id="ruleModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+  <div class="liquid-glass w-full max-w-lg p-6 relative">
+    <button type="button" onclick="$('ruleModal').classList.add('hidden')" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="text-lg font-bold text-rose-400 mb-3 flex items-center gap-2">
+      <i class="fa-solid fa-triangle-exclamation"></i> Quy định đặt đơn SMM
+    </h3>
+    <div class="space-y-2.5 text-xs text-zinc-300 leading-relaxed">
+      <p>1. <b>Công khai tài khoản/bài viết:</b> Luôn mở công khai trước khi đặt đơn. Không được đổi ID/Link hoặc khóa nick trong khi đơn đang chạy.</p>
+      <p>2. <b>Không đặt trùng cùng lúc:</b> Không cài đặt cùng 1 link ở nhiều nơi cùng lúc để tránh bị nghẽn số lượng hoặc hụt số liệu đối soát.</p>
+      <p>3. <b>Nghiêm cấm vi phạm:</b> Nghiêm cấm mọi hành vi buff bài viết vi phạm pháp luật, chính trị nhạy cảm, đồi trụy, vi phạm sẽ bị khóa tài khoản vĩnh viễn.</p>
+    </div>
+    <button type="button" onclick="$('ruleModal').classList.add('hidden')" class="btn btn-red btn-shine w-full py-2.5 mt-5 text-xs">Đã hiểu quy định</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-xl text-sm font-semibold liquid-glass opacity-0 pointer-events-none transition-all duration-300 translate-y-4 text-center max-w-[90vw]" style="top:5rem"></div>
+
+<!-- ==========================================
+     CORE JAVASCRIPT
+     ========================================== -->
+<script>
+/* ============ SUPABASE ============ */
+const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY, {
+  global: { fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" }) }
+});
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n||0).toLocaleString("vi-VN") + "đ";
+
+let currentUser = null;
+let currentBalance = 0;
+let tt;
+function toast(msg, ok=true){
+  const t = $("toast");
+  t.innerHTML = `<i class="fa-solid ${ok ? "fa-circle-check text-emerald-400" : "fa-triangle-exclamation text-rose-400"} mr-2"></i>${msg}`;
+  t.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.add("opacity-0", "translate-y-4", "pointer-events-none"), 3500);
+}
+
+/* ========================================================
+   SMM SERVICES DATA (CHIP / SERVICE / SERVER LIST CHUẨN)
+   ======================================================== */
+const SMM_DATA = {
+  facebook: {
+    name: "FaceBook",
+    icon: "fa-brands fa-facebook",
+    color: "#1877f2",
+    services: [
+      { id: "fb_like", name: "Like Bài Viết Facebook", servers: [
+        { id: "sv_fb_1", code: "SV1", name: "Like bài viết [Tốc độ siêu nhanh - Nick thật VN]", rate: 12, min: 50, max: 100000, speed: "20k/ngày", note: "Bài viết phải ở chế độ công khai." },
+        { id: "sv_fb_2", code: "SV2", name: "Like bài viết [Giá rẻ sinh viên - Ổn định]", rate: 8, min: 100, max: 50000, speed: "5k/ngày", note: "Nick hỗn hợp, giá tốt." },
+        { id: "sv_fb_3", code: "SV3", name: "Like bài viết Quốc tế [Lên ngay tức thì]", rate: 5, min: 100, max: 200000, speed: "50k/ngày", note: "Nick quốc tế tốc độ cao." }
+      ]},
+      { id: "fb_follow", name: "Follow Cá Nhân Facebook", servers: [
+        { id: "sv_fb_fol_1", code: "SV4", name: "Follow Sub Thật VN [Bảo hành 60 ngày - Cực hiếm tụt]", rate: 38, min: 100, max: 50000, speed: "5k/ngày", note: "Yêu cầu bật nút kết bạn/theo dõi công khai." },
+        { id: "sv_fb_fol_2", code: "SV5", name: "Follow Page Pro / Profile [Tốc độ cao]", rate: 26, min: 100, max: 100000, speed: "20k/ngày", note: "Hỗ trợ profile và page profile." }
+      ]},
+      { id: "fb_cmt", name: "Bình Luận Bài Viết Facebook", isComment: true, servers: [
+        { id: "sv_fb_cmt_1", code: "SV6", name: "Bình luận tùy chỉnh [Nick có Avatar]", rate: 250, min: 10, max: 2000, speed: "500/ngày", note: "Mỗi dòng là 1 bình luận." }
+      ]}
+    ]
+  },
+  tiktok: {
+    name: "TikTok",
+    icon: "fa-brands fa-tiktok",
+    color: "#ff0050",
+    services: [
+      { id: "tt_like", name: "Tiktok Likes Việt Nam Ổn Định", servers: [
+        { id: "sv_tt_1", code: "SV7", name: "Tiktok Like VN [Tài khoản hoạt động - Siêu tốc]", rate: 18, min: 50, max: 50000, speed: "20k/ngày", note: "Nhập link video tiktok dạng vt.tiktok.com hoặc link gốc." },
+        { id: "sv_tt_2", code: "SV8", name: "Tiktok Like Ngoại [Giá rẻ đẩy đề xuất]", rate: 9.5, min: 100, max: 100000, speed: "50k/ngày", note: "Đẩy tương tác cho video mới." }
+      ]},
+      { id: "tt_follow", name: "Tiktok Follower Việt Nam", servers: [
+        { id: "sv_tt_fol_1", code: "SV9", name: "Tiktok Follow VN [Chuẩn nick VN - BH 30 ngày]", rate: 58, min: 100, max: 20000, speed: "3k/ngày", note: "Phù hợp để bật livestream (1.000 follow) hoặc bán hàng." },
+        { id: "sv_tt_fol_2", code: "SV10", name: "Tiktok Follow Quốc Tế [Bật Live nhanh]", rate: 32, min: 100, max: 50000, speed: "10k/ngày", note: "Lên nhanh trong ngày." }
+      ]},
+      { id: "tt_view", name: "Tiktok Lượt Xem Video (Views Xu Hướng)", servers: [
+        { id: "sv_tt_v1", code: "SV11", name: "Tiktok Views [Siêu Rẻ - Đẩy xu hướng]", rate: 0.8, min: 1000, max: 5000000, speed: "1M/ngày", note: "Khởi chạy trong 1-5 phút." }
+      ]}
+    ]
+  },
+  instagram: {
+    name: "Instagram",
+    icon: "fa-brands fa-instagram",
+    color: "#e1306c",
+    services: [
+      { id: "ig_follow", name: "Instagram Follow Việt Nam", servers: [
+        { id: "sv_ig_1", code: "SV12", name: "Follow Instagram VN [Có Avatar & Bài đăng]", rate: 45, min: 100, max: 30000, speed: "5k/ngày", note: "Không đổi username trong khi chạy." }
+      ]},
+      { id: "ig_like", name: "Instagram Likes Bài Viết", servers: [
+        { id: "sv_ig_2", code: "SV13", name: "Instagram Like [Tốc độ cao]", rate: 8, min: 50, max: 50000, speed: "20k/ngày", note: "Hỗ trợ post và reels." }
+      ]}
+    ]
+  },
+  youtube: {
+    name: "Youtube",
+    icon: "fa-brands fa-youtube",
+    color: "#ff0000",
+    services: [
+      { id: "yt_sub", name: "Youtube Sub Kênh Bật Kiếm Tiền", servers: [
+        { id: "sv_yt_1", code: "SV14", name: "Youtube Subscribers [Không tụt - BH 90 ngày]", rate: 180, min: 50, max: 10000, speed: "300/ngày", note: "Kênh cần có ít nhất 1 video dài hơn 1 phút." }
+      ]},
+      { id: "yt_view", name: "Youtube Views Đề Xuất", servers: [
+        { id: "sv_yt_2", code: "SV15", name: "Youtube Views Giữ Chân Cao [An toàn Adsense]", rate: 35, min: 500, max: 500000, speed: "20k/ngày", note: "Xem video thời lượng cao." }
+      ]}
+    ]
+  },
+  telegram: {
+    name: "Telegram",
+    icon: "fa-brands fa-telegram",
+    color: "#0088cc",
+    services: [
+      { id: "tele_mem", name: "Telegram Members Nhóm & Kênh", servers: [
+        { id: "sv_tg_1", code: "SV16", name: "Telegram Member [Hiếm tụt - Tốc độ cao]", rate: 22, min: 100, max: 200000, speed: "50k/ngày", note: "Nhập link nhóm công khai t.me/tennhom." }
+      ]}
+    ]
+  }
+};
+
+let currentPlatform = "facebook";
+let currentService = null;
+let currentServer = null;
+
+function renderPlatformChips() {
+  const container = $("smmPlatformChips");
+  container.innerHTML = Object.keys(SMM_DATA).map(key => {
+    const p = SMM_DATA[key];
+    const active = key === currentPlatform ? "active" : "";
+    return `
+      <button type="button" class="smm-chip ${active}" data-platform="${key}">
+        <i class="${p.icon}" style="color:${p.color}"></i> ${p.name}
+      </button>
+    `;
+  }).join("");
+
+  container.querySelectorAll(".smm-chip").forEach(btn => {
+    btn.onclick = () => selectPlatform(btn.dataset.platform);
+  });
+}
+
+function selectPlatform(key) {
+  currentPlatform = key;
+  renderPlatformChips();
+  $("smmPlatformSelect").value = key;
+  updateServicesDropdown();
+}
+
+function updateServicesDropdown() {
+  const select = $("smmServiceSelect");
+  const services = SMM_DATA[currentPlatform].services;
+  select.innerHTML = services.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
+  onServiceSelect(services[0].id);
+}
+
+function onServiceSelect(serviceId) {
+  const services = SMM_DATA[currentPlatform].services;
+  currentService = services.find(s => s.id === serviceId) || services[0];
+  
+  // Toggle Comment Box
+  const cmtBox = $("smmCommentBox");
+  if (currentService.isComment) {
+    cmtBox.classList.remove("hidden");
+    $("smmQtyInput").readOnly = true;
+  } else {
+    cmtBox.classList.add("hidden");
+    $("smmQtyInput").readOnly = false;
+  }
+
+  renderServerList(currentService.servers);
+  selectServer(currentService.servers[0]);
+}
+
+function renderServerList(servers) {
+  const list = $("smmServerList");
+  $("smmServerCount").textContent = `${servers.length} máy chủ khả dụng`;
+  list.innerHTML = servers.map((sv, idx) => `
+    <div class="server-card ${idx === 0 ? 'selected' : ''}" data-svid="${sv.id}">
+      <div class="flex items-center gap-2.5">
+        <span class="text-[10px] font-black px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">${sv.code}</span>
+        <div>
+          <p class="font-bold text-xs text-white">${sv.name}</p>
+          <p class="text-[11px] text-zinc-400">⚡ Tốc độ: ${sv.speed} | Min: ${sv.min} - Max: ${sv.max.toLocaleString()}</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="font-extrabold text-sm text-rose-400">${sv.rate.toLocaleString()}đ</p>
+        <p class="text-[10px] text-zinc-500">/ 1.000 lượt</p>
+      </div>
+    </div>
+  `).join("");
+
+  list.querySelectorAll(".server-card").forEach((card, idx) => {
+    card.onclick = () => selectServer(servers[idx]);
+  });
+}
+
+function selectServer(sv) {
+  currentServer = sv;
+  document.querySelectorAll(".server-card").forEach(c => {
+    c.classList.toggle("selected", c.dataset.svid === sv.id);
+  });
+
+  const noteBox = $("smmServerNote");
+  noteBox.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1 text-rose-400"></i><b>Lưu ý [${sv.code}]:</b> ${sv.note}`;
+  noteBox.classList.remove("hidden");
+
+  $("smmQtyRange").textContent = `(${sv.min} ~ ${sv.max.toLocaleString()})`;
+  if (Number($("smmQtyInput").value) < sv.min) {
+    $("smmQtyInput").value = sv.min;
+  }
+  recalcTotal();
+}
+
+function setQty(val) {
+  $("smmQtyInput").value = val;
+  recalcTotal();
+}
+
+function recalcTotal() {
+  let qty = Number($("smmQtyInput").value || 0);
+  if (currentService && currentService.isComment) {
+    const lines = $("smmComments").value.split("\n").filter(l => l.trim().length > 0);
+    qty = lines.length;
+    $("smmQtyInput").value = qty;
+  }
+
+  const rate = currentServer ? currentServer.rate : 0;
+  const total = Math.round((qty * rate) / 1000);
+
+  $("confirmServiceName").textContent = currentServer ? `[${currentServer.code}] ${currentService.name}` : "Chưa chọn";
+  $("confirmRateBadge").textContent = currentServer ? `${currentServer.rate.toLocaleString()}đ / 1k` : "0đ";
+  $("confirmQtyVal").textContent = qty.toLocaleString();
+  $("confirmUserBal").textContent = fmt(currentBalance);
+  $("confirmTotalPay").textContent = fmt(total);
+
+  return { qty, total };
+}
+
+$("smmPlatformSelect").onchange = (e) => selectPlatform(e.target.value);
+$("smmServiceSelect").onchange = (e) => onServiceSelect(e.target.value);
+$("smmQtyInput").oninput = recalcTotal;
+$("smmComments").oninput = recalcTotal;
+
+$("btnPasteLink").onclick = async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text) { $("smmLinkInput").value = text; toast("Đã dán link!"); }
+  } catch(e) { toast("Hãy bấm Ctrl+V để dán link.", false); }
+};
+
+/* ========================================================
+   SUBMIT SMM ORDER (LƯU VÀO SUPABASE + TRỪ SỐ DƯ)
+   ======================================================== */
+$("btnSubmitSMMOrder").onclick = async () => {
+  if (!currentUser) {
+    toggleAuthModal(true);
+    toast("Vui lòng đăng nhập để tạo đơn hàng!", false);
+    return;
+  }
+
+  const link = $("smmLinkInput").value.trim();
+  if (!link) {
+    toast("Vui lòng nhập link cần lên đơn!", false);
+    $("smmLinkInput").focus();
+    return;
+  }
+
+  const { qty, total } = recalcTotal();
+  if (!currentServer || qty < currentServer.min || qty > currentServer.max) {
+    toast(`Số lượng yêu cầu từ ${currentServer.min} đến ${currentServer.max.toLocaleString()}!`, false);
+    return;
+  }
+
+  if (currentBalance < total) {
+    toast(`Số dư không đủ! Bạn cần ${fmt(total)}, vui lòng nạp thêm tiền.`, false);
+    setTimeout(() => { location.href = "nap-tien.html"; }, 1200);
+    return;
+  }
+
+  const btn = $("btnSubmitSMMOrder");
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ĐANG XỬ LÝ...`;
+
+  try {
+    // 1. Kiểm tra lại số dư từ server Supabase
+    const { data: profile, error: pErr } = await supabaseClient
+      .from("profiles").select("balance,total_spent").eq("id", currentUser.id).maybeSingle();
+    if (pErr) throw pErr;
+    const balance = Number(profile?.balance || 0);
+    const spent = Number(profile?.total_spent || 0);
+
+    if (balance < total) {
+      throw new Error(`Số dư không đủ. Vui lòng nạp thêm tiền.`);
+    }
+
+    // 2. Trừ tiền tài khoản
+    const nextBalance = balance - total;
+    const nextSpent = spent + total;
+    const { error: uErr } = await supabaseClient
+      .from("profiles").update({ balance: nextBalance, total_spent: nextSpent }).eq("id", currentUser.id);
+    if (uErr) throw uErr;
+
+    // 3. Tạo bản ghi đơn hàng trong bảng orders
+    const orderData = {
+      user_id: currentUser.id,
+      service: `[${currentServer.code}] ${currentService.name}`,
+      link: link,
+      contact: (currentUser.email || "").split("@")[0],
+      source: "smm-panel",
+      status: "pending",
+      // Thông tin mở rộng nếu bảng hỗ trợ
+    };
+
+    const { error: oErr } = await supabaseClient.from("orders").insert([orderData]);
+    if (oErr) {
+      // Rollback tiền nếu lỗi
+      await supabaseClient.from("profiles").update({ balance, total_spent: spent }).eq("id", currentUser.id);
+      throw oErr;
+    }
+
+    currentBalance = nextBalance;
+    toast(`🎉 Đặt đơn thành công! Hệ thống đang xử lý đơn hàng.`);
+    $("smmLinkInput").value = "";
+    if ($("smmComments")) $("smmComments").value = "";
+    loadAccount(currentUser);
+  } catch(err) {
+    console.error(err);
+    toast("Lỗi đặt đơn: " + (err.message || "Vui lòng thử lại."), false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> ĐẶT HÀNG NGAY`;
+  }
+};
+
+/* ========================================================
+   AUTHENTICATION & PROFILE LOGIC
+   ======================================================== */
+const AUTH_DOMAIN = "br34.shop";
+const toEmail = v => v.includes("@") ? v : v + "@" + AUTH_DOMAIN;
+let isLoginMode = true;
+
+function toggleAuthModal(show) {
+  const m = $("authModal");
+  m.classList.toggle("opacity-0", !show);
+  m.classList.toggle("pointer-events-none", !show);
+  $("authErr").classList.add("hidden");
+}
+
+$("authHeaderBtn").onclick = () => {
+  if (currentUser) {
+    if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+      supabaseClient.auth.signOut().then(() => updateUserState(null));
+    }
+  } else {
+    toggleAuthModal(true);
+  }
+};
+$("closeAuthModal").onclick = () => toggleAuthModal(false);
+
+$("authToggleBtn").onclick = () => {
+  isLoginMode = !isLoginMode;
+  $("authTitle").textContent = isLoginMode ? "Đăng nhập tài khoản" : "Tạo tài khoản mới";
+  $("authSubmitBtn").textContent = isLoginMode ? "ĐĂNG NHẬP" : "ĐĂNG KÝ";
+  $("authToggleText").textContent = isLoginMode ? "Chưa có tài khoản?" : "Đã có tài khoản?";
+  $("authToggleBtn").textContent = isLoginMode ? "Đăng ký ngay" : "Đăng nhập";
+  $("authPasswordConfirmWrap").classList.toggle("hidden", isLoginMode);
+};
+
+$("authForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const raw = $("authEmail").value.trim().toLowerCase();
+  const email = toEmail(raw);
+  const password = $("authPassword").value;
+  const btn = $("authSubmitBtn");
+
+  btn.disabled = true;
+  btn.textContent = "ĐANG XỬ LÝ...";
+  $("authErr").classList.add("hidden");
+
+  try {
+    if (!raw) throw new Error("Vui lòng nhập tên đăng nhập.");
+    if (isLoginMode) {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      updateUserState(data.user);
+      toggleAuthModal(false);
+      toast("Đăng nhập thành công!");
+    } else {
+      const { data, error } = await supabaseClient.auth.signUp({ email, password });
+      if (error) throw error;
+      if (data.session) {
+        updateUserState(data.user);
+        toggleAuthModal(false);
+        toast("Đăng ký thành công!");
+      } else {
+        toast("Đăng ký thành công! Hãy đăng nhập lại.");
+        isLoginMode = false;
+        $("authToggleBtn").click();
+      }
+    }
+  } catch(err) {
+    $("authErr").textContent = err.message || "Đã xảy ra lỗi.";
+    $("authErr").classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = isLoginMode ? "ĐĂNG NHẬP" : "ĐĂNG KÝ";
+  }
+};
+
+/* ========================================================
+   USER DATA & BALANCES
+   ======================================================== */
+async function loadAccount(user) {
+  if (!user) return;
+  try {
+    const { data: p } = await supabaseClient.from("profiles").select("balance,total_deposit,total_spent,is_admin").eq("id", user.id).maybeSingle();
+    currentBalance = Number(p?.balance || 0);
+    
+    // Đếm tổng số đơn SMM và Tài nguyên
+    const [r1, r2] = await Promise.all([
+      supabaseClient.from("orders").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      supabaseClient.from("resource_orders").select("id", { count: "exact", head: true }).eq("user_id", user.id)
+    ]);
+    const totalOrders = (r1.count || 0) + (r2.count || 0);
+
+    renderStats([currentBalance, Number(p?.total_deposit || 0), Number(p?.total_spent || 0), totalOrders]);
+    $("headerBalanceVal").textContent = fmt(currentBalance);
+    $("confirmUserBal").textContent = fmt(currentBalance);
+
+    // Kiểm tra quyền Admin
+    if (p && p.is_admin) {
+      $("openAdminBtn").classList.remove("hidden");
+      $("navAdminLink").classList.remove("hidden");
+      const mobAdmin = $("navMobAdmin");
+      if (mobAdmin) mobAdmin.classList.remove("hidden");
+    }
+  } catch(e) { console.error(e); }
+}
+
+function renderStats(vals) {
+  const LABELS = [
+    ["Số dư khả dụng", "fa-wallet", vals[0], "đ"],
+    ["Tổng tiền đã nạp", "fa-piggy-bank", vals[1], "đ"],
+    ["Tổng đã chi tiêu", "fa-fire", vals[2], "đ"],
+    ["Đơn hàng đã đặt", "fa-box", vals[3], ""]
+  ];
+
+  $("stats").innerHTML = LABELS.map(s => `
+    <div class="glass-card p-4">
+      <div class="flex items-center justify-between text-zinc-400 text-xs">
+        <span>${s[0]}</span><i class="fa-solid ${s[1]} text-rose-400"></i>
+      </div>
+      <p class="mt-2 text-xl sm:text-2xl font-black text-white">${fmt(s[2]).replace('đ', '')}${s[3]}</p>
+    </div>
+  `).join("");
+}
+
+function updateUserState(user) {
+  currentUser = user;
+  if (user) {
+    $("authHeaderBtn").textContent = "Đăng xuất";
+    $("authHeaderBtn").classList.remove("btn-red");
+    $("authHeaderBtn").classList.add("btn-dark");
+    $("userBox").classList.remove("hidden");
+    
+    const uname = user.email.split("@")[0];
+    $("dashUserDisplay").textContent = uname;
+    $("menuName").textContent = uname;
+    $("accName").textContent = uname;
+    $("accUsername").textContent = uname;
+    $("accUid").textContent = user.id;
+
+    loadAccount(user);
+  } else {
+    $("authHeaderBtn").textContent = "Đăng nhập";
+    $("authHeaderBtn").classList.remove("btn-dark");
+    $("authHeaderBtn").classList.add("btn-red");
+    $("userBox").classList.add("hidden");
+    $("dashUserDisplay").textContent = "Khách vãng lai";
+    currentBalance = 0;
+    renderStats([0, 0, 0, 0]);
+    $("headerBalanceVal").textContent = "0đ";
+  }
+}
+
+/* ========================================================
+   MODAL CONTROLS & EVENTS
+   ======================================================== */
+$("avatarBtn").onclick = (e) => { e.stopPropagation(); $("avatarMenu").classList.toggle("hidden"); };
+document.addEventListener("click", () => $("avatarMenu").classList.add("hidden"));
+$("openAccount").onclick = () => {
+  $("avatarMenu").classList.add("hidden");
+  $("accBalance").textContent = fmt(currentBalance);
+  $("accountModal").classList.remove("opacity-0", "pointer-events-none");
+};
+$("closeAccountModal").onclick = () => $("accountModal").classList.add("opacity-0", "pointer-events-none");
+$("accLogout").onclick = () => {
+  $("accountModal").classList.add("opacity-0", "pointer-events-none");
+  supabaseClient.auth.signOut().then(() => updateUserState(null));
+};
+$("avatarLogout").onclick = () => {
+  supabaseClient.auth.signOut().then(() => updateUserState(null));
+};
+
+$("menuBtn").onclick = () => $("navMob").classList.toggle("hidden");
+
+// Khởi tạo nền tảng & dịch vụ đầu tiên
+selectPlatform("facebook");
+
+// Kiểm tra phiên đăng nhập ban đầu
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  if (session) updateUserState(session.user);
+});
+supabaseClient.auth.onAuthStateChange((_e, session) => {
+  updateUserState(session ? session.user : null);
+});
+</script>
+</body>
+</html>
