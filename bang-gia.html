@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bảng Giá Dịch Vụ & Cấp Bậc — BR-34 SMM Panel</title>
+  <meta name="description" content="Tra cứu bảng giá dịch vụ tăng Like, Follow, View Facebook, TikTok, Instagram, YouTube chi tiết và chính sách chiết khấu đại lý BR-34.">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
+              400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
+              800: '#9f1239', 900: '#881337',
+            },
+            surface: {
+              light: '#f8fafc', card: '#ffffff', dark: '#0f172a', darkcard: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            'glow-sm': '0 4px 12px rgba(244, 63, 94, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+    * { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+
+<body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
+
+  <!-- TOP BAR -->
+  <aside aria-label="Thông báo khẩn" class="bg-gradient-to-r from-brand-600 via-rose-600 to-red-600 text-white text-xs font-semibold py-1.5 px-4 shadow-sm relative z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 truncate">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-[11px] font-bold shrink-0">
+          <i class="fa-solid fa-crown text-amber-300"></i> Bảng giá SMM
+        </span>
+        <span class="truncate">
+          Bảng giá sỉ dành cho đại lý và thành viên thân thiết. Hotline tư vấn: <strong class="underline decoration-white/40">Zalo 0976976627</strong>.
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- APP CONTAINER -->
+  <div class="min-h-[calc(100vh-2rem)] flex flex-col lg:flex-row max-w-[1600px] mx-auto">
+
+    <!-- SIDEBAR -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-surface-darkcard border-r border-slate-200/80 dark:border-slate-800 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none">
+      <div class="h-20 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-brand-500/20 shadow-md shadow-brand-500/10 group-hover:scale-105 transition-transform shrink-0">
+            <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">BR-34</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-black uppercase rounded-md bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400 border border-brand-200 dark:border-brand-800">SMM</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400 dark:text-slate-500">Social Media Marketing</p>
+          </div>
+        </a>
+        <button id="closeSidebarBtn" class="lg:hidden w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Bảng điều khiển</p>
+          <nav class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-house w-4 text-center text-slate-400"></i>
+              <span>Trang chủ</span>
+            </a>
+            <a href="lich-su.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-receipt w-4 text-center text-slate-400"></i>
+              <span>Lịch sử giao dịch</span>
+            </a>
+            <a href="ho-tro.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-comments w-4 text-center text-slate-400"></i>
+              <span>Hỗ trợ ticket</span>
+            </a>
+            <a href="api-docs.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-code w-4 text-center text-slate-400"></i>
+              <span>Tài liệu API</span>
+            </a>
+            <a href="bang-gia.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm">
+              <i class="fa-solid fa-crown w-4 text-center text-amber-500"></i>
+              <span>Cấp bậc & bảng giá</span>
+              <span class="ml-auto w-2 h-2 rounded-full bg-brand-500"></span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Tài chính</p>
+          <nav class="space-y-1">
+            <a href="nap-tien.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-wallet w-4 text-center text-emerald-500"></i>
+              <span>Nạp tiền tự động</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Sản phẩm & Dịch vụ</p>
+          <nav class="space-y-1">
+            <a href="mua-tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-box-open w-4 text-center text-indigo-500"></i>
+              <span>Mua tài nguyên số</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <!-- HEADER -->
+      <header class="sticky top-0 z-30 bg-white/80 dark:bg-surface-darkcard/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="openSidebarBtn" class="lg:hidden w-10 h-10 rounded-xl grid place-items-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <i class="fa-solid fa-bars-staggered text-lg"></i>
+          </button>
+          <h1 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-crown text-amber-500"></i> Cấp Bậc & Bảng Giá Dịch Vụ
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="themeToggleBtn" title="Chuyển chế độ sáng/tối" class="w-9 h-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+          </button>
+          <a href="index.html#t4HomeOrderForm" class="px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-xs font-bold text-white shadow-glow-sm transition">
+            Đặt đơn ngay
+          </a>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- 1. CÁC CẤP BẬC TÀI KHOẢN (TIERS CARDS) -->
+        <div>
+          <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-brand-500"></i> Quyền Lợi Các Cấp Bậc Thành Viên
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Tier 1 -->
+            <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Cấp 1</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white mt-2">Thành Viên Thường</h3>
+                <p class="text-xs text-slate-400 mt-1">Áp dụng cho mọi tài khoản vừa đăng ký</p>
+                <div class="mt-4 space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Mức nạp: Dưới 1.000.000đ</div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Áp dụng giá tiêu chuẩn</div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Hỗ trợ kỹ thuật qua Zalo / Ticket</div>
+                </div>
+              </div>
+              <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-400">
+                Giá niêm yết chuẩn
+              </div>
+            </div>
+
+            <!-- Tier 2: Đại Lý -->
+            <div class="p-6 rounded-3xl bg-amber-50/40 dark:bg-amber-950/20 border-2 border-amber-300 dark:border-amber-700 shadow-card flex flex-col justify-between relative overflow-hidden">
+              <span class="absolute top-4 right-4 px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase">Phổ biến</span>
+              <div>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-white">Cấp 2</span>
+                <h3 class="text-lg font-black text-amber-900 dark:text-amber-200 mt-2">Đại Lý Cấp 1</h3>
+                <p class="text-xs text-amber-700 dark:text-amber-400 mt-1">Dành cho cộng tác viên, web con</p>
+                <div class="mt-4 space-y-2 text-xs text-amber-900 dark:text-amber-200">
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-600"></i> Tổng nạp: Từ <strong>1.000.000đ</strong></div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-600"></i> <strong>Chiết khấu giảm 5%</strong> tất cả dịch vụ</div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-600"></i> Miễn phí đấu nối API SMM v2</div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-600"></i> Ưu tiên xử lý lỗi đơn nhanh</div>
+                </div>
+              </div>
+              <div class="mt-5 pt-3 border-t border-amber-200 dark:border-amber-800 text-xs font-black text-amber-600 dark:text-amber-400">
+                Tiết kiệm 5% trên mỗi đơn
+              </div>
+            </div>
+
+            <!-- Tier 3: Nhà Phân Phối -->
+            <div class="p-6 rounded-3xl bg-rose-50/40 dark:bg-rose-950/20 border-2 border-rose-300 dark:border-rose-700 shadow-card flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-600 text-white">Cấp 3</span>
+                <h3 class="text-lg font-black text-rose-900 dark:text-rose-200 mt-2">Nhà Phân Phối VIP</h3>
+                <p class="text-xs text-rose-700 dark:text-rose-400 mt-1">Khách hàng số lượng lớn, đối tác lớn</p>
+                <div class="mt-4 space-y-2 text-xs text-rose-900 dark:text-rose-200">
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-600"></i> Tổng nạp: Từ <strong>5.000.000đ</strong></div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-600"></i> <strong>Chiết khấu giảm 10% - 15%</strong></div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-600"></i> Server luồng riêng biệt tốc độ cao</div>
+                  <div class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-600"></i> Chuyên viên hỗ trợ 1-1 riêng biệt</div>
+                </div>
+              </div>
+              <div class="mt-5 pt-3 border-t border-rose-200 dark:border-rose-800 text-xs font-black text-rose-600 dark:text-rose-400">
+                Giá gốc sát sàn thị trường
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. BẢNG GIÁ DỊCH VỤ CHI TIẾT (SERVICES TABLE) -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+          
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-brand-500"></i> Danh Sách Toàn Bộ Dịch Vụ
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Giá tính trên mỗi 1.000 lượt (VNĐ)</p>
+            </div>
+
+            <!-- Search box -->
+            <div class="relative w-full md:w-72">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input id="serviceSearch" type="text" placeholder="Tìm tên dịch vụ, máy chủ..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+          </div>
+
+          <!-- Platform Filter Chips -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button onclick="filterCategory('all')" id="btn-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm shrink-0">Tất cả</button>
+            <button onclick="filterCategory('Facebook')" id="btn-Facebook" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0"><i class="fa-brands fa-facebook mr-1 text-blue-500"></i>Facebook</button>
+            <button onclick="filterCategory('TikTok')" id="btn-TikTok" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0"><i class="fa-brands fa-tiktok mr-1"></i>TikTok</button>
+            <button onclick="filterCategory('Instagram')" id="btn-Instagram" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0"><i class="fa-brands fa-instagram mr-1 text-pink-500"></i>Instagram</button>
+            <button onclick="filterCategory('YouTube')" id="btn-YouTube" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0"><i class="fa-brands fa-youtube mr-1 text-red-500"></i>YouTube</button>
+            <button onclick="filterCategory('Telegram')" id="btn-Telegram" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0"><i class="fa-brands fa-telegram mr-1 text-sky-500"></i>Telegram</button>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead>
+                <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                  <th class="py-3 px-3">ID</th>
+                  <th class="py-3 px-3">Tên Dịch Vụ & Máy Chủ</th>
+                  <th class="py-3 px-3 text-right">Giá Thành Viên</th>
+                  <th class="py-3 px-3 text-right">Giá Đại Lý</th>
+                  <th class="py-3 px-3 text-center">Tối thiểu / Tối đa</th>
+                  <th class="py-3 px-3">Mô tả & Bảo hành</th>
+                  <th class="py-3 px-3 text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="priceTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
+        <p class="font-semibold text-slate-700 dark:text-slate-300">Copyright © 2026. <span class="text-brand-600 dark:text-brand-400 font-extrabold">BR-34</span> — Bảng giá dịch vụ.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    const SERVICES = [
+      { id: 1, platform: "Facebook", name: "[SV1] Like Bài Viết Facebook Tốc Độ Cao", memberPrice: 12, agentPrice: 10.8, min: 50, max: 50000, desc: "Tốc độ 1-5k/ngày, bảo hành 30 ngày" },
+      { id: 2, platform: "Facebook", name: "[SV2] Like Bài Viết Việt Nam Thật Siêu Rẻ", memberPrice: 8, agentPrice: 7.2, min: 50, max: 20000, desc: "Người thật like, không bảo hành tụt" },
+      { id: 3, platform: "Facebook", name: "[SV4] Follow Trang Cá Nhân Sub Việt", memberPrice: 28, agentPrice: 25.2, min: 100, max: 100000, desc: "Sub thật Việt Nam, bảo hành 30 ngày" },
+      { id: 4, platform: "Facebook", name: "[SV5] Like & Follow Fanpage Facebook", memberPrice: 35, agentPrice: 31.5, min: 100, max: 50000, desc: "Tăng cả like trang và follow trang" },
+      { id: 5, platform: "Facebook", name: "[SV6] View Video & Reels Facebook", memberPrice: 5, agentPrice: 4.5, min: 500, max: 1000000, desc: "Bảo hành vĩnh viễn, xem mượt mà" },
+      { id: 6, platform: "TikTok", name: "[SV7] Followers TikTok Việt Nam Thật", memberPrice: 45, agentPrice: 40.5, min: 100, max: 50000, desc: "Follower người Việt, bảo hành 30 ngày" },
+      { id: 7, platform: "TikTok", name: "[SV8] Followers TikTok Quốc Tế Giá Rẻ", memberPrice: 22, agentPrice: 19.8, min: 100, max: 100000, desc: "Dùng để mở tính năng Livestream nhanh" },
+      { id: 8, platform: "TikTok", name: "[SV9] Thả Tim / Likes Video TikTok", memberPrice: 18, agentPrice: 16.2, min: 50, max: 50000, desc: "Tăng đề xuất và lên xu hướng video" },
+      { id: 9, platform: "TikTok", name: "[SV10] Views Video TikTok Siêu Tốc", memberPrice: 1.5, agentPrice: 1.3, min: 1000, max: 10000000, desc: "100k - 1 triệu view mỗi ngày" },
+      { id: 10, platform: "Instagram", name: "[SV11] Follower Instagram Việt Nam", memberPrice: 50, agentPrice: 45, min: 100, max: 20000, desc: "Nick Việt có avatar và bài viết" },
+      { id: 11, platform: "Instagram", name: "[SV13] Like Bài Viết & Reels Instagram", memberPrice: 10, agentPrice: 9, min: 50, max: 50000, desc: "Tăng an toàn, tốc độ ổn định" },
+      { id: 12, platform: "YouTube", name: "[SV14] Subscribe Kênh YouTube Bật Kiếm Tiền", memberPrice: 190, agentPrice: 171, min: 50, max: 10000, desc: "Chuẩn chính sách YouTube, không tụt" },
+      { id: 13, platform: "YouTube", name: "[SV15] Views Video YouTube Thời Lượng Cao", memberPrice: 35, agentPrice: 31.5, min: 500, max: 500000, desc: "Giúp tăng giờ xem và đề xuất video" },
+      { id: 14, platform: "Telegram", name: "[SV16] Telegram Members Nhóm & Kênh", memberPrice: 30, agentPrice: 27, min: 100, max: 50000, desc: "Bảo hành 30 ngày, link công khai" }
+    ];
+
+    let currentCategory = "all";
+    let searchKeyword = "";
+
+    function renderPriceTable() {
+      const tbody = $("priceTableBody");
+      let list = SERVICES;
+
+      if (currentCategory !== "all") {
+        list = list.filter(s => s.platform === currentCategory);
+      }
+
+      if (searchKeyword) {
+        const q = searchKeyword.toLowerCase();
+        list = list.filter(s => s.name.toLowerCase().includes(q) || s.platform.toLowerCase().includes(q));
+      }
+
+      tbody.innerHTML = list.map(s => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+          <td class="py-3 px-3 font-mono text-slate-400">#${s.id}</td>
+          <td class="py-3 px-3">
+            <span class="font-extrabold text-slate-900 dark:text-white">${s.name}</span>
+            <span class="ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500">${s.platform}</span>
+          </td>
+          <td class="py-3 px-3 text-right font-black text-brand-600 dark:text-brand-400">${s.memberPrice}đ</td>
+          <td class="py-3 px-3 text-right font-black text-amber-500">${s.agentPrice}đ</td>
+          <td class="py-3 px-3 text-center text-slate-500">${s.min.toLocaleString()} — ${s.max.toLocaleString()}</td>
+          <td class="py-3 px-3 text-slate-500 max-w-[200px] truncate" title="${s.desc}">${s.desc}</td>
+          <td class="py-3 px-3 text-right">
+            <a href="index.html#t4HomeOrderForm" class="px-2.5 py-1 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-bold text-[11px] shadow-sm transition">
+              Đặt đơn
+            </a>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      ['all', 'Facebook', 'TikTok', 'Instagram', 'YouTube', 'Telegram'].forEach(c => {
+        const el = $(`btn-${c}`);
+        if (el) {
+          el.className = c === cat 
+            ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm shrink-0'
+            : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 shrink-0';
+        }
+      });
+      renderPriceTable();
+    }
+
+    $("serviceSearch").addEventListener("input", e => {
+      searchKeyword = e.target.value.trim();
+      renderPriceTable();
+    });
+
+    function initTheme() {
+      const saved = localStorage.getItem("br34_theme");
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+      } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+      }
+    }
+    $("themeToggleBtn").onclick = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+        localStorage.setItem("br34_theme", "light");
+      } else {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("br34_theme", "dark");
+      }
+    };
+
+    const sidebar = $("sidebar");
+    const backdrop = $("sidebarBackdrop");
+    $("openSidebarBtn").onclick = () => { sidebar.classList.remove("-translate-x-full"); backdrop.classList.remove("hidden"); };
+    $("closeSidebarBtn").onclick = closeSidebar;
+    backdrop.onclick = closeSidebar;
+    function closeSidebar() { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); }
+
+    initTheme();
+    renderPriceTable();
+  </script>
+</body>
+</html>

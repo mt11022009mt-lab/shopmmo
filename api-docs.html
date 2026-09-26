@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tài Liệu API & Kết Nối SMM v2 — BR-34</title>
+  <meta name="description" content="Tài liệu tích hợp API SMM Panel v2 chuẩn quốc tế của hệ thống BR-34 dành cho Website đại lý, bot tự động.">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
+              400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
+              800: '#9f1239', 900: '#881337',
+            },
+            surface: {
+              light: '#f8fafc', card: '#ffffff', dark: '#0f172a', darkcard: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            'glow-sm': '0 4px 12px rgba(244, 63, 94, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+    * { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+
+<body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
+
+  <!-- TOP BAR -->
+  <aside aria-label="Thông báo khẩn" class="bg-gradient-to-r from-brand-600 via-rose-600 to-red-600 text-white text-xs font-semibold py-1.5 px-4 shadow-sm relative z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 truncate">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-[11px] font-bold shrink-0">
+          <i class="fa-solid fa-code text-amber-300"></i> API v2
+        </span>
+        <span class="truncate">
+          Hệ thống API SMM v2 chuẩn quốc tế, tốc độ phản hồi dưới 150ms. Hỗ trợ kỹ thuật: <strong>Zalo 0976976627</strong>.
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- APP CONTAINER -->
+  <div class="min-h-[calc(100vh-2rem)] flex flex-col lg:flex-row max-w-[1600px] mx-auto">
+
+    <!-- SIDEBAR -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-surface-darkcard border-r border-slate-200/80 dark:border-slate-800 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none">
+      <div class="h-20 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-brand-500/20 shadow-md shadow-brand-500/10 group-hover:scale-105 transition-transform shrink-0">
+            <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">BR-34</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-black uppercase rounded-md bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400 border border-brand-200 dark:border-brand-800">SMM</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400 dark:text-slate-500">Social Media Marketing</p>
+          </div>
+        </a>
+        <button id="closeSidebarBtn" class="lg:hidden w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Bảng điều khiển</p>
+          <nav class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-house w-4 text-center text-slate-400"></i>
+              <span>Trang chủ</span>
+            </a>
+            <a href="lich-su.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-receipt w-4 text-center text-slate-400"></i>
+              <span>Lịch sử giao dịch</span>
+            </a>
+            <a href="ho-tro.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-comments w-4 text-center text-slate-400"></i>
+              <span>Hỗ trợ ticket</span>
+            </a>
+            <a href="api-docs.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm">
+              <i class="fa-solid fa-code w-4 text-center text-brand-500"></i>
+              <span>Tài liệu API</span>
+              <span class="ml-auto w-2 h-2 rounded-full bg-brand-500"></span>
+            </a>
+            <a href="bang-gia.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-crown w-4 text-center text-amber-500"></i>
+              <span>Cấp bậc & bảng giá</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Tài chính</p>
+          <nav class="space-y-1">
+            <a href="nap-tien.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-wallet w-4 text-center text-emerald-500"></i>
+              <span>Nạp tiền tự động</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Sản phẩm & Dịch vụ</p>
+          <nav class="space-y-1">
+            <a href="mua-tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-box-open w-4 text-center text-indigo-500"></i>
+              <span>Mua tài nguyên số</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <!-- HEADER -->
+      <header class="sticky top-0 z-30 bg-white/80 dark:bg-surface-darkcard/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="openSidebarBtn" class="lg:hidden w-10 h-10 rounded-xl grid place-items-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <i class="fa-solid fa-bars-staggered text-lg"></i>
+          </button>
+          <h1 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-code text-brand-500"></i> Tài liệu API SMM v2
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="themeToggleBtn" title="Chuyển chế độ sáng/tối" class="w-9 h-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+          </button>
+          <a href="index.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 text-xs font-bold text-slate-700 dark:text-slate-200 transition">
+            Về Dashboard
+          </a>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- 1. API KEY & ENDPOINT CARDS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- API Key Block -->
+          <div class="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-key text-amber-500"></i> Khóa API Cá Nhân (API Key)
+              </h3>
+              <button onclick="regenerateApiKey()" class="text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline">
+                <i class="fa-solid fa-rotate mr-1"></i>Tạo lại key
+              </button>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="apiKeyInput" type="text" readonly value="br34_live_9a7f3c2e1b8d4e5f6a7b8c9d0e" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs font-bold text-slate-800 dark:text-slate-200 select-all">
+              <button onclick="copyApiKey()" class="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shrink-0 transition flex items-center gap-1.5">
+                <i class="fa-regular fa-copy"></i> Sao chép
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-400">Không chia sẻ API Key cho bất kỳ ai để bảo vệ số dư tài khoản.</p>
+          </div>
+
+          <!-- API Endpoint Block -->
+          <div class="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-3">
+            <h3 class="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-globe text-emerald-500"></i> API Endpoint (URL Kết Nối)
+            </h3>
+            <div class="flex items-center gap-2">
+              <input type="text" readonly value="https://fvkwcmztfxmdvyjlqcve.supabase.co/api/v2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs font-bold text-slate-800 dark:text-slate-200 select-all">
+              <button onclick="navigator.clipboard.writeText('https://fvkwcmztfxmdvyjlqcve.supabase.co/api/v2'); alert('Đã sao chép Endpoint!')" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-xs shrink-0 transition">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+            <div class="flex items-center gap-3 text-[11px] text-slate-400">
+              <span>Phương thức: <strong class="text-brand-500 font-mono">POST</strong></span>
+              <span>•</span>
+              <span>Định dạng: <strong class="text-emerald-500 font-mono">JSON</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. DOCUMENTATION TABS (services, add, status, balance) -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-slate-100 dark:border-slate-800">
+            <button onclick="switchTab('services')" id="tab-services" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">1. Danh sách Dịch vụ (services)</button>
+            <button onclick="switchTab('add')" id="tab-add" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">2. Tạo đơn hàng (add)</button>
+            <button onclick="switchTab('status')" id="tab-status" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">3. Trạng thái đơn (status)</button>
+            <button onclick="switchTab('balance')" id="tab-balance" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">4. Kiểm tra số dư (balance)</button>
+          </div>
+
+          <!-- TAB 1: SERVICES -->
+          <div id="content-services" class="space-y-4">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Lấy toàn bộ danh sách dịch vụ & đơn giá</h4>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-mono text-xs space-y-1">
+              <p><span class="text-amber-500 font-bold">POST Parameters:</span></p>
+              <p>key : YOUR_API_KEY</p>
+              <p>action : "services"</p>
+            </div>
+            <p class="text-xs text-slate-500">Mẫu JSON phản hồi:</p>
+            <pre class="p-4 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+[
+  {
+    "service": 1,
+    "name": "Like Bài Viết Facebook [Tốc độ cao]",
+    "type": "Default",
+    "category": "Facebook Like",
+    "rate": "12.00",
+    "min": "50",
+    "max": "50000"
+  },
+  {
+    "service": 7,
+    "name": "Followers TikTok Việt Nam [Bảo hành 30 ngày]",
+    "type": "Default",
+    "category": "TikTok Follow",
+    "rate": "45.00",
+    "min": "100",
+    "max": "50000"
+  }
+]</pre>
+          </div>
+
+          <!-- TAB 2: ADD ORDER -->
+          <div id="content-add" class="hidden space-y-4">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Tạo đơn hàng mới qua API</h4>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-mono text-xs space-y-1">
+              <p><span class="text-amber-500 font-bold">POST Parameters:</span></p>
+              <p>key : YOUR_API_KEY</p>
+              <p>action : "add"</p>
+              <p>service : ID_DICH_VU (ví dụ: 1)</p>
+              <p>link : "https://facebook.com/..."</p>
+              <p>quantity : 1000</p>
+            </div>
+            <p class="text-xs text-slate-500">Mẫu JSON phản hồi khi thành công:</p>
+            <pre class="p-4 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+{
+  "order": 10842,
+  "status": "success",
+  "charge": "12000"
+}</pre>
+          </div>
+
+          <!-- TAB 3: STATUS -->
+          <div id="content-status" class="hidden space-y-4">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Kiểm tra trạng thái đơn hàng</h4>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-mono text-xs space-y-1">
+              <p><span class="text-amber-500 font-bold">POST Parameters:</span></p>
+              <p>key : YOUR_API_KEY</p>
+              <p>action : "status"</p>
+              <p>order : 10842</p>
+            </div>
+            <p class="text-xs text-slate-500">Mẫu JSON phản hồi:</p>
+            <pre class="p-4 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+{
+  "charge": "12000",
+  "start_count": "520",
+  "status": "In progress",
+  "remains": "150",
+  "currency": "VND"
+}</pre>
+          </div>
+
+          <!-- TAB 4: BALANCE -->
+          <div id="content-balance" class="hidden space-y-4">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Kiểm tra số dư ví tài khoản</h4>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-mono text-xs space-y-1">
+              <p><span class="text-amber-500 font-bold">POST Parameters:</span></p>
+              <p>key : YOUR_API_KEY</p>
+              <p>action : "balance"</p>
+            </div>
+            <p class="text-xs text-slate-500">Mẫu JSON phản hồi:</p>
+            <pre class="p-4 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+{
+  "balance": "550000.00",
+  "currency": "VND"
+}</pre>
+          </div>
+
+        </section>
+
+        <!-- 3. CODE EXAMPLES (cURL, JS, PHP) -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-laptop-code text-indigo-500"></i> Code Mẫu Tích Hợp (SDK / Examples)
+          </h3>
+          <div class="space-y-3">
+            <p class="text-xs text-slate-500">Ví dụ gọi API tạo đơn bằng <strong>JavaScript (Fetch)</strong>:</p>
+            <pre class="p-4 rounded-2xl bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto">
+const res = await fetch("https://fvkwcmztfxmdvyjlqcve.supabase.co/api/v2", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    key: "YOUR_API_KEY",
+    action: "add",
+    service: 1,
+    link: "https://facebook.com/posts/123456",
+    quantity: 1000
+  })
+});
+const data = await res.json();
+console.log(data);</pre>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
+        <p class="font-semibold text-slate-700 dark:text-slate-300">Copyright © 2026. <span class="text-brand-600 dark:text-brand-400 font-extrabold">BR-34</span> — API Documentation.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function switchTab(t) {
+      ['services', 'add', 'status', 'balance'].forEach(name => {
+        $(`tab-${name}`).className = name === t 
+          ? 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm'
+          : 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+        $(`content-${name}`).classList.toggle('hidden', name !== t);
+      });
+    }
+
+    function copyApiKey() {
+      const val = $("apiKeyInput").value;
+      navigator.clipboard.writeText(val);
+      alert("Đã sao chép API Key vào bộ nhớ tạm!");
+    }
+
+    function regenerateApiKey() {
+      const rand = "br34_live_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      $("apiKeyInput").value = rand;
+      alert("Đã tạo mới API Key thành công! Hãy lưu lại trước khi rời trang.");
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("br34_theme");
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+      } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+      }
+    }
+    $("themeToggleBtn").onclick = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+        localStorage.setItem("br34_theme", "light");
+      } else {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("br34_theme", "dark");
+      }
+    };
+
+    const sidebar = $("sidebar");
+    const backdrop = $("sidebarBackdrop");
+    $("openSidebarBtn").onclick = () => { sidebar.classList.remove("-translate-x-full"); backdrop.classList.remove("hidden"); };
+    $("closeSidebarBtn").onclick = closeSidebar;
+    backdrop.onclick = closeSidebar;
+    function closeSidebar() { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); }
+
+    initTheme();
+  </script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lịch Sử Đơn Hàng & Giao Dịch — BR-34</title>
+  <meta name="description" content="Quản lý và tra cứu toàn bộ đơn hàng mạng xã hội Facebook, TikTok, Instagram đã đặt tại BR-34.">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
+              400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
+              800: '#9f1239', 900: '#881337',
+            },
+            surface: {
+              light: '#f8fafc', card: '#ffffff', dark: '#0f172a', darkcard: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            'glow': '0 10px 25px -5px rgba(244, 63, 94, 0.35)',
+            'glow-sm': '0 4px 12px rgba(244, 63, 94, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+    * { -webkit-tap-highlight-color: transparent; }
+    input, select { font-size: 15px !important; }
+    @media (min-width: 640px) { input, select { font-size: 14px !important; } }
+    .modern-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modern-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+
+<body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
+
+  <!-- TOP BAR -->
+  <aside aria-label="Thông báo khẩn" class="bg-gradient-to-r from-brand-600 via-rose-600 to-red-600 text-white text-xs font-semibold py-1.5 px-4 shadow-sm relative z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 truncate">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-[11px] font-bold shrink-0">
+          <i class="fa-solid fa-bolt text-amber-300"></i> BR-34 v2.5
+        </span>
+        <span class="truncate">
+          Hệ thống tra cứu tiến độ đơn hàng tự động. Hotline CSKH: <strong class="underline decoration-white/40">Zalo 0976976627</strong>.
+        </span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 shrink-0 text-[11px]">
+        <a href="https://zalo.me/0976976627" target="_blank" class="hover:text-amber-200 transition flex items-center gap-1">
+          <i class="fa-solid fa-headset"></i> CSKH 24/7
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- APP CONTAINER -->
+  <div class="min-h-[calc(100vh-2rem)] flex flex-col lg:flex-row max-w-[1600px] mx-auto">
+
+    <!-- SIDEBAR -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-surface-darkcard border-r border-slate-200/80 dark:border-slate-800 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none">
+      <div class="h-20 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-brand-500/20 shadow-md shadow-brand-500/10 group-hover:scale-105 transition-transform shrink-0">
+            <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">BR-34</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-black uppercase rounded-md bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400 border border-brand-200 dark:border-brand-800">SMM</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400 dark:text-slate-500">Social Media Marketing</p>
+          </div>
+        </a>
+        <button id="closeSidebarBtn" class="lg:hidden w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Bảng điều khiển</p>
+          <nav class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-house w-4 text-center text-slate-400"></i>
+              <span>Trang chủ</span>
+            </a>
+            <a href="lich-su.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm">
+              <i class="fa-solid fa-receipt w-4 text-center text-brand-500"></i>
+              <span>Lịch sử giao dịch</span>
+              <span class="ml-auto w-2 h-2 rounded-full bg-brand-500"></span>
+            </a>
+            <a href="ho-tro.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-comments w-4 text-center text-slate-400"></i>
+              <span>Hỗ trợ ticket</span>
+            </a>
+            <a href="api-docs.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-code w-4 text-center text-slate-400"></i>
+              <span>Tài liệu API</span>
+            </a>
+            <a href="bang-gia.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-crown w-4 text-center text-amber-500"></i>
+              <span>Cấp bậc & bảng giá</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Tài chính</p>
+          <nav class="space-y-1">
+            <a href="nap-tien.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-wallet w-4 text-center text-emerald-500"></i>
+              <span>Nạp tiền tự động</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Sản phẩm & Dịch vụ</p>
+          <nav class="space-y-1">
+            <a href="mua-tai-nguyen.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-box-open w-4 text-center text-indigo-500"></i>
+              <span>Mua tài nguyên số</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30">
+        <div id="sideLoggedOut" class="flex flex-col gap-2">
+          <a href="index.html" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 text-white font-bold text-xs text-center">
+            Đăng nhập tài khoản
+          </a>
+        </div>
+        <div id="sideLoggedIn" class="hidden flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-500 to-amber-400 p-0.5 shrink-0">
+              <div class="w-full h-full rounded-full bg-white dark:bg-slate-800 grid place-items-center text-xs font-black text-brand-600 dark:text-brand-400 uppercase" id="sideUserAvatarText">U</div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-slate-800 dark:text-white truncate" id="sideUserName">Người dùng</p>
+              <p class="text-[11px] font-extrabold text-emerald-500 truncate" id="sideUserBalance">0đ</p>
+            </div>
+          </div>
+          <button onclick="handleLogout()" title="Đăng xuất" class="w-8 h-8 rounded-xl grid place-items-center text-slate-400 hover:text-rose-500 transition shrink-0">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <!-- HEADER -->
+      <header class="sticky top-0 z-30 bg-white/80 dark:bg-surface-darkcard/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="openSidebarBtn" class="lg:hidden w-10 h-10 rounded-xl grid place-items-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <i class="fa-solid fa-bars-staggered text-lg"></i>
+          </button>
+          <h1 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-brand-500"></i> Lịch sử đơn hàng
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="themeToggleBtn" title="Chuyển chế độ sáng/tối" class="w-9 h-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+          </button>
+          <div class="flex items-center gap-1 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80">
+            <div class="px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+              <i class="fa-solid fa-wallet text-emerald-500"></i>
+              <span id="headerBalance">0đ</span>
+            </div>
+            <a href="nap-tien.html" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 text-white font-bold text-[11px] shadow-sm">
+              Nạp
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- 1. THẺ THỐNG KÊ NHANH -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng đơn đã đặt</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1" id="statTotalOrders">0</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Toàn bộ dịch vụ SMM</p>
+          </div>
+          <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Đang xử lý / chạy</p>
+            <h3 class="text-2xl font-black text-amber-500 mt-1" id="statPendingOrders">0</h3>
+            <p class="text-[11px] text-amber-500/80 mt-1">Đang được hệ thống chạy</p>
+          </div>
+          <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Đã hoàn thành</p>
+            <h3 class="text-2xl font-black text-emerald-500 mt-1" id="statDoneOrders">0</h3>
+            <p class="text-[11px] text-emerald-500/80 mt-1">Thành công 100%</p>
+          </div>
+          <div class="p-5 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng tiền đã chi</p>
+            <h3 class="text-2xl font-black text-brand-600 dark:text-brand-400 mt-1" id="statSpent">0đ</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Đã trừ từ số dư ví</p>
+          </div>
+        </div>
+
+        <!-- 2. BẢNG DANH SÁCH ĐƠN HÀNG VỚI BỘ LỌC -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+          
+          <!-- Filter Controls -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            
+            <!-- Trạng thái filters -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              <button onclick="filterStatus('all')" id="flt-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm">Tất cả</button>
+              <button onclick="filterStatus('pending')" id="flt-pending" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Chờ xử lý</button>
+              <button onclick="filterStatus('done')" id="flt-done" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Hoàn thành</button>
+              <button onclick="filterStatus('canceled')" id="flt-canceled" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">Đã hủy</button>
+            </div>
+
+            <!-- Search box -->
+            <div class="relative w-full md:w-72">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input id="searchInput" type="text" placeholder="Tìm theo mã đơn, link, tên..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+
+          </div>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead>
+                <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                  <th class="py-3 px-3">Thời gian</th>
+                  <th class="py-3 px-3">Mã đơn</th>
+                  <th class="py-3 px-3">Dịch vụ / Máy chủ</th>
+                  <th class="py-3 px-3">Liên kết (Target)</th>
+                  <th class="py-3 px-3 text-center">Trạng thái</th>
+                  <th class="py-3 px-3 text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tr>
+                  <td colspan="6" class="py-12 text-center text-slate-400">Đang tải lịch sử đơn hàng...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyNotice" class="hidden text-center py-10">
+            <i class="fa-solid fa-receipt text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
+            <p class="text-sm font-bold text-slate-600 dark:text-slate-400">Không tìm thấy đơn hàng nào</p>
+            <p class="text-xs text-slate-400 mt-0.5">Bạn chưa có đơn hàng nào phù hợp với bộ lọc hiện tại.</p>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
+        <p class="font-semibold text-slate-700 dark:text-slate-300">Copyright © 2026. <span class="text-brand-600 dark:text-brand-400 font-extrabold">BR-34</span> — Lịch sử giao dịch.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+    const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+
+    const $ = id => document.getElementById(id);
+    const fmtVnd = n => Number(n || 0).toLocaleString("vi-VN") + "đ";
+
+    let currentUser = null;
+    let allOrders = [];
+    let currentFilterStatus = "all";
+    let searchQuery = "";
+
+    async function loadOrders() {
+      const tbody = $("ordersTbody");
+      if (!currentUser) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400">Vui lòng đăng nhập để tra cứu lịch sử đơn hàng của bạn.</td></tr>`;
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient
+          .from("orders")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        allOrders = data || [];
+        updateStats();
+        renderOrders();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-rose-500">Lỗi khi tải đơn: ${err.message}</td></tr>`;
+      }
+    }
+
+    function updateStats() {
+      const total = allOrders.length;
+      const pending = allOrders.filter(o => o.status === 'pending' || !o.status).length;
+      const done = allOrders.filter(o => o.status === 'done' || o.status === 'completed').length;
+
+      $("statTotalOrders").textContent = total;
+      $("statPendingOrders").textContent = pending;
+      $("statDoneOrders").textContent = done;
+
+      // Spent
+      supabaseClient.from("profiles").select("balance, total_spent").eq("id", currentUser.id).maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            $("statSpent").textContent = fmtVnd(data.total_spent || 0);
+            $("headerBalance").textContent = fmtVnd(data.balance || 0);
+            $("sideUserBalance").textContent = fmtVnd(data.balance || 0);
+          }
+        });
+    }
+
+    function renderOrders() {
+      const tbody = $("ordersTbody");
+      const empty = $("emptyNotice");
+
+      let filtered = allOrders;
+
+      if (currentFilterStatus !== "all") {
+        if (currentFilterStatus === "pending") {
+          filtered = filtered.filter(o => o.status === "pending" || !o.status);
+        } else if (currentFilterStatus === "done") {
+          filtered = filtered.filter(o => o.status === "done" || o.status === "completed");
+        } else if (currentFilterStatus === "canceled") {
+          filtered = filtered.filter(o => o.status === "canceled" || o.status === "rejected");
+        }
+      }
+
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(o => 
+          (o.service || "").toLowerCase().includes(q) ||
+          (o.link || "").toLowerCase().includes(q) ||
+          String(o.id || "").toLowerCase().includes(q)
+        );
+      }
+
+      if (!filtered.length) {
+        tbody.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+
+      empty.classList.add("hidden");
+      tbody.innerHTML = filtered.map(o => {
+        const st = o.status || "pending";
+        const badge = (st === "done" || st === "completed")
+          ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">Hoàn thành</span>'
+          : (st === "canceled" || st === "rejected")
+          ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400">Đã hủy</span>'
+          : '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 animate-pulse">Đang chạy</span>';
+
+        const dt = o.created_at ? new Date(o.created_at).toLocaleString("vi-VN") : "—";
+        const orderCode = `ORD#${String(o.id).padStart(5, '0')}`;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+            <td class="py-3.5 px-3 text-slate-400 whitespace-nowrap">${dt}</td>
+            <td class="py-3.5 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">${orderCode}</td>
+            <td class="py-3.5 px-3">
+              <span class="font-bold text-slate-800 dark:text-white">${o.service || 'Dịch vụ SMM'}</span>
+            </td>
+            <td class="py-3.5 px-3 max-w-[220px]">
+              <a href="${o.link}" target="_blank" class="text-brand-600 dark:text-brand-400 truncate block hover:underline" title="${o.link}">
+                ${o.link || '—'}
+              </a>
+            </td>
+            <td class="py-3.5 px-3 text-center whitespace-nowrap">${badge}</td>
+            <td class="py-3.5 px-3 text-right">
+              <a href="https://zalo.me/0976976627?text=HoTroDon${orderCode}" target="_blank" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-600 text-slate-600 dark:text-slate-300 font-bold text-[11px] transition inline-flex items-center gap-1">
+                <i class="fa-solid fa-headset text-xs"></i> Báo lỗi
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterStatus(status) {
+      currentFilterStatus = status;
+      ['all', 'pending', 'done', 'canceled'].forEach(s => {
+        $(`flt-${s}`).className = s === status 
+          ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-glow-sm'
+          : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+      });
+      renderOrders();
+    }
+
+    $("searchInput").addEventListener("input", e => {
+      searchQuery = e.target.value.trim();
+      renderOrders();
+    });
+
+    function syncUserData(user) {
+      currentUser = user;
+      if (!user) {
+        $("sideLoggedOut").classList.remove("hidden");
+        $("sideLoggedIn").classList.add("hidden");
+        loadOrders();
+        return;
+      }
+
+      $("sideLoggedOut").classList.add("hidden");
+      $("sideLoggedIn").classList.remove("hidden");
+      const uname = (user.email || "").split("@")[0];
+      $("sideUserName").textContent = uname;
+      $("sideUserAvatarText").textContent = uname.charAt(0).toUpperCase();
+
+      loadOrders();
+    }
+
+    async function handleLogout() {
+      await supabaseClient.auth.signOut();
+      location.href = "index.html";
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("br34_theme");
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+      } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+      }
+    }
+    $("themeToggleBtn").onclick = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+        localStorage.setItem("br34_theme", "light");
+      } else {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("br34_theme", "dark");
+      }
+    };
+
+    const sidebar = $("sidebar");
+    const backdrop = $("sidebarBackdrop");
+    $("openSidebarBtn").onclick = () => { sidebar.classList.remove("-translate-x-full"); backdrop.classList.remove("hidden"); };
+    $("closeSidebarBtn").onclick = closeSidebar;
+    backdrop.onclick = closeSidebar;
+    function closeSidebar() { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); }
+
+    initTheme();
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      syncUserData(session ? session.user : null);
+    });
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      syncUserData(session ? session.user : null);
+    });
+  </script>
+</body>
+</html>
