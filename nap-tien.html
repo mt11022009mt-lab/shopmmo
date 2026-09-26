@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Nạp Tiền Tự Động — BR-34 SMM Panel</title>
-  <meta name="description" content="Nạp tiền vào tài khoản BR-34 tự động qua Ngân hàng MB Bank, Techcombank, Ví MoMo 24/7. Cộng tiền ngay sau 1-3 phút.">
+  <meta name="description" content="Nạp tiền vào tài khoản BR-34 tự động qua Ngân hàng Techcombank 24/7. Cộng tiền ngay sau 1-3 phút.">
   <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
 
   <!-- Tailwind CSS CDN -->
@@ -71,7 +71,7 @@
           <i class="fa-solid fa-bolt text-amber-300"></i> BR-34 v2.5
         </span>
         <span class="truncate">
-          Hệ thống nạp tiền tự động qua Techcombank & MB Bank 24/7. Hỗ trợ khách hàng: <strong class="underline decoration-white/40">Zalo 0976976627</strong>.
+          Hệ thống nạp tiền tự động qua Techcombank 24/7. Hỗ trợ khách hàng: <strong class="underline decoration-white/40">Zalo 0976976627</strong>.
         </span>
       </div>
       <div class="hidden sm:flex items-center gap-4 shrink-0 text-[11px]">
@@ -271,19 +271,11 @@
               <i class="fa-solid fa-credit-card text-brand-500"></i> Phương thức thanh toán
             </h2>
 
-            <!-- Chọn phương thức (Tabs: MB Bank / Techcombank / MoMo) -->
-            <div class="grid grid-cols-3 gap-2">
-              <button type="button" onclick="selectBankMethod('mbbank')" id="btnMethodMB" class="p-3 rounded-2xl border-2 border-brand-500 bg-brand-50/50 dark:bg-brand-950/30 text-center transition">
-                <div class="font-extrabold text-xs text-brand-600 dark:text-brand-400">MB BANK</div>
-                <div class="text-[10px] text-slate-400">Quét mã QR 24/7</div>
-              </button>
-              <button type="button" onclick="selectBankMethod('techcom')" id="btnMethodTCB" class="p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-center transition">
-                <div class="font-extrabold text-xs text-slate-700 dark:text-slate-300">TECHCOM</div>
-                <div class="text-[10px] text-slate-400">Miễn phí nạp</div>
-              </button>
-              <button type="button" onclick="selectBankMethod('momo')" id="btnMethodMomo" class="p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-center transition">
-                <div class="font-extrabold text-xs text-slate-700 dark:text-slate-300">VÍ MOMO</div>
-                <div class="text-[10px] text-slate-400">Ví điện tử</div>
+            <!-- Chọn phương thức (Chỉ Techcombank) -->
+            <div class="grid grid-cols-1 gap-2">
+              <button type="button" id="btnMethodTCB" class="p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 dark:bg-brand-950/30 text-center transition">
+                <div class="font-extrabold text-sm text-brand-600 dark:text-brand-400">TECHCOMBANK</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Quét mã QR 24/7 — Miễn phí nạp</div>
               </button>
             </div>
 
@@ -312,7 +304,7 @@
               <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 flex items-center justify-between">
                 <div>
                   <p class="text-slate-400 text-[10px] uppercase font-bold">Ngân hàng thụ hưởng</p>
-                  <p class="font-extrabold text-slate-800 dark:text-white mt-0.5" id="infoBankName">MB Bank (Quân Đội)</p>
+                  <p class="font-extrabold text-slate-800 dark:text-white mt-0.5" id="infoBankName">Techcombank</p>
                 </div>
                 <button type="button" onclick="copyText('infoBankName')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-bold hover:bg-brand-500 hover:text-white transition">
                   <i class="fa-regular fa-copy"></i>
@@ -322,7 +314,7 @@
               <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 flex items-center justify-between">
                 <div>
                   <p class="text-slate-400 text-[10px] uppercase font-bold">Số tài khoản</p>
-                  <p class="font-black text-brand-600 dark:text-brand-400 text-sm mt-0.5" id="infoAccountNo">0976976627</p>
+                  <p class="font-black text-brand-600 dark:text-brand-400 text-sm mt-0.5" id="infoAccountNo">19076780658018</p>
                 </div>
                 <button type="button" onclick="copyText('infoAccountNo')" class="px-2.5 py-1 rounded-lg bg-brand-500 text-white text-[11px] font-bold hover:bg-brand-600 transition">
                   <i class="fa-regular fa-copy"></i> Sao chép
@@ -367,7 +359,7 @@
             </div>
 
             <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-              Mở ứng dụng Ngân hàng hoặc MoMo của bạn để quét mã QR trên. Số tiền và nội dung sẽ được điền tự động 100%.
+              Mở ứng dụng Ngân hàng Techcombank của bạn để quét mã QR trên. Số tiền và nội dung sẽ được điền tự động 100%.
             </p>
           </div>
 
@@ -449,35 +441,20 @@
     const fmtVnd = n => Number(n || 0).toLocaleString("vi-VN") + "đ";
 
     let currentUser = null;
-    let selectedMethod = "mbbank";
+    let selectedMethod = "techcom"; // Chỉ còn Techcombank
 
     const BANK_CONFIG = {
-      mbbank: {
-        name: "MB Bank (Quân Đội)",
-        bin: "970422",
-        accNo: "0976976627",
-        accName: "TRAN MINH TUAN"
-      },
       techcom: {
         name: "Techcombank",
         bin: "970407",
         accNo: "19076780658018",
-        accName: "TRAN MINH TUAN"
-      },
-      momo: {
-        name: "Ví MoMo",
-        bin: "momo",
-        accNo: "0976976627",
         accName: "TRAN MINH TUAN"
       }
     };
 
     function selectBankMethod(m) {
       selectedMethod = m;
-      $("btnMethodMB").className = m === "mbbank" ? "p-3 rounded-2xl border-2 border-brand-500 bg-brand-50/50 dark:bg-brand-950/30 text-center transition" : "p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-center transition";
-      $("btnMethodTCB").className = m === "techcom" ? "p-3 rounded-2xl border-2 border-brand-500 bg-brand-50/50 dark:bg-brand-950/30 text-center transition" : "p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-center transition";
-      $("btnMethodMomo").className = m === "momo" ? "p-3 rounded-2xl border-2 border-brand-500 bg-brand-50/50 dark:bg-brand-950/30 text-center transition" : "p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-center transition";
-
+      // Chỉ có một phương thức nên luôn giữ nguyên style
       const cfg = BANK_CONFIG[m];
       $("infoBankName").textContent = cfg.name;
       $("infoAccountNo").textContent = cfg.accNo;
@@ -503,11 +480,8 @@
       const note = getTransferNote();
       $("infoTransferNote").textContent = note;
 
-      if (selectedMethod === "momo") {
-        $("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=2|99|${cfg.accNo}|TRAN%20MINH%20TUAN||0|0|${amt}|${encodeURIComponent(note)}|transfer_mycard`;
-      } else {
-        $("qrImage").src = `https://img.vietqr.io/image/${cfg.bin}-${cfg.accNo}-compact2.png?amount=${amt}&addInfo=${encodeURIComponent(note)}&accountName=${encodeURIComponent(cfg.accName)}`;
-      }
+      // Chỉ dùng VietQR cho Techcombank
+      $("qrImage").src = `https://img.vietqr.io/image/${cfg.bin}-${cfg.accNo}-compact2.png?amount=${amt}&addInfo=${encodeURIComponent(note)}&accountName=${encodeURIComponent(cfg.accName)}`;
     }
 
     $("inputAmount").addEventListener("input", updateQrCode);
@@ -698,7 +672,7 @@
     }
 
     initTheme();
-    selectBankMethod("mbbank");
+    selectBankMethod("techcom");
 
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
       syncUserData(session ? session.user : null);
