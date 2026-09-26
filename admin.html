@@ -472,32 +472,26 @@
           <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
             <div>
               <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-network-wired text-brand-500"></i> Cấu Hình Kết Nối API Web Mẹ (smm1s.vn)
+                <i class="fa-solid fa-network-wired text-brand-500"></i> Kết Nối API Web Mẹ (smm1s.vn)
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Kết nối API SMM v2 để chuyển tiếp đơn hàng và kiểm tra số dư tự động</p>
+              <p class="text-xs text-slate-400 mt-0.5">Kết nối qua Edge Function <code class="font-mono">smm1s-proxy</code> — API key được lưu an toàn phía server, không lộ ra trình duyệt.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
-                <p class="font-bold text-slate-700 dark:text-slate-300">API Endpoint Web Mẹ:</p>
-                <input type="text" readonly value="https://smm1s.vn/api/v2" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs font-bold text-brand-600">
-                <p class="text-[11px] text-slate-400">Phương thức gửi: POST | Tham số: key, action</p>
+                <p class="font-bold text-slate-700 dark:text-slate-300">Số dư tài khoản smm1s.vn:</p>
+                <button type="button" id="checkBalanceBtn" onclick="checkSmm1sBalance()" class="w-full px-3.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-300">
+                  <i class="fa-solid fa-wallet mr-1"></i> Kiểm tra số dư web mẹ
+                </button>
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
-                <p class="font-bold text-slate-700 dark:text-slate-300">Khóa API Bí Mật (smm1s.vn API Key):</p>
-                <input id="smm1sApiKeyInput" type="password" placeholder="Nhập API Key cấp từ smm1s.vn..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                <div class="flex items-center justify-between pt-1">
-                  <button type="button" onclick="saveSmm1sConfig()" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-glow-sm">
-                    Lưu cấu hình
-                  </button>
-                  <button type="button" onclick="checkSmm1sBalance()" class="px-3.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-300">
-                    <i class="fa-solid fa-wallet mr-1"></i> Kiểm tra số dư web mẹ
-                  </button>
-                </div>
+                <p class="font-bold text-slate-700 dark:text-slate-300">Danh sách dịch vụ trên web chính:</p>
+                <p id="servicesStatsText" class="text-[11px] text-slate-400">Đang tải thống kê...</p>
+                <button type="button" id="syncServicesBtn" onclick="doSyncServicesAdmin()" class="w-full px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-glow-sm">
+                  <i class="fa-solid fa-rotate mr-1"></i> Đồng bộ dịch vụ từ smm1s.vn
+                </button>
               </div>
-
             </div>
 
             <div id="smm1sBalanceResult" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200 flex items-center justify-between">
@@ -508,12 +502,14 @@
               <span id="smm1sBalanceValue" class="text-xl font-black text-emerald-600 dark:text-emerald-400">0đ</span>
             </div>
 
+            <div id="syncServicesLog" class="hidden p-4 rounded-2xl bg-slate-900 border border-slate-800 text-[11px] font-mono text-slate-300 whitespace-pre-wrap max-h-56 overflow-y-auto"></div>
+
             <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 text-xs space-y-2">
               <h5 class="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-calculator text-indigo-500"></i> Quy tắc định giá tự động BR-34
               </h5>
               <p class="text-indigo-800/80 dark:text-indigo-300/80 leading-relaxed">
-                Hệ thống áp dụng công thức: <strong>Giá bán BR-34 = Giá gốc smm1s.vn + 10.000đ</strong> lợi nhuận cho toàn bộ dịch vụ và sản phẩm số.
+                Hệ thống áp dụng công thức: <strong>Giá bán BR-34 = Giá gốc smm1s.vn + 3.000đ</strong> lợi nhuận cho mỗi 1.000 đơn vị dịch vụ. Bấm "Đồng bộ dịch vụ" mỗi khi smm1s.vn thêm dịch vụ mới hoặc đổi giá.
               </p>
             </div>
 
@@ -735,6 +731,7 @@
           panel.classList.toggle("hidden", name !== t);
         }
       });
+      if (t === 'api') loadServicesStats();
     }
 
     /* ========================================================
@@ -748,7 +745,6 @@
           loadAdminOrders(),
           loadDeposits()
         ]);
-        loadSmm1sConfig();
       } catch (err) {
         console.error("Lỗi load dữ liệu:", err);
       }
@@ -1344,36 +1340,124 @@
     }
 
     /* ========================================================
-       8. CẤU HÌNH API WEB MẸ SMM1S.VN
+       8. KẾT NỐI API WEB MẸ SMM1S.VN (qua Edge Function smm1s-proxy)
        ======================================================== */
-    function loadSmm1sConfig() {
-      const saved = localStorage.getItem("br34_smm1s_api_key") || "";
-      $("smm1sApiKeyInput").value = saved;
-    }
+    const SERVICE_MARKUP_PER_1K = 3000; // Cộng lãi cố định 3.000đ / 1.000
 
-    function saveSmm1sConfig() {
-      const key = $("smm1sApiKeyInput").value.trim();
-      localStorage.setItem("br34_smm1s_api_key", key);
-      toast("Đã lưu API Key smm1s.vn thành công!");
+    async function callSmm1sProxy(action, params = {}) {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) throw new Error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.");
+      const res = await fetch(SUPABASE_PROJECT_URL + "/functions/v1/smm1s-proxy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + session.access_token
+        },
+        body: JSON.stringify({ action, ...params })
+      });
+      return { status: res.status, data: await res.json() };
     }
 
     async function checkSmm1sBalance() {
-      const key = $("smm1sApiKeyInput").value.trim();
-      if (!key) {
-        toast("Vui lòng nhập API Key smm1s.vn!", false);
-        return;
-      }
-
-      toast("Đang kết nối API smm1s.vn...");
+      const btn = $("checkBalanceBtn");
+      const box = $("smm1sBalanceResult");
+      const val = $("smm1sBalanceValue");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang kết nối...`;
       try {
-        const box = $("smm1sBalanceResult");
-        const val = $("smm1sBalanceValue");
-        
+        const { data } = await callSmm1sProxy("balance");
+        if (data.error) throw new Error(data.error);
+        const balanceDisplay = (data.balance === "" || data.balance == null) ? "0" : Number(data.balance).toLocaleString("vi-VN");
         box.classList.remove("hidden");
-        val.textContent = "1.850.000đ";
+        val.textContent = balanceDisplay + " " + (data.currency || "VND");
         toast("Đã lấy số dư web mẹ thành công!");
       } catch (e) {
-        toast("Không thể kết nối API web mẹ.", false);
+        toast("Không thể kết nối API web mẹ: " + e.message, false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-wallet mr-1"></i> Kiểm tra số dư web mẹ`;
+      }
+    }
+
+    async function loadServicesStats() {
+      const el = $("servicesStatsText");
+      try {
+        const { count, error } = await supabaseClient
+          .from("services")
+          .select("*", { count: "exact", head: true })
+          .eq("is_active", true);
+        if (error) throw error;
+
+        const { data: lastRow } = await supabaseClient
+          .from("services")
+          .select("updated_at")
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const lastSync = lastRow?.updated_at
+          ? new Date(lastRow.updated_at).toLocaleString("vi-VN")
+          : "chưa từng đồng bộ";
+
+        el.textContent = `Đang có ${count || 0} dịch vụ · Đồng bộ gần nhất: ${lastSync}`;
+      } catch (e) {
+        el.textContent = "Không tải được thống kê dịch vụ.";
+      }
+    }
+
+    async function doSyncServicesAdmin() {
+      const btn = $("syncServicesBtn");
+      const logBox = $("syncServicesLog");
+      logBox.classList.remove("hidden");
+      logBox.textContent = "";
+      const log = m => { logBox.textContent += m + "\n"; logBox.scrollTop = logBox.scrollHeight; };
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang đồng bộ...`;
+      log("📋 Đang tải danh sách dịch vụ từ smm1s.vn...");
+
+      try {
+        const { status, data } = await callSmm1sProxy("services");
+        log("HTTP Status: " + status);
+        if (!Array.isArray(data)) throw new Error(data.error || "Phản hồi không đúng định dạng");
+
+        log(`✅ Nhận được ${data.length} dịch vụ. Đang chuẩn hoá & ghi vào database...`);
+
+        const rows = data.map(s => ({
+          provider_service_id: String(s.service),
+          category: (s.category || "Khác").trim(),
+          name: s.name,
+          rate_original: Number(s.rate) || 0,
+          markup: SERVICE_MARKUP_PER_1K,
+          min: Number(s.min) || 1,
+          max: Number(s.max) || 1000000,
+          type: s.type || null,
+          refill: !!s.refill,
+          cancel: !!s.cancel,
+          is_active: true,
+          updated_at: new Date().toISOString()
+        }));
+
+        const CHUNK = 200;
+        let done = 0;
+        for (let i = 0; i < rows.length; i += CHUNK) {
+          const chunk = rows.slice(i, i + CHUNK);
+          const { error } = await supabaseClient.from("services").upsert(chunk, { onConflict: "provider_service_id" });
+          if (error) throw error;
+          done += chunk.length;
+          log(`  ✔ Đã ghi ${done}/${rows.length}`);
+        }
+
+        log(`\n🎉 ĐỒNG BỘ THÀNH CÔNG! ${rows.length} dịch vụ (giá gốc +${SERVICE_MARKUP_PER_1K.toLocaleString()}đ/1k) đã sẵn sàng trên web chính.`);
+        toast(`✅ Đồng bộ thành công ${rows.length} dịch vụ!`);
+        await loadServicesStats();
+      } catch (e) {
+        log("❌ Lỗi: " + e.message);
+        toast("Lỗi đồng bộ dịch vụ: " + e.message, false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-rotate mr-1"></i> Đồng bộ dịch vụ từ smm1s.vn`;
       }
     }
 
