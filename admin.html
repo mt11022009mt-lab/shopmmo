@@ -16,10 +16,6 @@
 <script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Be Vietnam Pro"','system-ui','sans-serif']}}}}</script>
 
 <style>
-/* ==========================================================
-   BR-34 LIQUID GLASS THEME (SELF-CONTAINED)
-   Tông màu: Đen Than Chì (#0a0a0f, #14141e) & Đỏ Neon (#f43f5e, #e11d48)
-   ========================================================== */
 :root {
   --red: #f43f5e;
   --red2: #e11d48;
@@ -31,10 +27,7 @@
   --glass-border-hover: rgba(244, 63, 94, 0.65);
 }
 
-html {
-  scroll-behavior: smooth;
-  background-color: #0a0a0f;
-}
+html { scroll-behavior: smooth; background-color: #0a0a0f; }
 
 body {
   background: radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.16) 0%, transparent 45%),
@@ -47,26 +40,12 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== AURORA ÁNH SÁNG NỀN ===== */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  overflow: hidden;
-  contain: strict;
-}
+.aurora { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; contain: strict; }
 .aurora span {
-  position: absolute;
-  width: 60vmax;
-  height: 60vmax;
-  border-radius: 50%;
-  opacity: 0.32;
-  mix-blend-mode: screen;
+  position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%;
+  opacity: 0.32; mix-blend-mode: screen;
   background: radial-gradient(circle, currentColor, transparent 65%);
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
+  will-change: transform; transform: translate3d(0, 0, 0); backface-visibility: hidden;
 }
 .aurora .a1 { color: #f43f5e; top: -15%; left: -15%; animation: float1 26s ease-in-out infinite; }
 .aurora .a2 { color: #8b5cf6; top: 15%; right: -18%; animation: float2 30s ease-in-out infinite; }
@@ -76,26 +55,15 @@ body {
 @keyframes float3 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(4vw, -5vh, 0); } }
 
 .spotlight {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 520px;
-  height: 520px;
-  margin: -260px 0 0 -260px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: -1;
+  position: fixed; top: 0; left: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px;
+  border-radius: 50%; pointer-events: none; z-index: -1;
   background: radial-gradient(circle, rgba(244, 63, 94, 0.14), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s;
+  opacity: 0; transition: opacity 0.4s;
 }
 @media (hover: hover) and (pointer: fine) { .spotlight { opacity: 1; } }
 
 .grid-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
                     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 44px 44px;
@@ -103,10 +71,8 @@ body {
   mask-image: radial-gradient(ellipse 70% 55% at 50% 15%, #000, transparent);
 }
 
-/* ===== HIỆU ỨNG KÍNH LỎNG (LIQUID GLASS) ===== */
 .liquid-glass {
-  position: relative;
-  border-radius: 1.25rem;
+  position: relative; border-radius: 1.25rem;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 20, 30, 0.88) 50%, rgba(25, 25, 38, 0.85) 100%);
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -117,52 +83,29 @@ body {
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
   overflow: hidden;
 }
-
 .liquid-glass::before {
-  content: "";
-  position: absolute;
-  inset: -60%;
-  z-index: 0;
-  pointer-events: none;
+  content: ""; position: absolute; inset: -60%; z-index: 0; pointer-events: none;
   background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.09) 35deg, rgba(244, 63, 94, 0.22) 90deg, transparent 150deg, transparent 360deg);
-  animation: liquidSpin 14s linear infinite;
-  opacity: 0.75;
+  animation: liquidSpin 14s linear infinite; opacity: 0.75;
 }
-
 .liquid-glass::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 0;
   background: radial-gradient(140% 70% at 0% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
               radial-gradient(140% 70% at 100% 100%, rgba(225, 29, 72, 0.12), transparent 55%);
 }
-
-.liquid-glass > * {
-  position: relative;
-  z-index: 1;
-}
-
+.liquid-glass > * { position: relative; z-index: 1; }
 .liquid-glass:hover {
   border-color: var(--glass-border-hover);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32),
-              0 24px 50px -18px var(--red-glow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 24px 50px -18px var(--red-glow);
 }
-
-@keyframes liquidSpin {
-  to { transform: rotate(360deg); }
-}
+@keyframes liquidSpin { to { transform: rotate(360deg); } }
 
 .glass-card {
-  position: relative;
-  border-radius: 1.25rem;
+  position: relative; border-radius: 1.25rem;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(20, 20, 28, 0.8));
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 16px 36px -20px rgba(0, 0, 0, 0.8);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   transition: all 0.25s ease;
 }
 .glass-card:hover {
@@ -170,74 +113,45 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 20px 40px -18px var(--red-glow);
 }
 
-/* ===== NÚT BẤM (BUTTONS) ===== */
 .btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  border-radius: 0.8rem;
-  cursor: pointer;
-  overflow: hidden;
-  text-decoration: none;
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem; font-weight: 700; border-radius: 0.8rem; cursor: pointer;
+  overflow: hidden; text-decoration: none;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .btn:active { transform: scale(0.96); }
 
 .btn-red {
-  color: #fff;
-  background: linear-gradient(180deg, #ff5c7a, #e11d48);
+  color: #fff; background: linear-gradient(180deg, #ff5c7a, #e11d48);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 24px -6px rgba(244, 63, 94, 0.85);
 }
-.btn-red:hover {
-  filter: brightness(1.1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 30px -6px rgba(244, 63, 94, 1);
-}
+.btn-red:hover { filter: brightness(1.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 30px -6px rgba(244, 63, 94, 1); }
 
 .btn-dark {
-  color: #f4f4f5;
-  background: rgba(26, 26, 36, 0.85);
+  color: #f4f4f5; background: rgba(26, 26, 36, 0.85);
   border: 1px solid var(--glass-border);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .btn-dark:hover {
   background: rgba(38, 38, 52, 0.95);
-  border-color: rgba(244, 63, 94, 0.5);
-  color: #fff;
+  border-color: rgba(244, 63, 94, 0.5); color: #fff;
 }
 
 .btn-shine::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
   transition: left 0.6s;
 }
 .btn-shine:hover::after { left: 100%; }
 
-/* ===== FIELDS & SELECTS ===== */
 .field {
-  width: 100%;
-  background: #14141e !important;
-  color: #ffffff !important;
-  font-size: 14px;
-  padding: 0.75rem 1rem;
-  border-radius: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  outline: none;
+  width: 100%; background: #14141e !important; color: #ffffff !important;
+  font-size: 14px; padding: 0.75rem 1rem; border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.16); outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .field::placeholder { color: #71717a; }
-.field:focus {
-  border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
-}
+.field:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25); }
 
 select.field {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f43f5e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
@@ -245,38 +159,23 @@ select.field {
   background-position: right 1rem center !important;
   background-size: 1.1em !important;
   padding-right: 2.5rem !important;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
+  cursor: pointer; -webkit-appearance: none; appearance: none;
 }
-select.field option {
-  background: #14141e !important;
-  color: #ffffff !important;
-  padding: 8px;
-}
+select.field option { background: #14141e !important; color: #ffffff !important; padding: 8px; }
 
-/* ===== SMM CHIP ===== */
 .smm-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: 9999px;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.1rem; border-radius: 9999px;
   background: rgba(26, 26, 38, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #a1a1aa;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
+  color: #a1a1aa; font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
   transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 .smm-chip:hover {
-  color: #fff;
-  border-color: rgba(244, 63, 94, 0.45);
-  background: rgba(38, 38, 54, 0.95);
-  transform: translateY(-1px);
+  color: #fff; border-color: rgba(244, 63, 94, 0.45);
+  background: rgba(38, 38, 54, 0.95); transform: translateY(-1px);
 }
 .smm-chip.active {
   color: #fff;
@@ -286,31 +185,14 @@ select.field option {
 }
 
 .badge-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 0.28rem 0.65rem;
-  border-radius: 0.6rem;
-  border: 1px solid transparent;
-  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.72rem; font-weight: 800;
+  padding: 0.28rem 0.65rem; border-radius: 0.6rem;
+  border: 1px solid transparent; letter-spacing: 0.02em;
 }
-.badge-status.done {
-  color: #34d399;
-  background: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.3);
-}
-.badge-status.pending {
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.12);
-  border-color: rgba(251, 191, 36, 0.3);
-}
-.badge-status.canceled {
-  color: #fb7185;
-  background: rgba(251, 113, 133, 0.12);
-  border-color: rgba(251, 113, 133, 0.3);
-}
+.badge-status.done { color: #34d399; background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.3); }
+.badge-status.pending { color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.3); }
+.badge-status.canceled { color: #fb7185; background: rgba(251, 113, 133, 0.12); border-color: rgba(251, 113, 133, 0.3); }
 
 .badge-admin { background: rgba(244,63,94,0.18); color: #fda4af; border: 1px solid rgba(244,63,94,0.35); }
 .badge-type-smm { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
@@ -318,15 +200,11 @@ select.field option {
 
 .h-grad {
   background: linear-gradient(180deg, #ffffff 30%, #a1a1aa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .red-text {
   background: linear-gradient(90deg, #ff8fa3, #f43f5e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 </style>
 </head>
@@ -336,7 +214,7 @@ select.field option {
 <div id="spotlight" class="spotlight"></div>
 <div class="grid-bg"></div>
 
-<!-- ============ GATE ĐĂNG NHẬP / KIỂM TRA QUYỀN ADMIN ============ -->
+<!-- ============ GATE ĐĂNG NHẬP ============ -->
 <div id="gateScreen" class="min-h-screen flex items-center justify-center p-5">
   <div class="w-full max-w-sm liquid-glass p-7 text-center">
     <div id="gateLoading">
@@ -377,14 +255,12 @@ select.field option {
   </div>
 </div>
 
-<!-- ============ DASHBOARD ADMIN CHÍNH ============ -->
+<!-- ============ DASHBOARD ADMIN ============ -->
 <div id="dash" class="hidden min-h-screen pb-16">
 
-  <!-- Header Admin Liquid Glass -->
   <header class="sticky top-0 z-40" style="padding-top:env(safe-area-inset-top,0px)">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 pt-3 pb-2">
       <div class="liquid-glass flex items-center justify-between gap-3 h-16 px-4">
-        
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl overflow-hidden border border-rose-500/40">
             <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="" class="w-full h-full object-cover object-top">
@@ -406,11 +282,9 @@ select.field option {
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
-
       </div>
     </div>
 
-    <!-- Tab Navigation -->
     <div class="max-w-6xl mx-auto px-4 mt-2 flex gap-2 overflow-x-auto pb-2">
       <button class="smm-chip active" data-tab="overview"><i class="fa-solid fa-chart-pie"></i> Tổng quan</button>
       <button class="smm-chip" data-tab="orders"><i class="fa-solid fa-box-archive"></i> Đơn hàng</button>
@@ -421,7 +295,7 @@ select.field option {
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-5">
 
-    <!-- ===== TAB 1: TỔNG QUAN (OVERVIEW) ===== -->
+    <!-- ===== TAB 1: TỔNG QUAN ===== -->
     <section id="panel-overview" class="space-y-5">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="liquid-glass p-4 sm:p-5">
@@ -429,19 +303,16 @@ select.field option {
           <p class="text-2xl sm:text-3xl font-black text-white mt-1" id="statOrders">—</p>
           <p class="text-[11px] text-amber-400 mt-1"><i class="fa-solid fa-clock mr-1"></i><span id="statOrdersPending">0</span> đang chờ xử lý</p>
         </div>
-
         <div class="liquid-glass p-4 sm:p-5">
           <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">TỔNG ĐÃ NẠP</p>
           <p class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1"><span id="statDeposited">—</span>đ</p>
           <p class="text-[11px] text-zinc-500 mt-1">Đã cộng vào ví khách</p>
         </div>
-
         <div class="liquid-glass p-4 sm:p-5">
           <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">CHỜ DUYỆT NẠP</p>
           <p class="text-2xl sm:text-3xl font-black text-rose-400 mt-1" id="statDepPending">—</p>
           <p class="text-[11px] text-zinc-400 mt-1"><span id="statDepPendingSum">0</span>đ đang chờ</p>
         </div>
-
         <div class="liquid-glass p-4 sm:p-5">
           <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">TRUY CẬP HÔM NAY</p>
           <p class="text-2xl sm:text-3xl font-black text-white mt-1" id="statViewsToday">—</p>
@@ -449,7 +320,6 @@ select.field option {
         </div>
       </div>
 
-      <!-- Biểu đồ lượt xem 7 ngày -->
       <div class="liquid-glass p-5">
         <div class="flex items-center justify-between mb-4">
           <p class="text-sm font-bold text-white">Lượt truy cập 7 ngày gần đây</p>
@@ -458,7 +328,6 @@ select.field option {
         <div id="viewsChart" class="flex items-end gap-2.5 sm:gap-4 h-32"></div>
       </div>
 
-      <!-- Đơn hàng mới nhất -->
       <div class="liquid-glass p-5">
         <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
           <p class="text-sm font-bold text-white">Đơn hàng mới tạo</p>
@@ -468,7 +337,7 @@ select.field option {
       </div>
     </section>
 
-    <!-- ===== TAB 2: QUẢN LÝ ĐƠN HÀNG (ORDERS) ===== -->
+    <!-- ===== TAB 2: ĐƠN HÀNG ===== -->
     <section id="panel-orders" class="hidden space-y-4">
       <div class="flex flex-wrap items-center gap-2">
         <div class="flex gap-1.5 flex-wrap" id="orderFilters">
@@ -477,13 +346,11 @@ select.field option {
           <button class="smm-chip" data-status="done">Hoàn thành</button>
           <button class="smm-chip" data-status="canceled">Đã huỷ</button>
         </div>
-
         <div class="flex gap-1.5 flex-wrap" id="orderTypeFilters">
           <button class="smm-chip active" data-type="">Cả 2 loại</button>
           <button class="smm-chip" data-type="smm"><i class="fa-solid fa-bolt mr-1"></i>SMM</button>
           <button class="smm-chip" data-type="resource"><i class="fa-solid fa-cube mr-1"></i>Tài nguyên</button>
         </div>
-
         <input id="orderSearch" type="text" placeholder="Tìm theo link / mã đơn / khách..." class="field !py-1.5 !text-xs ml-auto max-w-[240px]">
       </div>
 
@@ -509,19 +376,47 @@ select.field option {
       </div>
     </section>
 
-    <!-- ===== TAB 3: KHÁCH HÀNG (CUSTOMERS) ===== -->
+    <!-- ===== TAB 3: KHÁCH HÀNG (ĐÃ SỬA) ===== -->
     <section id="panel-customers" class="hidden space-y-4">
-      <form id="custSearchForm" class="flex gap-2">
-        <input id="custSearchInput" type="text" placeholder="Nhập email hoặc UID khách hàng..." class="field text-xs sm:text-sm">
+      <form id="custSearchForm" class="flex gap-2 flex-wrap">
+        <input id="custSearchInput" type="text" placeholder="Nhập email hoặc UID khách hàng..." class="field text-xs sm:text-sm flex-1 min-w-[200px]">
         <button class="btn btn-red btn-shine px-5 text-xs font-bold" type="submit">
           <i class="fa-solid fa-magnifying-glass"></i> Tìm
         </button>
+        <button type="button" id="custReloadBtn" class="btn btn-dark px-4 text-xs" title="Tải lại danh sách">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
       </form>
+
+      <!-- Thông báo tổng số khách -->
+      <div id="custCountBar" class="hidden text-xs text-zinc-400 px-1">
+        <i class="fa-solid fa-circle-info text-rose-400 mr-1"></i>
+        Tìm thấy <span id="custCount" class="font-bold text-white">0</span> khách hàng
+      </div>
+
       <div id="custResults" class="grid sm:grid-cols-2 gap-3"></div>
-      <p id="custEmpty" class="hidden text-center text-zinc-500 text-xs py-10">Không tìm thấy khách hàng nào.</p>
+
+      <div id="custLoading" class="hidden text-center py-10">
+        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-rose-400"></i>
+        <p class="text-xs text-zinc-500 mt-2">Đang tải danh sách khách hàng...</p>
+      </div>
+
+      <p id="custEmpty" class="hidden text-center text-zinc-500 text-xs py-10">
+        <i class="fa-solid fa-inbox text-2xl block mb-2 opacity-40"></i>
+        Không tìm thấy khách hàng nào.
+      </p>
+
+      <div id="custError" class="hidden text-center py-8">
+        <i class="fa-solid fa-triangle-exclamation text-2xl text-rose-400 mb-2"></i>
+        <p class="text-xs text-rose-400 font-semibold" id="custErrorMsg"></p>
+        <p class="text-[11px] text-zinc-500 mt-2 max-w-md mx-auto">
+          Có thể bảng <code class="text-rose-300">profiles</code> đang bị chặn bởi RLS.
+          Kiểm tra policy trong Supabase Dashboard → Authentication → Policies.
+        </p>
+      </div>
     </section>
 
-    <!-- ===== TAB 4: DUYỆT NẠP TIỀN (DEPOSITS) ===== -->
+    <!-- ===== TAB 4: DUYỆT NẠP TIỀN ===== -->
     <section id="panel-deposits" class="hidden space-y-4">
       <div class="flex gap-1.5 flex-wrap" id="depFilters">
         <button class="smm-chip active" data-status="pending">Chờ duyệt</button>
@@ -630,19 +525,30 @@ document.querySelectorAll(".smm-chip[data-tab]").forEach(el => {
   el.onclick = () => switchTab(el.dataset.tab);
 });
 
+let customersLoaded = false;
+
 function switchTab(tab){
   document.querySelectorAll(".smm-chip[data-tab]").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
   ["overview", "orders", "customers", "deposits"].forEach(p => {
     $(`panel-${p}`).classList.toggle("hidden", p !== tab);
   });
+  // TỰ ĐỘNG LOAD KHÁCH HÀNG KHI VÀO TAB
+  if (tab === "customers" && !customersLoaded) {
+    loadCustomers();
+    customersLoaded = true;
+  }
 }
 
-$("refreshAllBtn").onclick = () => loadAll();
+$("refreshAllBtn").onclick = () => { customersLoaded = false; loadAll(); };
 
 async function loadAll(){
   loadOverviewStats();
   loadOrders(true);
   loadDeposits();
+  // Nếu đang ở tab customers thì reload
+  if (!$("panel-customers").classList.contains("hidden")) {
+    loadCustomers();
+  }
 }
 
 /* Overview */
@@ -669,7 +575,6 @@ async function loadOverviewStats(){
 
   loadViews();
 
-  // Đơn mới nhất
   try {
     const [oRes, rRes] = await Promise.all([
       supabaseClient.from("orders").select("service,contact,status,created_at").order("created_at", { ascending:false }).limit(5),
@@ -817,34 +722,115 @@ async function updateOrderStatus(type, id, status, sel){
   finally { sel.disabled = false; }
 }
 
-/* Customers */
-$("custSearchForm").onsubmit = async e => {
-  e.preventDefault();
-  const q = $("custSearchInput").value.trim();
+/* ================= CUSTOMERS (ĐÃ SỬA HOÀN CHỈNH) ================= */
+async function loadCustomers(keyword = ""){
   const box = $("custResults");
-  box.innerHTML = `<p class="text-zinc-500 text-xs col-span-2 py-6 text-center">Đang tìm...</p>`;
-  $("custEmpty").classList.add("hidden");
+  const loading = $("custLoading");
+  const empty = $("custEmpty");
+  const errBox = $("custError");
+  const countBar = $("custCountBar");
+
+  // Reset UI
+  box.innerHTML = "";
+  empty.classList.add("hidden");
+  errBox.classList.add("hidden");
+  countBar.classList.add("hidden");
+  loading.classList.remove("hidden");
+
   try {
-    let query = supabaseClient.from("profiles").select("id,email,balance,total_deposit,total_spent,is_admin").limit(20);
-    if (q) query = query.ilike("email", `%${q}%`);
-    const { data } = await query;
-    box.innerHTML = "";
-    if (!data || !data.length) { $("custEmpty").classList.remove("hidden"); return; }
+    // Thử query với created_at trước
+    let query = supabaseClient
+      .from("profiles")
+      .select("id,email,balance,total_deposit,total_spent,is_admin,created_at")
+      .limit(100);
+
+    if (keyword) {
+      // Tìm theo email hoặc UID
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(keyword);
+      if (isUUID) {
+        query = query.eq("id", keyword);
+      } else {
+        query = query.ilike("email", `%${keyword}%`);
+      }
+    } else {
+      query = query.order("created_at", { ascending: false });
+    }
+
+    let { data, error } = await query;
+
+    // Nếu lỗi do cột created_at không tồn tại → thử lại không order
+    if (error && /column .*created_at.* does not exist/i.test(error.message || "")) {
+      let q2 = supabaseClient.from("profiles").select("id,email,balance,total_deposit,total_spent,is_admin").limit(100);
+      if (keyword) {
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(keyword);
+        q2 = isUUID ? q2.eq("id", keyword) : q2.ilike("email", `%${keyword}%`);
+      }
+      const retry = await q2;
+      data = retry.data;
+      error = retry.error;
+    }
+
+    loading.classList.add("hidden");
+
+    if (error) throw error;
+
+    if (!data || !data.length) {
+      empty.classList.remove("hidden");
+      return;
+    }
+
+    // Render
+    countBar.classList.remove("hidden");
+    $("custCount").textContent = data.length;
     data.forEach(r => box.insertAdjacentHTML("beforeend", customerCard(r)));
-  } catch(e){}
+
+  } catch(e){
+    loading.classList.add("hidden");
+    console.error("Load customers error:", e);
+    errBox.classList.remove("hidden");
+    $("custErrorMsg").textContent = "Lỗi: " + (e.message || "Không thể tải danh sách khách hàng.");
+  }
+}
+
+// Form submit → tìm kiếm
+$("custSearchForm").onsubmit = e => {
+  e.preventDefault();
+  loadCustomers($("custSearchInput").value.trim());
+};
+
+// Nút reload
+$("custReloadBtn").onclick = () => {
+  $("custSearchInput").value = "";
+  loadCustomers();
 };
 
 function customerCard(r){
+  const shortId = (r.id || "").slice(0, 8);
+  const createdStr = r.created_at ? dt(r.created_at) : "";
   return `
     <div class="liquid-glass p-4" data-row="${r.id}">
-      <div class="flex items-center justify-between mb-2">
-        <p class="font-bold text-xs sm:text-sm text-white truncate">${esc(r.email||"(vô danh)")}${r.is_admin ? ' <span class="badge-admin text-[10px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : ''}</p>
-        <p class="cust-balance text-sm font-black text-emerald-400">${vnd(r.balance)}đ</p>
+      <div class="flex items-start justify-between mb-2 gap-2">
+        <div class="min-w-0 flex-1">
+          <p class="font-bold text-xs sm:text-sm text-white truncate">
+            ${esc(r.email||"(vô danh)")}
+            ${r.is_admin ? ' <span class="badge-admin text-[10px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : ''}
+          </p>
+          <p class="text-[10px] text-zinc-500 font-mono mt-0.5" title="${esc(r.id)}">
+            UID: ${esc(shortId)}...${createdStr ? ` · ${createdStr}` : ''}
+          </p>
+        </div>
+        <p class="cust-balance text-sm font-black text-emerald-400 whitespace-nowrap">${vnd(r.balance)}đ</p>
       </div>
+
+      <div class="grid grid-cols-2 gap-2 text-[10px] text-zinc-400 mb-3 mt-2">
+        <div>Tổng nạp: <span class="text-white font-bold">${vnd(r.total_deposit)}đ</span></div>
+        <div>Đã chi: <span class="text-white font-bold">${vnd(r.total_spent)}đ</span></div>
+      </div>
+
       <div class="flex items-center gap-2 mt-3">
         <input type="number" min="1000" step="1000" placeholder="Số tiền" class="field cust-amount !py-1.5 !text-xs">
-        <button type="button" class="btn btn-dark px-3 py-1.5 text-xs text-rose-400" onclick="adjustBalance('${r.id}', -1, this)">Trừ</button>
-        <button type="button" class="btn btn-red btn-shine px-3 py-1.5 text-xs font-bold" onclick="adjustBalance('${r.id}', 1, this)">Cộng</button>
+        <button type="button" class="btn btn-dark px-3 py-1.5 text-xs text-rose-400 whitespace-nowrap" onclick="adjustBalance('${r.id}', -1, this)">Trừ</button>
+        <button type="button" class="btn btn-red btn-shine px-3 py-1.5 text-xs font-bold whitespace-nowrap" onclick="adjustBalance('${r.id}', 1, this)">Cộng</button>
       </div>
     </div>
   `;
@@ -860,13 +846,15 @@ async function adjustBalance(id, sign, btn){
   const current = Number((balEl.textContent||"0").replace(/\D/g,"")) || 0;
   const next = Math.max(0, current + sign*amt);
 
+  btn.disabled = true;
   try {
     const { error } = await supabaseClient.from("profiles").update({ balance: next }).eq("id", id);
     if (error) throw error;
     balEl.textContent = vnd(next) + "đ";
     input.value = "";
-    toast(sign > 0 ? "Đã cộng tiền vào ví khách!" : "Đã trừ tiền ví khách!");
+    toast(sign > 0 ? `Đã cộng ${vnd(amt)}đ vào ví khách!` : `Đã trừ ${vnd(amt)}đ khỏi ví khách!`);
   } catch(e){ toast("Lỗi: " + e.message, false); }
+  finally { btn.disabled = false; }
 }
 
 /* Deposits */
