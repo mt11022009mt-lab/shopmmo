@@ -1226,90 +1226,78 @@
     /* =========================================================
        4. SMM SERVICES
        ========================================================= */
-    const SMM_DATA = {
-      facebook: { name: "Facebook", icon: "fa-brands fa-facebook",
-        categories: [
-          { id: "fb_like", name: "Facebook | Like Bài Viết",
-            servers: [
-              { id: "sv1", code: "SV1", name: "Like Bài Viết [Tốc độ cao - Không tụt]", rate: 12, min: 50, max: 50000, note: "Tốc độ: 1k - 5k/ngày. Bảo hành 30 ngày. Bài viết phải để công khai." },
-              { id: "sv2", code: "SV2", name: "Like Bài Viết [Việt Nam thật - Siêu rẻ]", rate: 8, min: 50, max: 20000, note: "Like người dùng thật. Không bảo hành khi bài bị ẩn hoặc xóa." },
-              { id: "sv3", code: "SV3", name: "Cảm Xúc Bài Viết (Love, Haha, Wow)", rate: 16, min: 50, max: 20000, note: "Đầy đủ cảm xúc tùy chọn. Tốc độ mượt mà ổn định." }
-            ]
-          },
-          { id: "fb_follow", name: "Facebook | Follow Cá Nhân & Fanpage",
-            servers: [
-              { id: "sv4", code: "SV4", name: "Follow Trang Cá Nhân [Sub Việt]", rate: 28, min: 100, max: 100000, note: "Sub thật Việt Nam, hỗ trợ bật nút Follow trước khi chạy." },
-              { id: "sv5", code: "SV5", name: "Like & Follow Fanpage [Chất lượng cao]", rate: 35, min: 100, max: 50000, note: "Tăng cả Like và Follow cho trang Page tự động." }
-            ]
-          },
-          { id: "fb_view", name: "Facebook | Lượt Xem Video & Reels",
-            servers: [
-              { id: "sv6", code: "SV6", name: "View Video / Reels [Bảo hành vĩnh viễn]", rate: 5, min: 500, max: 1000000, note: "Hỗ trợ video công khai, view nhảy sau 5-10 phút." }
-            ]
-          }
-        ]
-      },
-      tiktok: { name: "TikTok", icon: "fa-brands fa-tiktok",
-        categories: [
-          { id: "tt_follow", name: "TikTok | Follower Việt Nam",
-            servers: [
-              { id: "sv7", code: "SV7", name: "Followers Việt Nam [Bảo hành 30 ngày]", rate: 45, min: 100, max: 50000, note: "Follower Việt Nam thật 100%. Tốc độ 1k-3k/ngày." },
-              { id: "sv8", code: "SV8", name: "Followers Ngoại [Giá Siêu Rẻ]", rate: 22, min: 100, max: 100000, note: "Follower quốc tế, dùng để mở tính năng Livestream nhanh." }
-            ]
-          },
-          { id: "tt_like", name: "TikTok | Thả Tim / Likes Video",
-            servers: [
-              { id: "sv9", code: "SV9", name: "Likes Video TikTok [Việt Nam - Ổn định]", rate: 18, min: 50, max: 50000, note: "Tim video người thật. Giúp video dễ lên xu hướng." }
-            ]
-          },
-          { id: "tt_view", name: "TikTok | Lượt Xem Video Lên Xu Hướng",
-            servers: [
-              { id: "sv10", code: "SV10", name: "Views Video TikTok [Siêu Tốc - Giá Rẻ]", rate: 1.5, min: 1000, max: 10000000, note: "Tốc độ 100k - 1 triệu view/ngày." }
-            ]
-          }
-        ]
-      },
-      instagram: { name: "Instagram", icon: "fa-brands fa-instagram",
-        categories: [
-          { id: "ig_follow", name: "Instagram | Follower Tài Khoản",
-            servers: [
-              { id: "sv11", code: "SV11", name: "Follower Instagram [Việt Nam]", rate: 50, min: 100, max: 20000, note: "Tài khoản Việt Nam có avatar và bài đăng." },
-              { id: "sv12", code: "SV12", name: "Follower Instagram [Quốc tế không tụt]", rate: 26, min: 100, max: 100000, note: "Bảo hành 60 ngày nếu tụt quá 10%." }
-            ]
-          },
-          { id: "ig_like", name: "Instagram | Like & View Reels",
-            servers: [
-              { id: "sv13", code: "SV13", name: "Like Bài Viết / Reels [Chất lượng]", rate: 10, min: 50, max: 50000, note: "Tăng mượt mà, an toàn cho tài khoản mới." }
-            ]
-          }
-        ]
-      },
-      youtube: { name: "YouTube", icon: "fa-brands fa-youtube",
-        categories: [
-          { id: "yt_sub", name: "YouTube | Subscribe Kênh",
-            servers: [
-              { id: "sv14", code: "SV14", name: "Sub Kênh YouTube [Bảo hành không tụt]", rate: 190, min: 50, max: 10000, note: "Sub an toàn chuẩn chính sách YouTube." }
-            ]
-          },
-          { id: "yt_view", name: "YouTube | View Video & Shorts",
-            servers: [
-              { id: "sv15", code: "SV15", name: "Views Video YouTube [Thời lượng xem cao]", rate: 35, min: 500, max: 500000, note: "Giúp tăng đề xuất video." }
-            ]
-          }
-        ]
-      },
-      telegram: { name: "Telegram", icon: "fa-brands fa-telegram",
-        categories: [
-          { id: "tg_member", name: "Telegram | Members Nhóm & Kênh",
-            servers: [
-              { id: "sv16", code: "SV16", name: "Telegram Members [Bảo hành 30 ngày]", rate: 30, min: 100, max: 50000, note: "Member ổn định, nhóm cần để link public." }
-            ]
-          }
-        ]
-      }
-    };
+    // Dữ liệu dịch vụ được load động từ bảng "services" trên Supabase
+    // (đồng bộ từ SMM1S qua trang test.html, đã cộng lãi 3.000đ/1k)
+    let SMM_DATA = {};
+    let servicesLoaded = false;
 
-    let curPlatform = "facebook";
+    const PLATFORM_KEYWORDS = [
+      { key: "facebook", name: "Facebook", icon: "fa-brands fa-facebook", match: ["facebook", "fb "] },
+      { key: "tiktok", name: "TikTok", icon: "fa-brands fa-tiktok", match: ["tiktok", "tik tok"] },
+      { key: "instagram", name: "Instagram", icon: "fa-brands fa-instagram", match: ["instagram", "ig "] },
+      { key: "youtube", name: "YouTube", icon: "fa-brands fa-youtube", match: ["youtube", "yt "] },
+      { key: "telegram", name: "Telegram", icon: "fa-brands fa-telegram", match: ["telegram", "tele "] },
+      { key: "twitter", name: "Twitter / X", icon: "fa-brands fa-x-twitter", match: ["twitter", " x "] },
+      { key: "threads", name: "Threads", icon: "fa-brands fa-threads", match: ["threads"] },
+      { key: "spotify", name: "Spotify", icon: "fa-brands fa-spotify", match: ["spotify"] },
+      { key: "shopee", name: "Shopee", icon: "fa-solid fa-bag-shopping", match: ["shopee"] },
+      { key: "other", name: "Khác", icon: "fa-solid fa-layer-group", match: [] }
+    ];
+
+    function detectPlatform(categoryName) {
+      const s = (" " + categoryName + " ").toLowerCase();
+      for (const p of PLATFORM_KEYWORDS) {
+        if (p.key === "other") continue;
+        if (p.match.some(kw => s.includes(kw))) return p;
+      }
+      return PLATFORM_KEYWORDS.find(p => p.key === "other");
+    }
+
+    async function loadServicesFromDB() {
+      const { data, error } = await supabaseClient
+        .from("services")
+        .select("*")
+        .eq("is_active", true)
+        .order("category", { ascending: true });
+
+      if (error) {
+        console.error("Lỗi tải dịch vụ:", error);
+        toast("Không tải được danh sách dịch vụ!", false);
+        return;
+      }
+      if (!data || data.length === 0) {
+        SMM_DATA = {};
+        servicesLoaded = true;
+        return;
+      }
+
+      const built = {};
+      data.forEach(row => {
+        const platform = detectPlatform(row.category);
+        if (!built[platform.key]) {
+          built[platform.key] = { name: platform.name, icon: platform.icon, categories: [] };
+        }
+        let cat = built[platform.key].categories.find(c => c.name === row.category);
+        if (!cat) {
+          cat = { id: row.category, name: row.category, servers: [] };
+          built[platform.key].categories.push(cat);
+        }
+        cat.servers.push({
+          id: String(row.provider_service_id),
+          code: "#" + row.provider_service_id,
+          name: row.name,
+          rate: Number(row.rate_final),
+          min: Number(row.min),
+          max: Number(row.max),
+          note: row.type ? `Loại: ${row.type}` : ""
+        });
+      });
+
+      SMM_DATA = built;
+      servicesLoaded = true;
+    }
+
+    let curPlatform = null;
     let curCategoryIndex = 0;
     let curServer = null;
 
@@ -1473,14 +1461,28 @@
     /* =========================================================
        8. DASHBOARD ENGINE
        ========================================================= */
-    function initDashboardEngine() {
-      renderDashPlatformChips();
+    async function initDashboardEngine() {
       renderTierBadge(Number(currentProfile?.total_deposit || 0));
+
+      if (!servicesLoaded) {
+        $("dashPlatformChips").innerHTML = `<p class="text-xs text-slate-400 px-2 py-2"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách dịch vụ...</p>`;
+        await loadServicesFromDB();
+      }
+
+      const keys = Object.keys(SMM_DATA);
+      if (keys.length === 0) {
+        $("dashPlatformChips").innerHTML = `<p class="text-xs text-slate-400 px-2 py-2">Chưa có dịch vụ nào. Vui lòng đồng bộ dịch vụ từ trang quản trị.</p>`;
+        return;
+      }
+      if (!curPlatform || !SMM_DATA[curPlatform]) curPlatform = keys[0];
+
+      renderDashPlatformChips();
     }
 
     function renderDashPlatformChips() {
       const container = $("dashPlatformChips");
       const keys = Object.keys(SMM_DATA);
+      if (keys.length === 0) return;
       container.innerHTML = keys.map(k => {
         const p = SMM_DATA[k];
         const isActive = k === curPlatform;
