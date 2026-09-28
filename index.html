@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -2326,14 +2326,20 @@
       updateDashBill();
     }
 
+    // Giá bán = số lượng x giá/1.000 x (1 - chiết khấu cấp bậc), làm tròn LÊN.
+    // PHẢI giống hệt công thức trong Edge Function create-order.
+    function calcPrice(server, qty, discountPercent) {
+      return Math.ceil((qty * Number(server.rate)) / 1000 * (1 - (discountPercent || 0) / 100));
+    }
+
     function updateDashBill() {
       if (!curServer) return;
       const qty = Math.max(1, Number($("dashOrderQty")?.value || 0));
-      const rawTotal = Math.round((qty * curServer.rate) / 1000);
       const tier = getTierByDeposit(Number(currentProfile?.total_deposit || 0));
-      const discountAmt = Math.round(rawTotal * tier.discount / 100);
-      const couponAmt = Math.round(rawTotal * dashCouponDiscountPercent / 100);
-      const total = Math.max(0, rawTotal - discountAmt - couponAmt);
+      const rawTotal = Math.ceil((qty * curServer.rate) / 1000);
+      const total = calcPrice(curServer, qty, tier.discount);
+      const discountAmt = Math.max(0, rawTotal - total);
+      const couponAmt = 0; // mã giảm giá tạm ngưng (server chưa hỗ trợ)
 
       if ($("dashLimitHint")) $("dashLimitHint").textContent = `Tối thiểu: ${curServer.min.toLocaleString()} — Tối đa: ${curServer.max.toLocaleString()}`;
       
@@ -2400,48 +2406,27 @@
         toast(`Số lượng phải từ ${curServer.min.toLocaleString()} đến ${curServer.max.toLocaleString()}!`, false);
         return;
       }
-      const tier = getTierByDeposit(Number(currentProfile?.total_deposit || 0));
-      const rawTotal = Math.round((qty * curServer.rate) / 1000);
-      const discountAmt = Math.round(rawTotal * tier.discount / 100);
-      const total = rawTotal - discountAmt;
-
       const btn = $("dashSubmitBtn");
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang khởi tạo đơn hàng...`;
 
       try {
-        const { data: prof, error: pErr } = await supabaseClient
-          .from("profiles").select("balance, total_spent").eq("id", currentUser.id).maybeSingle();
-        if (pErr) throw pErr;
-        const bal = Number(prof?.balance || 0);
-        const spent = Number(prof?.total_spent || 0);
-        if (bal < total) throw new Error(`Số dư không đủ! Còn thiếu ${fmtVnd(total - bal)}.`);
-        const nextBal = bal - total;
-        const nextSpent = spent + total;
-
-        const { error: uErr } = await supabaseClient
-          .from("profiles").update({ balance: nextBal, total_spent: nextSpent }).eq("id", currentUser.id);
-        if (uErr) throw uErr;
-
-        const orderCode = "SMM" + Date.now().toString().slice(-8);
-        const { error: oErr } = await supabaseClient.from("orders").insert([{
-          user_id: currentUser.id,
-          service: `[${curServer.code}] ${curServer.name}`,
-          link: link,
-          contact: (currentUser.email || "").split("@")[0],
-          source: "smm-panel",
-          status: "pending"
-        }]);
-        if (oErr) {
-          await supabaseClient.from("profiles").update({ balance: bal, total_spent: spent }).eq("id", currentUser.id);
-          throw oErr;
+        // Giá + trừ ví + gửi đơn sang web mẹ đều xử lý ở server (Edge Function create-order)
+        const { data, error } = await supabaseClient.functions.invoke("create-order", {
+          body: { service_id: curServer.id, link, quantity: qty },
+        });
+        if (error) {
+          let msg = error.message;
+          try { msg = (await error.context.json()).error || msg; } catch (_) {}
+          throw new Error(msg);
         }
+        if (data && data.error) throw new Error(data.error);
 
-        currentBalance = nextBal;
-        currentProfile = { ...currentProfile, balance: nextBal, total_spent: nextSpent };
+        currentBalance = Number(data.balance);
+        currentProfile = { ...currentProfile, balance: currentBalance };
         await syncSession(currentUser);
         updateDashBill();
-        toast(`🎉 Tạo đơn thành công! Mã đơn: ${orderCode}`);
+        toast(`🎉 Tạo đơn thành công! Mã đơn: ${String(data.order_id).slice(0, 8).toUpperCase()}`);
         $("dashOrderLink").value = "";
       } catch (err) {
         toast(err.message || "Tạo đơn thất bại!", false);
@@ -2659,6 +2644,13 @@
     }
 
     function applyDashCoupon() {
+      // Tạm ngưng: server chưa tính mã giảm giá nên giá hiển thị sẽ lệch giá bị trừ.
+      dashCouponDiscountPercent = 0;
+      const _cm = document.getElementById("dashCouponMsg");
+      if (_cm) { _cm.textContent = "Mã giảm giá đang tạm ngưng."; _cm.className = "text-xs mt-1.5 font-bold text-amber-400 block"; }
+      toast("Mã giảm giá đang tạm ngưng", false);
+      updateDashBill();
+      return;
       const val = (document.getElementById("dashCouponInput")?.value || "").trim().toUpperCase();
       const msg = document.getElementById("dashCouponMsg");
       if (!val) {
